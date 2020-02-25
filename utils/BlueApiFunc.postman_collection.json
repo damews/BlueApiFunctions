@@ -1,0 +1,522 @@
+{
+	"info": {
+		"_postman_id": "b50fa477-5057-4ec3-8f03-67fe87985a1f",
+		"name": "BlueApiFunc",
+		"description": "Coleção de chamadas para os endpoints da API do I Blue It (Blue Api)\n\n**Definição de prefixos dos endpoints**\n\n- Send: envia de dados para serem gravados no banco de dados.\n- Get: busca os dados de acordo com os parâmetros incluídos na URL\n- Update: realiza a atualização dos dados. Deve-se passar o mesmo modelo enviado para a mesma rota contendo o prefixo Send, mas desta vez, contendo o ID do modelo a ser atualizado.\n\n---\n\n**Observações**\n\n- Os parâmetros na busca (Get) são encadeados, ou seja, os resultados têm que obedecer todos os parâmetros passados.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Send",
+			"item": [
+				{
+					"name": "Salvar Paciente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "GameToken",
+								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"description": "Token de permissão de acesso a API",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Adam Santos\",\r\n    \"birthday\": \"1995/11/25\",\r\n    \"sex\": \"M\",\r\n    \"weigth\": 100,\r\n    \"heigth\": 185,\r\n    \"ethnicity\": \"Templário das Terras Altas\",\r\n    \"condition\": \"Normal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/pacients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"pacients"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Salva um paciente no BD"
+					},
+					"response": []
+				},
+				{
+					"name": "Salvar Calibração",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "GameToken",
+								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"description": "Token de permissão de acesso a API",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pacientId\": \"5e530fb8e706ad47ac659557\",\r\n    \"gameDevice\": \"PITACO\",\r\n    \"calibrationValue\": 100,\r\n    \"calibrationExercise\": \"PINS\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/calibrations",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"calibrations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Salvar Resumo Minigame",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "GameToken",
+								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"description": "Token de permissão de acesso a API",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"pacientId\": \"5e530fb8e706ad47ac659557\",\r\n    \"flowData\": \r\n        [\r\n        \t{ \"flowValue\": 100, \"timestamp\": \"2020-02-23T08:59:50\" },\r\n        \t{ \"flowValue\": 110, \"timestamp\": \"2020-02-23T09:00:00\" },\r\n        \t{ \"flowValue\": 120, \"timestamp\": \"2020-02-23T09:01:10\" }\r\n    \t]\r\n    ,\r\n    \"minigameType\": \"PINS\",\r\n    \"gameDevice\": \"PITACO\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/minigames",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"minigames"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Salvar Resumo Plataforma",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "GameToken",
+								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"description": "Token de permissão de acesso a API",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n    \"pacientId\": \"5e530fb8e706ad47ac659557\",\r\n    \"gameDevice\": \"PITACO\",\r\n    \"flowData\":  [\r\n        \t{ \"flowValue\": 100, \"timestamp\": \"2020-02-23T08:59:50\" },\r\n        \t{ \"flowValue\": 110, \"timestamp\": \"2020-02-23T09:00:00\" },\r\n        \t{ \"flowValue\": 120, \"timestamp\": \"2020-02-23T09:01:10\" }\r\n    \t],\r\n    \"playStart\": \"2020-02-23T09:01:10\",\r\n    \"playFinish\": \"2020-02-23T09:01:10\",\r\n    \"duration\": 100,\r\n    \"result\": 1,\r\n    \"stageId\": 1,\r\n    \"phase\": 1,\r\n    \"level\": 1,\r\n    \"relaxTimeSpawned\": 1,\r\n    \"maxScore\": 1,\r\n    \"scoreRatio\": 1,\r\n    \"targetsSpawned\": 1,\r\n    \"TargetsSuccess\": 1,\r\n    \"TargetsInsuccess\": 1,\r\n    \"TargetsExpSuccess\": 1,\r\n    \"TargetsFails\": 1,\r\n    \"TargetsInsFail\": 1,\r\n    \"TargetsExpFail\": 1,\r\n    \"ObstaclesSpawned\": 1,\r\n    \"ObstaclesSuccess\": 1,\r\n    \"ObstaclesInsSuccess\": 1,\r\n    \"ObstaclesExpSuccess\": 1,\r\n    \"ObstaclesFail\": 1,\r\n    \"ObstaclesInsFail\": 1,\r\n    \"ObstaclesExpFail\": 1,\r\n    \"PlayerHp\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/plataforms",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"plataforms"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Get",
+			"item": [
+				{
+					"name": "Buscar Calibração",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "GameToken",
+								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"description": "Token de permissão de acesso a API",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:7071/api/calibrations?",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"calibrations"
+							],
+							"query": [
+								{
+									"key": "pacientId",
+									"value": "5e530fb8e706ad47ac659557",
+									"description": "ID do Paciente [OBRIGATÓRIO]",
+									"disabled": true
+								},
+								{
+									"key": "gameDevice",
+									"value": "PITACO",
+									"description": "Dispositivo [NÃO OBRIGATÓRIO]",
+									"disabled": true
+								},
+								{
+									"key": "calibrationExercise",
+									"value": "PINS",
+									"description": "Exercício [NÃO OBRIGATÓRIO]",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Resumo Minigame",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "GameToken",
+								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"description": "Token de permissão de acesso a API",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:7071/api/minigames?",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"minigames"
+							],
+							"query": [
+								{
+									"key": "pacientId",
+									"value": "5e530fb8e706ad47ac659557",
+									"description": "ID do Paciente [OBRIGATÓRIO]",
+									"disabled": true
+								},
+								{
+									"key": "gameDevice",
+									"value": "PITACO",
+									"description": "Dispositivo [NÃO OBRIGATÓRIO]",
+									"disabled": true
+								},
+								{
+									"key": "minigameType",
+									"value": "PINS",
+									"description": "Exercício [NÃO OBRIGATÓRIO]",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Resumo Plataforma",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "GameToken",
+								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"description": "Token de permissão de acesso a API",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:7071/api/plataforms?",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"plataforms"
+							],
+							"query": [
+								{
+									"key": "pacientId",
+									"value": "5e530fb8e706ad47ac659557",
+									"description": "ID do Paciente [OBRIGATÓRIO]",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Pacientes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "GameToken",
+								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"description": "Token de permissão de acesso a API",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:7071/api/pacients?name=Ada",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"pacients"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Ada",
+									"description": "Letras iniciais do nome do paciente (Case-Sensitive)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Único Paciente",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "GameToken",
+								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"description": "Token de permissão de acesso a API",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:7071/api/pacients/:pacientId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"pacients",
+								":pacientId"
+							],
+							"variable": [
+								{
+									"key": "pacientId",
+									"value": "5e532927627d484ac8b117dd",
+									"description": "ID do Paciente [OBRIGATÓRIO]"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Update",
+			"item": [
+				{
+					"name": "Atualizar Paciente",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "GameToken",
+								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"description": "Token de permissão de acesso a API",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Adam Mews dos Santos\",\r\n    \"birthday\": \"1995/11/25\",\r\n    \"sex\": \"M\",\r\n    \"weigth\": 100,\r\n    \"heigth\": 185,\r\n    \"ethnicity\": \"Templário das Terras Altas\",\r\n    \"condition\": \"Quase Normal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7071/api/pacient/:pacientId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"pacient",
+								":pacientId"
+							],
+							"variable": [
+								{
+									"key": "pacientId",
+									"value": "5e530fb8e706ad47ac659557",
+									"description": "ID do Paciente [OBRIGATÓRIO]"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Delete",
+			"item": [
+				{
+					"name": "Excluir Paciente",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "GameToken",
+								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"description": "Token de permissão de acesso a API",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:7071/api/pacients/:pacientId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7071",
+							"path": [
+								"api",
+								"pacients",
+								":pacientId"
+							],
+							"variable": [
+								{
+									"key": "pacientId",
+									"value": "5e532927627d484ac8b117dd",
+									"description": "ID do Paciente [OBRIGATÓRIO]"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "e63271e3-edcd-453c-8817-064da478dcbb",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "8608e849-f577-4fdd-8f8e-8a3392c7cf15",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
