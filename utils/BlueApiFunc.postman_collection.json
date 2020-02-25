@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b50fa477-5057-4ec3-8f03-67fe87985a1f",
+		"_postman_id": "8fa5e2fb-5851-4426-a068-c516dfb64525",
 		"name": "BlueApiFunc",
 		"description": "Coleção de chamadas para os endpoints da API do I Blue It (Blue Api)\n\n**Definição de prefixos dos endpoints**\n\n- Send: envia de dados para serem gravados no banco de dados.\n- Get: busca os dados de acordo com os parâmetros incluídos na URL\n- Update: realiza a atualização dos dados. Deve-se passar o mesmo modelo enviado para a mesma rota contendo o prefixo Send, mas desta vez, contendo o ID do modelo a ser atualizado.\n\n---\n\n**Observações**\n\n- Os parâmetros na busca (Get) são encadeados, ou seja, os resultados têm que obedecer todos os parâmetros passados.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -37,12 +37,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:7071/api/pacients",
-							"protocol": "http",
+							"raw": "https://blueapi.azurewebsites.net/api/pacients?",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"blueapi",
+								"azurewebsites",
+								"net"
 							],
-							"port": "7071",
 							"path": [
 								"api",
 								"pacients"
@@ -87,12 +88,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:7071/api/calibrations",
-							"protocol": "http",
+							"raw": "https://blueapi.azurewebsites.net/api/calibrations",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"blueapi",
+								"azurewebsites",
+								"net"
 							],
-							"port": "7071",
 							"path": [
 								"api",
 								"calibrations"
@@ -129,12 +131,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:7071/api/minigames",
-							"protocol": "http",
+							"raw": "https://blueapi.azurewebsites.net/api/minigames?=",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"blueapi",
+								"azurewebsites",
+								"net"
 							],
-							"port": "7071",
 							"path": [
 								"api",
 								"minigames"
@@ -177,12 +180,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:7071/api/plataforms",
-							"protocol": "http",
+							"raw": "https://blueapi.azurewebsites.net/api/plataforms",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"blueapi",
+								"azurewebsites",
+								"net"
 							],
-							"port": "7071",
 							"path": [
 								"api",
 								"plataforms"
@@ -210,12 +214,13 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:7071/api/calibrations?",
-							"protocol": "http",
+							"raw": "https://blueapi.azurewebsites.net/api/calibrations",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"blueapi",
+								"azurewebsites",
+								"net"
 							],
-							"port": "7071",
 							"path": [
 								"api",
 								"calibrations"
@@ -257,12 +262,13 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:7071/api/minigames?",
-							"protocol": "http",
+							"raw": "https://blueapi.azurewebsites.net/api/minigames",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"blueapi",
+								"azurewebsites",
+								"net"
 							],
-							"port": "7071",
 							"path": [
 								"api",
 								"minigames"
@@ -304,12 +310,13 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:7071/api/plataforms?",
-							"protocol": "http",
+							"raw": "https://blueapi.azurewebsites.net/api/plataforms",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"blueapi",
+								"azurewebsites",
+								"net"
 							],
-							"port": "7071",
 							"path": [
 								"api",
 								"plataforms"
@@ -339,12 +346,13 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:7071/api/pacients?name=Ada",
-							"protocol": "http",
+							"raw": "https://blueapi.azurewebsites.net/api/pacients?",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"blueapi",
+								"azurewebsites",
+								"net"
 							],
-							"port": "7071",
 							"path": [
 								"api",
 								"pacients"
@@ -353,7 +361,8 @@
 								{
 									"key": "name",
 									"value": "Ada",
-									"description": "Letras iniciais do nome do paciente (Case-Sensitive)"
+									"description": "Letras iniciais do nome do paciente (Case-Sensitive)",
+									"disabled": true
 								}
 							]
 						}
@@ -373,12 +382,13 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:7071/api/pacients/:pacientId",
-							"protocol": "http",
+							"raw": "https://blueapi.azurewebsites.net/api/pacients/:pacientId",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"blueapi",
+								"azurewebsites",
+								"net"
 							],
-							"port": "7071",
 							"path": [
 								"api",
 								"pacients",
@@ -429,12 +439,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:7071/api/pacient/:pacientId",
-							"protocol": "http",
+							"raw": "https://blueapi.azurewebsites.net/api/pacient/:pacientId",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"blueapi",
+								"azurewebsites",
+								"net"
 							],
-							"port": "7071",
 							"path": [
 								"api",
 								"pacient",
@@ -470,12 +481,13 @@
 							}
 						],
 						"url": {
-							"raw": "http://localhost:7071/api/pacients/:pacientId",
-							"protocol": "http",
+							"raw": "https://blueapi.azurewebsites.net/api/pacients/:pacientId",
+							"protocol": "https",
 							"host": [
-								"localhost"
+								"blueapi",
+								"azurewebsites",
+								"net"
 							],
-							"port": "7071",
 							"path": [
 								"api",
 								"pacients",
