@@ -2,12 +2,43 @@ const mongoose = require('mongoose');
 
 const PacientSchema = mongoose.Schema({
     name: { type: String, require: true },
-    birthday: { type: Date },
     sex: { type: String },
-    weigth: { type: Number },
-    heigth: { type: Number },
+    birthday: { type: Date },
+    capacitiesPitaco: {
+        insPeakFlow: { type: Number },
+        expPeakFlow: { type: Number },
+        insFlowDuration: { type: Number },
+        expFlowDuration: { type: Number },
+        respiratoryRate: { type: Number },
+    },
+    capacitiesMano: {
+        insPeakFlow: { type: Number },
+        expPeakFlow: { type: Number },
+        insFlowDuration: { type: Number },
+        expFlowDuration: { type: Number },
+        respiratoryRate: { type: Number },
+    },
+    capacitiesCinta: {
+        insPeakFlow: { type: Number },
+        expPeakFlow: { type: Number },
+        insFlowDuration: { type: Number },
+        expFlowDuration: { type: Number },
+        respiratoryRate: { type: Number },
+    },
+    observations: {type:String},
+    condition: { type: String },
+    unlockedLevels: {type:Number},
+    playSessionsDone: {type:Number},
+    calibrationPitacoDone: {type:Boolean},
+    calibrationManoDone: {type:Boolean},
+    calibrationCintaDone: {type:Boolean},
+    howToPlayDone: {type:Boolean},
+    weight: { type: Number },
+    height: { type: Number },
+    pitacoThreshold: { type: Number },
+    manoThreshold: { type: Number },
+    cintaThreshold: { type: Number },
     ethnicity: { type: String },
-    condition: { type: String }
 },
     { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );

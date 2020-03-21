@@ -5,8 +5,8 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": ["patch"],
-      "route": "pacient/{pacientId}"
+      "methods": ["patch", "post"],
+      "route": "pacients/{pacientId}"
     },
     {
       "type": "http",
