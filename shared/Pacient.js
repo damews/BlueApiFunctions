@@ -28,6 +28,7 @@ const PacientSchema = mongoose.Schema({
     observations: {type:String},
     condition: { type: String },
     unlockedLevels: {type:Number},
+    accumulatedScore: {type: Number},
     playSessionsDone: {type:Number},
     calibrationPitacoDone: {type:Boolean},
     calibrationManoDone: {type:Boolean},

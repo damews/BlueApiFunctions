@@ -32,8 +32,8 @@ module.exports = async function (context, req) {
         return;
     }
     findObj.pacientId = req.query.pacientId;
-    if (req.query.minigameType)
-        findObj.minigameType = req.query.minigameType;
+    if (req.query.minigameName)
+        findObj.minigameName = req.query.minigameName;
     if (req.query.gameDevice)
         findObj.gameDevice = req.query.gameDevice;
             
