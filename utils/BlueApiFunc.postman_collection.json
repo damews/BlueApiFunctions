@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "8fa5e2fb-5851-4426-a068-c516dfb64525",
+		"_postman_id": "a507d981-4fcb-4ca0-96a4-e1c5668959fd",
 		"name": "BlueApiFunc",
 		"description": "Coleção de chamadas para os endpoints da API do I Blue It (Blue Api)\n\n**Definição de prefixos dos endpoints**\n\n- Send: envia de dados para serem gravados no banco de dados.\n- Get: busca os dados de acordo com os parâmetros incluídos na URL\n- Update: realiza a atualização dos dados. Deve-se passar o mesmo modelo enviado para a mesma rota contendo o prefixo Send, mas desta vez, contendo o ID do modelo a ser atualizado.\n\n---\n\n**Observações**\n\n- Os parâmetros na busca (Get) são encadeados, ou seja, os resultados têm que obedecer todos os parâmetros passados.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -29,7 +29,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Adam Santos\",\r\n    \"birthday\": \"1995/11/25\",\r\n    \"sex\": \"M\",\r\n    \"weigth\": 100,\r\n    \"heigth\": 185,\r\n    \"ethnicity\": \"Templário das Terras Altas\",\r\n    \"condition\": \"Normal\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Adam M\",\r\n    \"birthday\": \"1995/11/25\",\r\n    \"sex\": \"Male\",\r\n    \"capacitiesPitaco\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"capacitiesMano\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"capacitiesCinta\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"observations\": \"None\",\r\n    \"condition\": \"Normal\",\r\n    \"unlockedLevels\": 1,\r\n    \"accumulatedScore\": 0,\r\n    \"playSessionsDone\": 0,\r\n    \"calibrationPitacoDone\": false,\r\n    \"calibrationManoDone\": false,\r\n    \"calibrationCintaDone\": false,\r\n    \"howToPlayDone\": false,\r\n    \"weigth\": 100,\r\n    \"heigth\": 185,\r\n    \"pitacoThreshold\": 0,\r\n    \"manoThreshold\": 0,\r\n    \"cintaThreshold\": 0,\r\n    \"ethnicity\": \"Templário das Terras Altas\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -37,7 +37,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/pacients?",
+							"raw": "https://blueapi.azurewebsites.net/api/pacients",
 							"protocol": "https",
 							"host": [
 								"blueapi",
@@ -47,13 +47,6 @@
 							"path": [
 								"api",
 								"pacients"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": "",
-									"disabled": true
-								}
 							]
 						},
 						"description": "Salva um paciente no BD"
@@ -80,7 +73,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"pacientId\": \"5e530fb8e706ad47ac659557\",\r\n    \"gameDevice\": \"PITACO\",\r\n    \"calibrationValue\": 100,\r\n    \"calibrationExercise\": \"PINS\"\r\n}",
+							"raw": "{\r\n    \"pacientId\": \"5e530fb8e706ad47ac659557\",\r\n    \"gameDevice\": \"Pitaco\",\r\n    \"calibrationValue\": 100,\r\n    \"calibrationExercise\": \"InspiratoryPeak\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -99,7 +92,8 @@
 								"api",
 								"calibrations"
 							]
-						}
+						},
+						"description": "Possíveis valores para\n\n\"gameDevice\": \"Pitaco\"\n\"calibrationExercise\":\n\t\"RespiratoryFrequency\"\n\t-\"InspiratoryPeak\"\n\t-\"InspiratoryDuration\"\n\t-\"ExpiratoryPeak\"\n\t-\"ExpiratoryDuration\""
 					},
 					"response": []
 				},
@@ -123,7 +117,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"pacientId\": \"5e530fb8e706ad47ac659557\",\r\n    \"flowData\": \r\n        [\r\n        \t{ \"flowValue\": 100, \"timestamp\": \"2020-02-23T08:59:50\" },\r\n        \t{ \"flowValue\": 110, \"timestamp\": \"2020-02-23T09:00:00\" },\r\n        \t{ \"flowValue\": 120, \"timestamp\": \"2020-02-23T09:01:10\" }\r\n    \t]\r\n    ,\r\n    \"minigameType\": \"PINS\",\r\n    \"gameDevice\": \"PITACO\"\r\n}",
+							"raw": "{\r\n    \"pacientId\": \"5e530fb8e706ad47ac659557\",\r\n    \"gameDevice\": \"Pitaco\",\r\n    \"minigameName\": \"CakeGame\",\r\n    \"respiratoryExercise\": \"RespiratoryFrequency\",\r\n    \"flowDataRounds\": \r\n        [\r\n        \t{ \r\n        \t\t\"minigameRound\": 1,\r\n        \t\t\"roundScore\": 2,\r\n        \t\t\"roundFlowScore\": 50,\r\n        \t\t\"flowData\": [\r\n        \t\t\t{ \"flowValue\": 100, \"timestamp\": \"2020-02-23T08:59:50\" },\r\n        \t\t\t{ \"flowValue\": 110, \"timestamp\": \"2020-02-23T09:00:00\" },\r\n        \t\t\t{ \"flowValue\": 120, \"timestamp\": \"2020-02-23T09:01:10\" }\r\n    \t\t\t]\r\n    \t\t},\r\n    \t\t{ \r\n        \t\t\"minigameRound\": 2,\r\n        \t\t\"roundScore\": 2,\r\n        \t\t\"roundFlowScore\": 50,\r\n        \t\t\"flowData\": [\r\n        \t\t\t{ \"flowValue\": 100, \"timestamp\": \"2020-02-23T08:59:50\" },\r\n        \t\t\t{ \"flowValue\": 110, \"timestamp\": \"2020-02-23T09:00:00\" },\r\n        \t\t\t{ \"flowValue\": 120, \"timestamp\": \"2020-02-23T09:01:10\" }\r\n    \t\t\t]\r\n    \t\t},\r\n    \t\t{ \r\n        \t\t\"minigameRound\": 3,\r\n        \t\t\"roundScore\": 2,\r\n        \t\t\"roundFlowScore\": 50,\r\n        \t\t\"flowData\": [\r\n        \t\t\t{ \"flowValue\": 100, \"timestamp\": \"2020-02-23T08:59:50\" },\r\n        \t\t\t{ \"flowValue\": 110, \"timestamp\": \"2020-02-23T09:00:00\" },\r\n        \t\t\t{ \"flowValue\": 120, \"timestamp\": \"2020-02-23T09:01:10\" }\r\n    \t\t\t]\r\n    \t\t}\r\n        \t\r\n        \t\r\n    \t]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -148,7 +142,8 @@
 									"value": ""
 								}
 							]
-						}
+						},
+						"description": "Valores possíveis para\n\n\"minigameName\": \n\t-\"CakeGame\"\n\t-\"WaterGame\"\n\t-\"BirdGame\"\n\"respiratoryExercise\":\n\t-\"RespiratoryFrequency\"\n\t-\"InspiratoryPeak\"\n\t-\"InspiratoryDuration\"\n\t-\"ExpiratoryPeak\"\n\t-\"ExpiratoryDuration\""
 					},
 					"response": []
 				},
@@ -214,7 +209,7 @@
 							}
 						],
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/calibrations",
+							"raw": "https://blueapi.azurewebsites.net/api/calibrations?",
 							"protocol": "https",
 							"host": [
 								"blueapi",
@@ -234,15 +229,19 @@
 								},
 								{
 									"key": "gameDevice",
-									"value": "PITACO",
+									"value": "Pitaco",
 									"description": "Dispositivo [NÃO OBRIGATÓRIO]",
 									"disabled": true
 								},
 								{
 									"key": "calibrationExercise",
-									"value": "PINS",
+									"value": "InspiratoryPeak",
 									"description": "Exercício [NÃO OBRIGATÓRIO]",
 									"disabled": true
+								},
+								{
+									"key": "",
+									"value": null
 								}
 							]
 						}
@@ -262,7 +261,7 @@
 							}
 						],
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/minigames",
+							"raw": "https://blueapi.azurewebsites.net/api/minigames?",
 							"protocol": "https",
 							"host": [
 								"blueapi",
@@ -282,15 +281,19 @@
 								},
 								{
 									"key": "gameDevice",
-									"value": "PITACO",
+									"value": "Pitaco",
 									"description": "Dispositivo [NÃO OBRIGATÓRIO]",
 									"disabled": true
 								},
 								{
-									"key": "minigameType",
-									"value": "PINS",
+									"key": "minigameName",
+									"value": "CakeGame",
 									"description": "Exercício [NÃO OBRIGATÓRIO]",
 									"disabled": true
+								},
+								{
+									"key": "",
+									"value": null
 								}
 							]
 						}
@@ -310,7 +313,7 @@
 							}
 						],
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/plataforms",
+							"raw": "https://blueapi.azurewebsites.net/api/plataforms?",
 							"protocol": "https",
 							"host": [
 								"blueapi",
@@ -346,7 +349,7 @@
 							}
 						],
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/pacients?",
+							"raw": "https://blueapi.azurewebsites.net/api/pacients",
 							"protocol": "https",
 							"host": [
 								"blueapi",
@@ -396,14 +399,39 @@
 							],
 							"variable": [
 								{
+									"id": "5d47f17a-5e51-4dc4-beb9-6267f8f06d84",
 									"key": "pacientId",
 									"value": "5e532927627d484ac8b117dd",
+									"type": "string",
 									"description": "ID do Paciente [OBRIGATÓRIO]"
 								}
 							]
 						}
 					},
 					"response": []
+				}
+			],
+			"description": "Valores possíveis para\n\n\"gameDevice\": \"Pitaco\"\n\n\"minigameName\": \n\t-\"CakeGame\"\n\t-\"WaterGame\"\n\t-\"BirdGame\"\n\n\"respiratoryExercise\":\n\t-\"RespiratoryFrequency\"\n\t-\"InspiratoryPeak\"\n\t-\"InspiratoryDuration\"\n\t-\"ExpiratoryPeak\"\n\t-\"ExpiratoryDuration\"",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "bd7c39ff-f9ec-4a0d-a05f-877cc2d549c9",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "cb31b794-fc8f-4dfc-b3ad-c362c42694cf",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -431,7 +459,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Adam Mews dos Santos\",\r\n    \"birthday\": \"1995/11/25\",\r\n    \"sex\": \"M\",\r\n    \"weigth\": 100,\r\n    \"heigth\": 185,\r\n    \"ethnicity\": \"Templário das Terras Altas\",\r\n    \"condition\": \"Quase Normal\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Adam M\",\r\n    \"birthday\": \"1995/11/25\",\r\n    \"sex\": \"Male\",\r\n    \"capacitiesPitaco\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"capacitiesMano\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"capacitiesCinta\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"observations\": \"None\",\r\n    \"condition\": \"Normal\",\r\n    \"unlockedLevels\": 1,\r\n    \"playSessionsDone\": 0,\r\n    \"calibrationPitacoDone\": false,\r\n    \"calibrationManoDone\": false,\r\n    \"calibrationCintaDone\": false,\r\n    \"howToPlayDone\": false,\r\n    \"weigth\": 100,\r\n    \"heigth\": 185,\r\n    \"pitacoThreshold\": 0,\r\n    \"manoThreshold\": 0,\r\n    \"cintaThreshold\": 0,\r\n    \"ethnicity\": \"Templário das Terras Altas\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -439,7 +467,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/pacient/:pacientId",
+							"raw": "https://blueapi.azurewebsites.net/api/pacients/:pacientId",
 							"protocol": "https",
 							"host": [
 								"blueapi",
@@ -448,14 +476,13 @@
 							],
 							"path": [
 								"api",
-								"pacient",
+								"pacients",
 								":pacientId"
 							],
 							"variable": [
 								{
 									"key": "pacientId",
-									"value": "5e530fb8e706ad47ac659557",
-									"description": "ID do Paciente [OBRIGATÓRIO]"
+									"value": ""
 								}
 							]
 						}
@@ -495,8 +522,10 @@
 							],
 							"variable": [
 								{
+									"id": "e1cb4b27-d534-4c2b-ac01-bf3af815af9a",
 									"key": "pacientId",
 									"value": "5e532927627d484ac8b117dd",
+									"type": "string",
 									"description": "ID do Paciente [OBRIGATÓRIO]"
 								}
 							]
