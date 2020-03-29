@@ -10,9 +10,11 @@ module.exports = async function (context, req) {
 
     const utils = require('../shared/utils');
 
+    await utils.validateHeaders(req.headers, context);
+
     var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
 
-    if (!isVerifiedGameToken) {
+    if(!isVerifiedGameToken){
         context.res = {
             status: 403,
             body: "Token do jogo inexistente."
@@ -23,8 +25,17 @@ module.exports = async function (context, req) {
 
     const findObj = {}
 
-    if(req.query.calibrationId)
-        findObj._id = req.query.calibrationId;
+    if (req.params.pacientId === undefined || req.params.pacientId == null) {
+        context.res = {
+            status: 400,
+            body: "ID do paciente necessário!"
+        }
+        context.done();
+        return;
+    }
+
+    findObj.pacientId = req.params.pacientId;
+
     if (req.query.gameDevice)
         findObj.gameDevice = req.query.gameDevice;
     if (req.query.calibrationExercise)

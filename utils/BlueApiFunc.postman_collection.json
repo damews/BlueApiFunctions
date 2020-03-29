@@ -37,15 +37,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/pacients",
-							"protocol": "https",
+							"raw": "{{url}}/pacients",
 							"host": [
-								"blueapi",
-								"azurewebsites",
-								"net"
+								"{{url}}"
 							],
 							"path": [
-								"api",
 								"pacients"
 							]
 						},
@@ -73,7 +69,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"pacientId\": \"5e530fb8e706ad47ac659557\",\r\n    \"gameDevice\": \"Pitaco\",\r\n    \"calibrationValue\": 100,\r\n    \"calibrationExercise\": \"InspiratoryPeak\"\r\n}",
+							"raw": "{\r\n    \"pacientId\": \"5e7e4681ec40020e3cd70558\",\r\n    \"gameDevice\": \"Pitaco\",\r\n    \"calibrationValue\": 100,\r\n    \"calibrationExercise\": \"InspiratoryPeak\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -81,19 +77,15 @@
 							}
 						},
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/calibrations",
-							"protocol": "https",
+							"raw": "{{url}}/calibrations",
 							"host": [
-								"blueapi",
-								"azurewebsites",
-								"net"
+								"{{url}}"
 							],
 							"path": [
-								"api",
 								"calibrations"
 							]
 						},
-						"description": "Possíveis valores para\n\n\"gameDevice\": \"Pitaco\"\n\"calibrationExercise\":\n\t\"RespiratoryFrequency\"\n\t-\"InspiratoryPeak\"\n\t-\"InspiratoryDuration\"\n\t-\"ExpiratoryPeak\"\n\t-\"ExpiratoryDuration\""
+						"description": "Possíveis valores para\n\n\"gameDevice\": \"Pitaco\"\n\"calibrationExercise\":\n\t-\"RespiratoryFrequency\"\n\t-\"InspiratoryPeak\"\n\t-\"InspiratoryDuration\"\n\t-\"ExpiratoryPeak\"\n\t-\"ExpiratoryDuration\""
 					},
 					"response": []
 				},
@@ -125,15 +117,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/minigames?=",
-							"protocol": "https",
+							"raw": "{{url}}/minigames?=",
 							"host": [
-								"blueapi",
-								"azurewebsites",
-								"net"
+								"{{url}}"
 							],
 							"path": [
-								"api",
 								"minigames"
 							],
 							"query": [
@@ -175,15 +163,11 @@
 							}
 						},
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/plataforms",
-							"protocol": "https",
+							"raw": "{{url}}/plataforms",
 							"host": [
-								"blueapi",
-								"azurewebsites",
-								"net"
+								"{{url}}"
 							],
 							"path": [
-								"api",
 								"plataforms"
 							]
 						}
@@ -197,7 +181,218 @@
 			"name": "Get",
 			"item": [
 				{
-					"name": "Buscar Calibração",
+					"name": "Paciente",
+					"item": [
+						{
+							"name": "Paciente",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "Token de permissão de acesso a API",
+										"key": "GameToken",
+										"type": "text",
+										"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw=="
+									}
+								],
+								"url": {
+									"raw": "{{url}}/pacients/:pacientId",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"pacients",
+										":pacientId"
+									],
+									"variable": [
+										{
+											"description": "ID do Paciente [OBRIGATÓRIO]",
+											"key": "pacientId",
+											"type": "string",
+											"value": "5e7e4681ec40020e3cd70558"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Minigames",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "GameToken",
+										"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/pacients/:pacientId/minigames",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"pacients",
+										":pacientId",
+										"minigames"
+									],
+									"query": [
+										{
+											"key": "minigameName",
+											"value": "CakeGame",
+											"description": "Nome do Jogo [NÃO OBRIGATÓRIO]",
+											"disabled": true
+										},
+										{
+											"key": "gameDevice",
+											"value": "Pitaco",
+											"description": "Nome do dispositivo [NÃO OBRIGATÓRIO]",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "pacientId",
+											"value": "",
+											"description": "ID do Paciente [OBRIGATÓRIO]"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Plataformas",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "GameToken",
+										"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/pacients/:pacientId/plataforms",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"pacients",
+										":pacientId",
+										"plataforms"
+									],
+									"query": [
+										{
+											"key": "phase",
+											"value": "1",
+											"description": "Fase da plataforma [NÃO OBRIGATÓRIO]",
+											"disabled": true
+										},
+										{
+											"key": "level",
+											"value": "1",
+											"description": "Level da Plataforma [NÃO OBRIGATÓRIO]",
+											"disabled": true
+										},
+										{
+											"key": "createdAt",
+											"value": "01-01-2019",
+											"description": "Criado em (dd-mm-aaaa) [NÃO OBRIGATÓRIO]",
+											"disabled": true
+										},
+										{
+											"key": "gameDevice",
+											"value": "Pitaco",
+											"description": "Dispositivo [NÃO OBRIGATÓRIO]",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "pacientId",
+											"value": "",
+											"description": "ID do Paciente [OBRIGATÓRIO]"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Calibrações",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "GameToken",
+										"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/pacients/:pacientId/calibrations",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"pacients",
+										":pacientId",
+										"calibrations"
+									],
+									"query": [
+										{
+											"key": "gameDevice",
+											"value": "Pitaco",
+											"description": "Dispositivo [NÃO OBRIGATÓRIO]",
+											"disabled": true
+										},
+										{
+											"key": "gameDevice",
+											"value": "InspiratoryPeak",
+											"description": "Exercício [NÃO OBRIGATÓRIO]",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "pacientId",
+											"value": "5e7e4681ec40020e3cd70558"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "85ded69a-7a49-4785-8915-5fb8d1300bd5",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "0c6d62f9-4078-48b3-9435-f26cb4824543",
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Calibrações",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -209,23 +404,18 @@
 							}
 						],
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/calibrations?",
-							"protocol": "https",
+							"raw": "{{url}}/calibrations?calibrationId=",
 							"host": [
-								"blueapi",
-								"azurewebsites",
-								"net"
+								"{{url}}"
 							],
 							"path": [
-								"api",
 								"calibrations"
 							],
 							"query": [
 								{
-									"key": "pacientId",
-									"value": "5e530fb8e706ad47ac659557",
-									"description": "ID do Paciente [OBRIGATÓRIO]",
-									"disabled": true
+									"key": "calibrationId",
+									"value": "",
+									"description": "ID do Registro da Calibração [NÃO OBRIGATÓRIO]"
 								},
 								{
 									"key": "gameDevice",
@@ -238,10 +428,6 @@
 									"value": "InspiratoryPeak",
 									"description": "Exercício [NÃO OBRIGATÓRIO]",
 									"disabled": true
-								},
-								{
-									"key": "",
-									"value": null
 								}
 							]
 						}
@@ -249,39 +435,34 @@
 					"response": []
 				},
 				{
-					"name": "Buscar Resumo Minigame",
+					"name": "Resumos Minigame",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
-								"key": "GameToken",
-								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
 								"description": "Token de permissão de acesso a API",
-								"type": "text"
+								"key": "GameToken",
+								"type": "text",
+								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw=="
 							}
 						],
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/minigames?",
-							"protocol": "https",
+							"raw": "{{url}}/minigames?minigameOverviewId=5e7bb65396145d14144b345e",
 							"host": [
-								"blueapi",
-								"azurewebsites",
-								"net"
+								"{{url}}"
 							],
 							"path": [
-								"api",
 								"minigames"
 							],
 							"query": [
 								{
-									"key": "pacientId",
-									"value": "5e530fb8e706ad47ac659557",
-									"description": "ID do Paciente [OBRIGATÓRIO]",
-									"disabled": true
+									"key": "minigameOverviewId",
+									"value": "5e7bb65396145d14144b345e",
+									"description": "ID do Registro do Resumo do Minigame [NÃO OBRIGATÓRIO]"
 								},
 								{
 									"key": "gameDevice",
-									"value": "Pitaco",
+									"value": "5e530fb8e706ad47ac659557",
 									"description": "Dispositivo [NÃO OBRIGATÓRIO]",
 									"disabled": true
 								},
@@ -290,10 +471,6 @@
 									"value": "CakeGame",
 									"description": "Exercício [NÃO OBRIGATÓRIO]",
 									"disabled": true
-								},
-								{
-									"key": "",
-									"value": null
 								}
 							]
 						}
@@ -301,7 +478,7 @@
 					"response": []
 				},
 				{
-					"name": "Buscar Resumo Plataforma",
+					"name": "Resumos Plataforma",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -313,23 +490,18 @@
 							}
 						],
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/plataforms?",
-							"protocol": "https",
+							"raw": "{{url}}/plataforms?plataformOverviewId",
 							"host": [
-								"blueapi",
-								"azurewebsites",
-								"net"
+								"{{url}}"
 							],
 							"path": [
-								"api",
 								"plataforms"
 							],
 							"query": [
 								{
-									"key": "pacientId",
-									"value": "5e530fb8e706ad47ac659557",
-									"description": "ID do Paciente [OBRIGATÓRIO]",
-									"disabled": true
+									"key": "plataformOverviewId",
+									"value": null,
+									"description": "ID do Registro do Resumo da Plataforma [NÃO OBRIGATÓRIO]"
 								}
 							]
 						}
@@ -337,7 +509,7 @@
 					"response": []
 				},
 				{
-					"name": "Buscar Pacientes",
+					"name": "Pacientes",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -349,15 +521,11 @@
 							}
 						],
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/pacients",
-							"protocol": "https",
+							"raw": "{{url}}/pacients",
 							"host": [
-								"blueapi",
-								"azurewebsites",
-								"net"
+								"{{url}}"
 							],
 							"path": [
-								"api",
 								"pacients"
 							],
 							"query": [
@@ -366,44 +534,6 @@
 									"value": "Ada",
 									"description": "Letras iniciais do nome do paciente (Case-Sensitive)",
 									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Buscar Único Paciente",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "GameToken",
-								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
-								"description": "Token de permissão de acesso a API",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/pacients/:pacientId",
-							"protocol": "https",
-							"host": [
-								"blueapi",
-								"azurewebsites",
-								"net"
-							],
-							"path": [
-								"api",
-								"pacients",
-								":pacientId"
-							],
-							"variable": [
-								{
-									"id": "5d47f17a-5e51-4dc4-beb9-6267f8f06d84",
-									"key": "pacientId",
-									"value": "5e532927627d484ac8b117dd",
-									"type": "string",
-									"description": "ID do Paciente [OBRIGATÓRIO]"
 								}
 							]
 						}
@@ -467,12 +597,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/pacients/:pacientId",
-							"protocol": "https",
+							"raw": "{{url}}/api/pacients/:pacientId",
 							"host": [
-								"blueapi",
-								"azurewebsites",
-								"net"
+								"{{url}}"
 							],
 							"path": [
 								"api",
@@ -508,23 +635,18 @@
 							}
 						],
 						"url": {
-							"raw": "https://blueapi.azurewebsites.net/api/pacients/:pacientId",
-							"protocol": "https",
+							"raw": "{{url}}/pacients/:pacientId",
 							"host": [
-								"blueapi",
-								"azurewebsites",
-								"net"
+								"{{url}}"
 							],
 							"path": [
-								"api",
 								"pacients",
 								":pacientId"
 							],
 							"variable": [
 								{
-									"id": "e1cb4b27-d534-4c2b-ac01-bf3af815af9a",
 									"key": "pacientId",
-									"value": "5e532927627d484ac8b117dd",
+									"value": "5e796795a624b507e4355222",
 									"type": "string",
 									"description": "ID do Paciente [OBRIGATÓRIO]"
 								}

@@ -4,15 +4,15 @@ module.exports = async function (context, req) {
     mongoose.connect(DATABASE);
     mongoose.Promise = global.Promise;
 
-    //CalibrationOverview Schema
-    require('../shared/CalibrationOverview');
-    const CalibrationOverviewModel = mongoose.model('CalibrationOverview');
+    //MinigameOverview Schema
+    require('../shared/MinigameOverview');
+    const MinigameOverviewModel = mongoose.model('MinigameOverview');
 
     const utils = require('../shared/utils');
 
     var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
 
-    if (!isVerifiedGameToken) {
+    if(!isVerifiedGameToken){
         context.res = {
             status: 403,
             body: "Token do jogo inexistente."
@@ -23,19 +23,29 @@ module.exports = async function (context, req) {
 
     const findObj = {}
 
-    if(req.query.calibrationId)
-        findObj._id = req.query.calibrationId;
+    if (req.params.pacientId === undefined || req.params.pacientId == null){
+        context.res = {
+            status: 400,
+            body: "ID do paciente necessário!" 
+        }
+        context.done();
+        return;
+    }
+
+    findObj.pacientId = req.params.pacientId;
+
+    if (req.query.minigameName)
+        findObj.minigameName = req.query.minigameName;
     if (req.query.gameDevice)
         findObj.gameDevice = req.query.gameDevice;
-    if (req.query.calibrationExercise)
-        findObj.calibrationExercise = req.query.calibrationExercise;
-
+            
     try {
-        const calibrationOverviews = await CalibrationOverviewModel.find(findObj);
-        context.log("[OUTPUT] - CalibrationOverview Get");
+
+        const minigamesOverview = await MinigameOverviewModel.find(findObj);
+        context.log("[OUTPUT] - MinigameOverview Get");
         context.res = {
             status: 200,
-            body: calibrationOverviews
+            body: minigamesOverview
         }
     } catch (err) {
         context.res = {

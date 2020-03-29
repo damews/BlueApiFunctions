@@ -23,15 +23,8 @@ module.exports = async function (context, req) {
 
     const findObj = {}
 
-    if (req.query.pacientId === undefined || req.query.pacientId == null){
-        context.res = {
-            status: 400,
-            body: "ID do paciente necessário!" 
-        }
-        context.done();
-        return;
-    }
-    findObj.pacientId = req.query.pacientId;
+    if (req.query.minigameOverviewId)
+        findObj._id = req.query.minigameOverviewId;
     if (req.query.minigameName)
         findObj.minigameName = req.query.minigameName;
     if (req.query.gameDevice)

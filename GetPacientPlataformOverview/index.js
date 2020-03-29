@@ -12,7 +12,7 @@ module.exports = async function (context, req) {
 
     var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
 
-    if (!isVerifiedGameToken) {
+    if(!isVerifiedGameToken){
         context.res = {
             status: 403,
             body: "Token do jogo inexistente."
@@ -23,8 +23,17 @@ module.exports = async function (context, req) {
 
     const findObj = {}
 
-    if (req.query.plataformOverviewId)
-        findObj._id = req.query.plataformOverviewId
+    if (req.params.pacientId === undefined || req.params.pacientId == null) {
+        context.res = {
+            status: 400,
+            body: "ID do paciente necessário!"
+        }
+        context.done();
+        return;
+    }
+    
+    findObj.pacientId = req.params.pacientId;
+
     if (req.query.phase)
         findObj.phase = req.query.phase;
     if (req.query.level)
@@ -39,7 +48,7 @@ module.exports = async function (context, req) {
     try {
 
         const plataformOverviews = await PlataformOverviewModel.find(findObj);
-        context.log("[OUTPUT] - PlataformOverview Get");
+        context.log("[OUTPUT] - Pacient PlataformOverview Get");
         context.res = {
             status: 200,
             body: plataformOverviews
