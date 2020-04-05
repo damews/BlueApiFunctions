@@ -11,7 +11,7 @@ const minigameOverviewSchema = mongoose.Schema({
             minigameRound: Number,
             roundScore: Number,
             roundFlowScore: Number,
-            flowData: [{ flowValue: Number, timestamp: Date }]
+            flowDataDevices:  [{ deviceName: String, flowDataId: String }],
         }
     ],
 },

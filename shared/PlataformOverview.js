@@ -4,7 +4,7 @@ const PlataformOverviewSchema = mongoose.Schema({
 
     pacientId: { type: String },
     gameDevice: { type: String },
-    flowData:  [{ flowValue: Number, timestamp: Date }],
+    flowDataDevices:  [{ deviceName: String, flowDataId: String }],
     playStart: { type: Date },
     playFinish: { type: Date },
     duration: { type: Number },
@@ -31,7 +31,7 @@ const PlataformOverviewSchema = mongoose.Schema({
     ObstaclesExpFail: { type: Number },
     PlayerHp: { type: Number }
 },
-    { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
+    { timestamps: { createdAt: 'created_at'} }
 );
 
 module.exports = mongoose.model('PlataformOverview', PlataformOverviewSchema);
