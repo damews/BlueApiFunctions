@@ -6,13 +6,15 @@ module.exports = async function (context, req) {
 
     //PlataformOverview Schema
     require('../shared/PlataformOverview');
+    require('../shared/FlowDataDevice');
     const PlataformOverviewModel = mongoose.model('PlataformOverview');
+    const FlowDataDeviceModel = mongoose.model('FlowDataDevice');
 
     const utils = require('../shared/utils');
 
     var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
 
-    if(!isVerifiedGameToken){
+    if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
             body: "Token do jogo inexistente."
@@ -20,10 +22,10 @@ module.exports = async function (context, req) {
         context.done();
         return;
     }
-    
+
     const plataformOverviewReq = req.body || {};
 
-    if(Object.entries(plataformOverviewReq).length === 0){
+    if (Object.entries(plataformOverviewReq).length === 0) {
         context.res = {
             status: 400,
             body: "Resumo da Plataforma necessário!"
@@ -32,19 +34,28 @@ module.exports = async function (context, req) {
         return;
     }
 
+    var flowDataDevicesReq = req.body.flowDataDevices;
+
+    delete plataformOverviewReq.flowDataDevices;
+
     try {
+
+        const savedFlowDataDevices = await (new FlowDataDeviceModel({ flowDataDevices: flowDataDevicesReq })).save();
+
+        plataformOverviewReq.flowDataDevicesId = savedFlowDataDevices._id;
+
         const savedPlataformOverview = await (new PlataformOverviewModel(plataformOverviewReq)).save();
         context.log("[OUTPUT] - PlataformOverview Saved: ", savedPlataformOverview);
-		context.res = {
+        context.res = {
             status: 201,
             body: savedPlataformOverview
         }
-	} catch (err) {
-		context.res = {
+    } catch (err) {
+        context.res = {
             status: 500,
             body: err
         }
     }
-    
+
     context.done();
 };

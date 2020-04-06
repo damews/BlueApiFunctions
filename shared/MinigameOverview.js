@@ -8,14 +8,14 @@ const minigameOverviewSchema = mongoose.Schema({
     minigameName: { type: String },
     flowDataRounds: [
         {
-            minigameRound: Number,
-            roundScore: Number,
-            roundFlowScore: Number,
-            flowDataDevices:  [{ deviceName: String, flowDataId: String }],
+            minigameRound: { type: Number },
+            roundScore: { type: Number },
+            roundFlowScore: { type: Number },
+            flowDataDevicesId: { type: mongoose.Schema.Types.ObjectId, ref: 'FlowDataDevice' },
         }
     ],
 },
-    { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
+    { timestamps: { createdAt: 'created_at' } }
 );
 
 module.exports = mongoose.model('MinigameOverview', minigameOverviewSchema);
