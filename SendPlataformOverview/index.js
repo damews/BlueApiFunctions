@@ -41,9 +41,7 @@ module.exports = async function (context, req) {
     try {
 
         const savedFlowDataDevices = await (new FlowDataDeviceModel({ flowDataDevices: flowDataDevicesReq })).save();
-
         plataformOverviewReq.flowDataDevicesId = savedFlowDataDevices._id;
-
         const savedPlataformOverview = await (new PlataformOverviewModel(plataformOverviewReq)).save();
         context.log("[OUTPUT] - PlataformOverview Saved: ", savedPlataformOverview);
         context.res = {
