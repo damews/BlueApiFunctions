@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 const minigameOverviewSchema = mongoose.Schema({
+    _gameToken: { type: String },
     pacientId: { type: String },
     gameDevice: { type: String },
     respiratoryExercise: { type: String },

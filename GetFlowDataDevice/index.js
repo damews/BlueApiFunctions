@@ -31,8 +31,13 @@ module.exports = async function (context, req) {
         return;
     }
 
+    const findObj = {
+        flowDataDeviceId: req.params.flowDataDeviceId,
+        _gameToken: req.headers.gametoken 
+    }
+
     try {
-        const flowDataDevice = await FlowDataDeviceModel.findById(req.params.flowDataDeviceId);
+        const flowDataDevice = await FlowDataDeviceModel.find(findObj);
         context.log("[OUTPUT] - FlowDataDevice Get by ID");
         context.res = {
             status: 200,

@@ -23,6 +23,8 @@ module.exports = async function (context, req) {
 
     const findObj = {}
 
+    findObj._gameToken = req.headers.gametoken;
+
     if (req.query.minigameOverviewId)
         findObj._id = req.query.minigameOverviewId;
     if (req.query.minigameName)

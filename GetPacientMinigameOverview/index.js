@@ -21,7 +21,6 @@ module.exports = async function (context, req) {
         return;
     }
 
-    const findObj = {}
 
     if (req.params.pacientId === undefined || req.params.pacientId == null){
         context.res = {
@@ -32,7 +31,10 @@ module.exports = async function (context, req) {
         return;
     }
 
-    findObj.pacientId = req.params.pacientId;
+    const findObj = {
+        pacientId: req.params.pacientId,
+        _gameToken: req.headers.gametoken
+    }
 
     if (req.query.minigameName)
         findObj.minigameName = req.query.minigameName;

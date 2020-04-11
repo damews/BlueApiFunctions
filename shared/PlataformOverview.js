@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const PlataformOverviewSchema = mongoose.Schema({
-
+    _gameToken: { type: String },
     pacientId: { type: String },
     gameDevice: { type: String },
     flowDataDevicesId: { type: mongoose.Schema.Types.ObjectId, ref: 'FlowDataDevice' },

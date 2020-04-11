@@ -21,7 +21,9 @@ module.exports = async function (context, req) {
         return;
     }
 
-    const findObj = {}
+    const findObj = {
+        _gameToken: req.headers.gametoken
+    }
 
     if (req.query.name)
         findObj.name = { $regex : "^" + req.query.name + ".*", $options: 'i' };
