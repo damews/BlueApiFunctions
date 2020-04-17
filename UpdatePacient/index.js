@@ -34,6 +34,8 @@ module.exports = async function (context, req) {
         return;
     }
 
+    pacientReq._gameToken = req.headers.gametoken;
+
     try {
         const updatedPacient = await PacientModel.updateOne(
             { _id: req.params.pacientId },

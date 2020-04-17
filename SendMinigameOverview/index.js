@@ -36,6 +36,8 @@ module.exports = async function (context, req) {
         return;
     }
 
+    minigameOverviewReq._gameToken = req.headers.gametoken;
+
     var flowDataDevicesIds = [];
 
     var flowDataDevicesObjects = minigameOverviewReq.flowDataRounds.map(x => x.flowDataDevices);
@@ -43,13 +45,13 @@ module.exports = async function (context, req) {
     minigameOverviewReq.flowDataRounds.map(x => delete x.flowDataDevices);
 
     try {
-        const saveFlowDataDevices = async () =>{
+        const saveFlowDataDevices = async () => {
             for (const flowDataDevices of flowDataDevicesObjects) {
-                var savedFlowDataDevices = await (new FlowDataDeviceModel({ flowDataDevices: flowDataDevices })).save();
+                var savedFlowDataDevices = await (new FlowDataDeviceModel({ _gameToken: req.headers.gametoken, flowDataDevices: flowDataDevices })).save();
                 flowDataDevicesIds.push(savedFlowDataDevices._id);
             }
         }
-        
+
         await saveFlowDataDevices();
 
         minigameOverviewReq.flowDataRounds[0].flowDataDevicesId = flowDataDevicesIds[0];

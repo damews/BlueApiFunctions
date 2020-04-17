@@ -23,12 +23,15 @@ module.exports = async function (context, req) {
 
     const findObj = {}
 
+    findObj._gameToken = req.headers.gametoken
+
     if(req.query.calibrationId)
         findObj._id = req.query.calibrationId;
     if (req.query.gameDevice)
         findObj.gameDevice = req.query.gameDevice;
     if (req.query.calibrationExercise)
         findObj.calibrationExercise = req.query.calibrationExercise;
+
 
     try {
         const calibrationOverviews = await CalibrationOverviewModel.find(findObj);

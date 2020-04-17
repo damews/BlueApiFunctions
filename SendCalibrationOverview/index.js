@@ -32,6 +32,8 @@ module.exports = async function (context, req) {
         return;
     }
 
+    calibrationReq._gameToken = req.headers.gametoken;
+
     try {
         const savedCalibrationOverview = await (new CalibrationOverviewModel(calibrationReq)).save();
         context.log("[OUTPUT] - Calibration Overview Saved: ", savedCalibrationOverview);

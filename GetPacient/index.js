@@ -30,9 +30,14 @@ module.exports = async function (context, req) {
         return;
     }
 
+    const findObj = {
+        _id: req.params.pacientId,
+        _gameToken: req.headers.gametoken
+    }
+
 
     try {
-        const pacients = await PacientModel.findById(req.params.pacientId);
+        const pacients = await PacientModel.find(findObj);
         context.log("[OUTPUT] - Pacient Get by ID");
         context.res = {
             status: 200,

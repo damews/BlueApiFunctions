@@ -32,6 +32,8 @@ module.exports = async function (context, req) {
         return;
     }
 
+    pacientReq._gameToken = req.headers.gametoken;
+
     try {
         const savedPacient = await (new PacientModel(pacientReq)).save();
         context.log("[OUTPUT] - Pacient Saved: ", savedPacient);

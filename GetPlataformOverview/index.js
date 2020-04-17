@@ -21,7 +21,9 @@ module.exports = async function (context, req) {
         return;
     }
 
-    const findObj = {}
+    const findObj = {
+        _gameToken: req.headers.gametoken
+    }
 
     if (req.query.plataformOverviewId)
         findObj._id = req.query.plataformOverviewId

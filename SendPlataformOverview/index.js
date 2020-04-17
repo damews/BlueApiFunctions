@@ -37,13 +37,14 @@ module.exports = async function (context, req) {
         return;
     }
 
+    plataformOverviewReq._gameToken = req.headers.gametoken;
+
     var flowDataDevicesReq = req.body.flowDataDevices;
 
     delete plataformOverviewReq.flowDataDevices;
 
     try {
-
-        const savedFlowDataDevices = await (new FlowDataDeviceModel({ flowDataDevices: flowDataDevicesReq })).save();
+        const savedFlowDataDevices = await (new FlowDataDeviceModel({ _gameToken: req.headers.gametoken, flowDataDevices: flowDataDevicesReq })).save();
         plataformOverviewReq.flowDataDevicesId = savedFlowDataDevices._id;
         const savedPlataformOverview = await (new PlataformOverviewModel(plataformOverviewReq)).save();
         context.log("[OUTPUT] - PlataformOverview Saved: ", savedPlataformOverview);
