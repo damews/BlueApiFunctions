@@ -56,7 +56,6 @@ module.exports = async function (context, req) {
         minigameOverviewReq.flowDataRounds[1].flowDataDevicesId = flowDataDevicesIds[1];
         minigameOverviewReq.flowDataRounds[2].flowDataDevicesId = flowDataDevicesIds[2];
 
-
         const savedMinigameOverview = await (new MinigameOverviewModel(minigameOverviewReq)).save();
         context.log("[OUTPUT] - MinigameOverview Saved: ", savedMinigameOverview);
         context.res = {

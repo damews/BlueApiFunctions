@@ -9,7 +9,8 @@
   "dependencies": {
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28",
-    "mongoose": "^5.9.2"
+    "mongoose": "^5.9.2",
+    "validate.js": "^0.13.1"
   },
   "devDependencies": {}
 }

@@ -7,9 +7,12 @@ module.exports = async function (context, req) {
     //PlataformOverview Schema
     require('../shared/PlataformOverview');
     require('../shared/FlowDataDevice');
+
     const PlataformOverviewModel = mongoose.model('PlataformOverview');
     const FlowDataDeviceModel = mongoose.model('FlowDataDevice');
 
+    const validators = require("../shared/Validators");
+    const validate = require("validate.js");
     const utils = require('../shared/utils');
 
     var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
