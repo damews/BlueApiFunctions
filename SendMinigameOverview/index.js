@@ -19,7 +19,11 @@ module.exports = async function (context, req) {
     if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
-            body: "Token do jogo inexistente."
+            body: utils.createResponse(false,
+                false,
+                "Chave de acesso inválida.",
+                null,
+                1)
         }
         context.done();
         return;
@@ -30,7 +34,11 @@ module.exports = async function (context, req) {
     if (Object.entries(minigameOverviewReq).length === 0) {
         context.res = {
             status: 400,
-            body: "Resumo do Minigame necessário!"
+            body: utils.createResponse(false,
+                true,
+                "Dados vazios!",
+                null,
+                2)
         }
         context.done();
         return;
@@ -63,12 +71,20 @@ module.exports = async function (context, req) {
         context.log("[OUTPUT] - MinigameOverview Saved: ", savedMinigameOverview);
         context.res = {
             status: 201,
-            body: savedMinigameOverview
+            body: utils.createResponse(true,
+                true,
+                "Minigame salvo com sucesso.",
+                savedMinigameOverview,
+                null)
         }
     } catch (err) {
         context.res = {
             status: 500,
-            body: err
+            body:  utils.createResponse(false,
+                true,
+                "Ocorreu um erro interno ao realizar a operação.",
+                null,
+                00)
         }
     }
 

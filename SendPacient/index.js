@@ -15,7 +15,11 @@ module.exports = async function (context, req) {
     if(!isVerifiedGameToken){
         context.res = {
             status: 403,
-            body: "Token do jogo inexistente."
+            body: utils.createResponse(false,
+                false,
+                "Chave de acesso inválida.",
+                null,
+                1)
         }
         context.done();
         return;
@@ -26,7 +30,11 @@ module.exports = async function (context, req) {
     if(Object.entries(pacientReq).length === 0){
         context.res = {
             status: 400,
-            body: "Paciente necessário!"
+            body: utils.createResponse(false,
+                true,
+                "Dados vazios!",
+                null,
+                2)
         }
         context.done();
         return;
@@ -39,12 +47,21 @@ module.exports = async function (context, req) {
         context.log("[OUTPUT] - Pacient Saved: ", savedPacient);
 		context.res = {
             status: 201,
-            body: savedPacient
+            body: utils.createResponse(true,
+                true,
+                "Paciente salvo com sucesso.",
+                savedPacient,
+                null)
         }
 	} catch (err) {
+        context.log("[DB SAVING] - ERROR: ", err);
 		context.res = {
             status: 500,
-            body: err
+            body:  utils.createResponse(false,
+                true,
+                "Ocorreu um erro interno ao realizar a operação.",
+                null,
+                00)
         }
     }
     

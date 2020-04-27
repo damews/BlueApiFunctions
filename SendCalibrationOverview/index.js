@@ -12,21 +12,29 @@ module.exports = async function (context, req) {
 
     var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
 
-    if(!isVerifiedGameToken){
+    if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
-            body: "Token do jogo inexistente."
+            body: utils.createResponse(false,
+                false,
+                "Chave de acesso inválida.",
+                null,
+                1)
         }
         context.done();
         return;
     }
-    
+
     const calibrationReq = req.body || {};
 
-    if(Object.entries(calibrationReq).length === 0){
+    if (Object.entries(calibrationReq).length === 0) {
         context.res = {
             status: 400,
-            body: "Calibração necessária!"
+            body: utils.createResponse(false,
+                true,
+                "Dados vazios!",
+                null,
+                2)
         }
         context.done();
         return;
@@ -37,16 +45,25 @@ module.exports = async function (context, req) {
     try {
         const savedCalibrationOverview = await (new CalibrationOverviewModel(calibrationReq)).save();
         context.log("[OUTPUT] - Calibration Overview Saved: ", savedCalibrationOverview);
-		context.res = {
+        context.res = {
             status: 201,
-            body: savedCalibrationOverview
+            body: utils.createResponse(true,
+                true,
+                "Calibração salva com sucesso.",
+                savedCalibrationOverview,
+                null)
         }
-	} catch (err) {
-		context.res = {
+    } catch (err) {
+        context.log("[DB SAVING] - ERROR: ", err);
+        context.res = {
             status: 500,
-            body: err
+            body:  utils.createResponse(false,
+                true,
+                "Ocorreu um erro interno ao realizar a operação.",
+                null,
+                00)
         }
     }
-    
+
     context.done();
 };

@@ -15,7 +15,11 @@ module.exports = async function (context, req) {
     if(!isVerifiedGameToken){
         context.res = {
             status: 403,
-            body: "Token do jogo inexistente."
+            body: utils.createResponse(false,
+                false,
+                "Chave de acesso inválida.",
+                null,
+                1)
         }
         context.done();
         return;
@@ -30,15 +34,24 @@ module.exports = async function (context, req) {
 
     try {
         const pacients = await PacientModel.find(findObj);
-        context.log("[OUTPUT] - Pacient Get");
+        context.log("[DB QUERYING] - Pacient Get");
         context.res = {
             status: 200,
-            body: pacients
+            body: utils.createResponse(true,
+                true,
+                "Consulta realizada com sucesso.",
+                flowDataDevice,
+                null)
         }
     } catch (err) {
+        context.log("[DB QUERYING] - ERROR: ", err);
         context.res = {
             status: 500,
-            body: err
+            body: utils.createResponse(false,
+                true,
+                "Ocorreu um erro interno ao realizar a operação.",
+                null,
+                00)
         }
     }
 
