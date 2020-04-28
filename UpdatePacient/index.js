@@ -4,8 +4,6 @@ module.exports = async function (context, req) {
     mongoose.connect(DATABASE);
     mongoose.Promise = global.Promise;
 
-    var obje
-
     //MinigameOverview Schema
     require('../shared/Pacient');
     const PacientModel = mongoose.model('Pacient');
@@ -17,7 +15,11 @@ module.exports = async function (context, req) {
     if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
-            body: "Token do jogo inexistente."
+            body: utils.createResponse(false,
+                false,
+                "Chave de acesso inválida.",
+                null,
+                1)
         }
         context.done();
         return;
@@ -28,7 +30,11 @@ module.exports = async function (context, req) {
     if (req.params.pacientId === undefined || req.params.pacientId == null) {
         context.res = {
             status: 400,
-            body: "ID do Paciente necessário!"
+            body: utils.createResponse(false,
+                false,
+                "Parâmetros de consulta inexistentes.",
+                null,
+                300)
         }
         context.done();
         return;
@@ -82,15 +88,24 @@ module.exports = async function (context, req) {
                     ethnicity: req.body.ethnicity,
                 }
             });
-        context.log("[OUTPUT] - Pacient Updated: ", updatedPacient);
+        context.log("[DB UPDATE] - Pacient Updated: ", updatedPacient);
         context.res = {
             status: 200,
-            body: updatedPacient
+            body: utils.createResponse(true,
+                true,
+                "Registro atualizado com sucesso.",
+                flowDataDevice,
+                null)
         }
     } catch (err) {
+        context.log("[DB DELETE] - ERROR: ", err);
         context.res = {
             status: 500,
-            body: err
+            body: utils.createResponse(false,
+                true,
+                "Ocorreu um erro interno ao realizar a operação.",
+                null,
+                00)
         }
     }
 

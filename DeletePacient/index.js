@@ -15,7 +15,11 @@ module.exports = async function (context, req) {
     if(!isVerifiedGameToken){
         context.res = {
             status: 403,
-            body: "Token do jogo inexistente."
+            body: utils.createResponse(false,
+                false,
+                "Chave de acesso inválida.",
+                null,
+                1)
         }
         context.done();
         return;
@@ -24,7 +28,11 @@ module.exports = async function (context, req) {
     if(req.params.pacientId === undefined || req.params.pacientId == null){
         context.res = {
             status: 404,
-            body: "ID do Paciente necessário!"
+            body: utils.createResponse(false,
+                false,
+                "Parâmetros de consulta inexistentes.",
+                null,
+                300)
         }
         context.done();
         return;
@@ -32,11 +40,17 @@ module.exports = async function (context, req) {
 
     try {
         const removedPacient = await PacientModel.deleteOne({_id: req.params.pacientId});
-        context.log("[OUTPUT] - Pacient Deleted: ", removedPacient);
+        context.log("[DB DELETE] - Pacient Deleted: ", removedPacient);
 		context.res = {
             status: 204,
+            body: utils.createResponse(true,
+                true,
+                "Exclusão realizada com sucesso.",
+                null,
+                null)
         }
 	} catch (err) {
+        context.log("[DB DELETE] - ERROR: ", err);
 		context.res = {
             status: 500,
             body: err
