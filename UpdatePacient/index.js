@@ -38,7 +38,7 @@ module.exports = async function (context, req) {
 
     try {
         const updatedPacient = await PacientModel.updateOne(
-            { _id: req.params.pacientId },
+            { _id: req.params.pacientId, _gameToken: req.headers.gametoken },
             {
                 $set:
                 {
@@ -66,7 +66,7 @@ module.exports = async function (context, req) {
                         expFlowDuration: req.body.capacitiesCinta.expFlowDuration,
                         respiratoryRate: req.body.capacitiesCinta.respiratoryRate,
                     },
-                    observations: req.bodyobservations,
+                    observations: req.body.observations,
                     condition: req.body.condition,
                     unlockedLevels: req.body.unlockedLevels,
                     playSessionsDone: req.body.playSessionsDone,
