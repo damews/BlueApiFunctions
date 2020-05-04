@@ -5,29 +5,15 @@ module.exports = async function (context, req) {
     mongoose.Promise = global.Promise;
 
     //MinigameOverview Schema
-    require('../shared/Pacient');
-    const PacientModel = mongoose.model('Pacient');
+    require('../shared/GameToken');
+    const GameTokenModel = mongoose.model('GameToken');
 
     const utils = require('../shared/utils');
+    const { v4: uuidv4 } = require('uuid');
 
-    var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
+    const gameTokenReq = req.body || {};
 
-    if(!isVerifiedGameToken){
-        context.res = {
-            status: 403,
-            body: utils.createResponse(false,
-                false,
-                "Chave de acesso inválida.",
-                null,
-                1)
-        }
-        context.done();
-        return;
-    }
-    
-    const pacientReq = req.body || {};
-
-    if(Object.entries(pacientReq).length === 0){
+    if(Object.entries(gameTokenReq).length === 0){
         context.res = {
             status: 400,
             body: utils.createResponse(false,
@@ -40,17 +26,17 @@ module.exports = async function (context, req) {
         return;
     }
 
-    pacientReq._gameToken = req.headers.gametoken;
+    gameTokenReq.token = uuidv4();
 
     try {
-        const savedPacient = await (new PacientModel(pacientReq)).save();
-        context.log("[DB SAVING] - Pacient Saved: ", savedPacient);
+        const savedGameToken = await (new GameTokenModel(gameTokenReq)).save();
+        context.log("[DB SAVING] - GameToken Saved: ", savedGameToken);
 		context.res = {
             status: 201,
             body: utils.createResponse(true,
                 true,
-                "Paciente salvo com sucesso.",
-                savedPacient,
+                "Game Token salvo com sucesso.",
+                savedGameToken,
                 null)
         }
 	} catch (err) {

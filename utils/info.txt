@@ -1,6 +1,0 @@
-Calibração: CalibrationManagerPitaco
-Criar Paciente: CanvasCreatePacient
-Listar Pacientes: FillPacientList
-
-
-Quando o StageManager da plataforma invokar a Action OnStageEnd, serão chamados todos os Saves dos Loggers instanciados

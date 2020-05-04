@@ -40,7 +40,7 @@ module.exports = async function (context, req) {
             body: utils.createResponse(true,
                 true,
                 "Consulta realizada com sucesso.",
-                flowDataDevice,
+                pacients,
                 null)
         }
     } catch (err) {

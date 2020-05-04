@@ -29,7 +29,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Adam M\",\r\n    \"birthday\": \"1995/11/25\",\r\n    \"sex\": \"Male\",\r\n    \"capacitiesPitaco\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"capacitiesMano\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"capacitiesCinta\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"observations\": \"None\",\r\n    \"condition\": \"Normal\",\r\n    \"unlockedLevels\": 1,\r\n    \"accumulatedScore\": 0,\r\n    \"playSessionsDone\": 0,\r\n    \"calibrationPitacoDone\": false,\r\n    \"calibrationManoDone\": false,\r\n    \"calibrationCintaDone\": false,\r\n    \"howToPlayDone\": false,\r\n    \"weigth\": 100,\r\n    \"heigth\": 185,\r\n    \"pitacoThreshold\": 0,\r\n    \"manoThreshold\": 0,\r\n    \"cintaThreshold\": 0,\r\n    \"ethnicity\": \"Templário das Terras Altas\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Teste B\",\r\n    \"birthday\": \"1995/11/25\",\r\n    \"sex\": \"Male\",\r\n    \"capacitiesPitaco\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"capacitiesMano\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"capacitiesCinta\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"observations\": \"None\",\r\n    \"condition\": \"Healthy\",\r\n    \"unlockedLevels\": 1,\r\n    \"accumulatedScore\": 0,\r\n    \"playSessionsDone\": 0,\r\n    \"calibrationPitacoDone\": false,\r\n    \"calibrationManoDone\": false,\r\n    \"calibrationCintaDone\": false,\r\n    \"howToPlayDone\": false,\r\n    \"weigth\": 100,\r\n    \"heigth\": 185,\r\n    \"pitacoThreshold\": 0,\r\n    \"manoThreshold\": 0,\r\n    \"cintaThreshold\": 0,\r\n    \"ethnicity\": \"Templário das Terras Altas\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -109,7 +109,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"pacientId\": \"5e530fb8e706ad47ac659557\",\r\n    \"gameDevice\": \"Pitaco\",\r\n    \"minigameName\": \"CakeGame\",\r\n    \"respiratoryExercise\": \"RespiratoryFrequency\",\r\n    \"flowDataRounds\": \r\n        [\r\n        \t{ \r\n        \t\t\"minigameRound\": 1,\r\n        \t\t\"roundScore\": 2,\r\n        \t\t\"roundFlowScore\": 50,\r\n        \t\t\"flowData\": [\r\n        \t\t\t{ \"flowValue\": 100, \"timestamp\": \"2020-02-23T08:59:50\" },\r\n        \t\t\t{ \"flowValue\": 110, \"timestamp\": \"2020-02-23T09:00:00\" },\r\n        \t\t\t{ \"flowValue\": 120, \"timestamp\": \"2020-02-23T09:01:10\" }\r\n    \t\t\t]\r\n    \t\t},\r\n    \t\t{ \r\n        \t\t\"minigameRound\": 2,\r\n        \t\t\"roundScore\": 2,\r\n        \t\t\"roundFlowScore\": 50,\r\n        \t\t\"flowData\": [\r\n        \t\t\t{ \"flowValue\": 100, \"timestamp\": \"2020-02-23T08:59:50\" },\r\n        \t\t\t{ \"flowValue\": 110, \"timestamp\": \"2020-02-23T09:00:00\" },\r\n        \t\t\t{ \"flowValue\": 120, \"timestamp\": \"2020-02-23T09:01:10\" }\r\n    \t\t\t]\r\n    \t\t},\r\n    \t\t{ \r\n        \t\t\"minigameRound\": 3,\r\n        \t\t\"roundScore\": 2,\r\n        \t\t\"roundFlowScore\": 50,\r\n        \t\t\"flowData\": [\r\n        \t\t\t{ \"flowValue\": 100, \"timestamp\": \"2020-02-23T08:59:50\" },\r\n        \t\t\t{ \"flowValue\": 110, \"timestamp\": \"2020-02-23T09:00:00\" },\r\n        \t\t\t{ \"flowValue\": 120, \"timestamp\": \"2020-02-23T09:01:10\" }\r\n    \t\t\t]\r\n    \t\t}\r\n        \t\r\n        \t\r\n    \t]\r\n}",
+							"raw": "{\n    \"pacientId\": \"5e530fb8e706ad47ac659557\",\n    \"minigameName\": \"CakeGame\",\n    \"respiratoryExercise\": \"RespiratoryFrequency\",\n    \"flowDataRounds\": [\n        {\n            \"minigameRound\": 1,\n            \"roundScore\": 2,\n            \"roundFlowScore\": 50,\n            \"flowDataDevices\": [\n                {\n                    \"deviceName\": \"Pitaco\",\n                    \"flowData\": [\n                        {\n                            \"flowValue\": 100,\n                            \"timestamp\": \"2020-02-23T08:59:50\"\n                        },\n                        {\n                            \"flowValue\": 110,\n                            \"timestamp\": \"2020-02-23T09:00:00\"\n                        },\n                        {\n                            \"flowValue\": 120,\n                            \"timestamp\": \"2020-02-23T09:01:10\"\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            \"minigameRound\": 2,\n            \"roundScore\": 2,\n            \"roundFlowScore\": 50,\n            \"flowDataDevices\": [\n                {\n                    \"deviceName\": \"Pitaco\",\n                    \"flowData\": [\n                        {\n                            \"flowValue\": 100,\n                            \"timestamp\": \"2020-02-23T08:59:50\"\n                        },\n                        {\n                            \"flowValue\": 110,\n                            \"timestamp\": \"2020-02-23T09:00:00\"\n                        },\n                        {\n                            \"flowValue\": 120,\n                            \"timestamp\": \"2020-02-23T09:01:10\"\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            \"minigameRound\": 3,\n            \"roundScore\": 2,\n            \"roundFlowScore\": 50,\n            \"flowDataDevices\": [\n                {\n                    \"deviceName\": \"Pitaco\",\n                    \"flowData\": [\n                        {\n                            \"flowValue\": 100,\n                            \"timestamp\": \"2020-02-23T08:59:50\"\n                        },\n                        {\n                            \"flowValue\": 110,\n                            \"timestamp\": \"2020-02-23T09:00:00\"\n                        },\n                        {\n                            \"flowValue\": 120,\n                            \"timestamp\": \"2020-02-23T09:01:10\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -155,7 +155,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n\r\n    \"pacientId\": \"5e530fb8e706ad47ac659557\",\r\n    \"gameDevice\": \"PITACO\",\r\n    \"flowData\":  [\r\n        \t{ \"flowValue\": 100, \"timestamp\": \"2020-02-23T08:59:50\" },\r\n        \t{ \"flowValue\": 110, \"timestamp\": \"2020-02-23T09:00:00\" },\r\n        \t{ \"flowValue\": 120, \"timestamp\": \"2020-02-23T09:01:10\" }\r\n    \t],\r\n    \"playStart\": \"2020-02-23T09:01:10\",\r\n    \"playFinish\": \"2020-02-23T09:01:10\",\r\n    \"duration\": 100,\r\n    \"result\": 1,\r\n    \"stageId\": 1,\r\n    \"phase\": 1,\r\n    \"level\": 1,\r\n    \"relaxTimeSpawned\": 1,\r\n    \"maxScore\": 1,\r\n    \"scoreRatio\": 1,\r\n    \"targetsSpawned\": 1,\r\n    \"TargetsSuccess\": 1,\r\n    \"TargetsInsuccess\": 1,\r\n    \"TargetsExpSuccess\": 1,\r\n    \"TargetsFails\": 1,\r\n    \"TargetsInsFail\": 1,\r\n    \"TargetsExpFail\": 1,\r\n    \"ObstaclesSpawned\": 1,\r\n    \"ObstaclesSuccess\": 1,\r\n    \"ObstaclesInsSuccess\": 1,\r\n    \"ObstaclesExpSuccess\": 1,\r\n    \"ObstaclesFail\": 1,\r\n    \"ObstaclesInsFail\": 1,\r\n    \"ObstaclesExpFail\": 1,\r\n    \"PlayerHp\": 1\r\n}",
+							"raw": "{\n    \"pacientId\": \"5e84cfd3de8a0e16fc9d3096\",\n    \"flowDataDevices\": [\n        {\n            \"deviceName\": \"Pitaco\",\n            \"flowData\": [\n                {\n                    \"flowValue\": 100,\n                    \"timestamp\": \"2020-02-23T08:59:50\"\n                },\n                {\n                    \"flowValue\": 110,\n                    \"timestamp\": \"2020-02-23T09:00:00\"\n                },\n                {\n                    \"flowValue\": 120,\n                    \"timestamp\": \"2020-02-23T09:01:10\"\n                }\n            ]\n        }\n    ],\n    \"playStart\": \"2020-02-23T09:01:10\",\n    \"playFinish\": \"2020-02-23T09:01:10\",\n    \"duration\": 100,\n    \"result\": 1,\n    \"stageId\": 1,\n    \"phase\": 1,\n    \"level\": 1,\n    \"relaxTimeSpawned\": 1,\n    \"maxScore\": 1,\n    \"scoreRatio\": 1,\n    \"targetsSpawned\": 1,\n    \"TargetsSuccess\": 1,\n    \"TargetsInsuccess\": 1,\n    \"TargetsExpSuccess\": 1,\n    \"TargetsFails\": 1,\n    \"TargetsInsFail\": 1,\n    \"TargetsExpFail\": 1,\n    \"ObstaclesSpawned\": 1,\n    \"ObstaclesSuccess\": 1,\n    \"ObstaclesInsSuccess\": 1,\n    \"ObstaclesExpSuccess\": 1,\n    \"ObstaclesFail\": 1,\n    \"ObstaclesInsFail\": 1,\n    \"ObstaclesExpFail\": 1,\n    \"PlayerHp\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -171,6 +171,33 @@
 								"plataforms"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"author\": \"Teste 1\",\n\t\"description\": \"Teste 1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/CreateGameToken",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"CreateGameToken"
+							]
+						},
+						"description": "Rota para criar token de acesso a API"
 					},
 					"response": []
 				}
@@ -254,7 +281,7 @@
 									"variable": [
 										{
 											"key": "pacientId",
-											"value": "",
+											"value": "5e7e4681ec40020e3cd70558",
 											"description": "ID do Paciente [OBRIGATÓRIO]"
 										}
 									]
@@ -312,7 +339,7 @@
 									"variable": [
 										{
 											"key": "pacientId",
-											"value": "",
+											"value": "5e84cfd3de8a0e16fc9d3096",
 											"description": "ID do Paciente [OBRIGATÓRIO]"
 										}
 									]
@@ -404,7 +431,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/calibrations?calibrationId=",
+							"raw": "{{url}}/calibrations?calibrationId=5e7bacc193a7f81adcb4d8fc",
 							"host": [
 								"{{url}}"
 							],
@@ -414,7 +441,7 @@
 							"query": [
 								{
 									"key": "calibrationId",
-									"value": "",
+									"value": "5e7bacc193a7f81adcb4d8fc",
 									"description": "ID do Registro da Calibração [NÃO OBRIGATÓRIO]"
 								},
 								{
@@ -490,7 +517,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/plataforms?plataformOverviewId",
+							"raw": "{{url}}/plataforms?plataformOverviewId=5e7e4681ec40020e3cd70558",
 							"host": [
 								"{{url}}"
 							],
@@ -500,7 +527,7 @@
 							"query": [
 								{
 									"key": "plataformOverviewId",
-									"value": null,
+									"value": "5e7e4681ec40020e3cd70558",
 									"description": "ID do Registro do Resumo da Plataforma [NÃO OBRIGATÓRIO]"
 								}
 							]
@@ -515,7 +542,7 @@
 						"header": [
 							{
 								"key": "GameToken",
-								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"value": "d536dfd4-f69e-4b79-a2aa-5539f50fe215",
 								"description": "Token de permissão de acesso a API",
 								"type": "text"
 							}
@@ -537,6 +564,38 @@
 								}
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "Dados Respiratórios",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "GameToken",
+								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/flowdata/:{flowDataDeviceid}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"flowdata",
+								":{flowDataDeviceid}"
+							],
+							"variable": [
+								{
+									"key": "{flowDataDeviceid}",
+									"value": "5e8d25e9c3d49a5860b0b27a",
+									"description": "ID do registro do Flow Data Device"
+								}
+							]
+						},
+						"description": "Para busca de valores dos dispositivos utilizados em um determinado registro de minigame/plataforma"
 					},
 					"response": []
 				}
@@ -572,7 +631,7 @@
 				{
 					"name": "Atualizar Paciente",
 					"request": {
-						"method": "PATCH",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -589,7 +648,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Adam M\",\r\n    \"birthday\": \"1995/11/25\",\r\n    \"sex\": \"Male\",\r\n    \"capacitiesPitaco\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"capacitiesMano\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"capacitiesCinta\": {\r\n        \"insPeakFlow\": 0,\r\n        \"expPeakFlow\": 0,\r\n        \"insFlowDuration\": 0,\r\n        \"expFlowDuration\": 0,\r\n        \"respiratoryRate\": 0\r\n    },\r\n    \"observations\": \"None\",\r\n    \"condition\": \"Normal\",\r\n    \"unlockedLevels\": 1,\r\n    \"playSessionsDone\": 0,\r\n    \"calibrationPitacoDone\": false,\r\n    \"calibrationManoDone\": false,\r\n    \"calibrationCintaDone\": false,\r\n    \"howToPlayDone\": false,\r\n    \"weigth\": 100,\r\n    \"heigth\": 185,\r\n    \"pitacoThreshold\": 0,\r\n    \"manoThreshold\": 0,\r\n    \"cintaThreshold\": 0,\r\n    \"ethnicity\": \"Templário das Terras Altas\"\r\n}",
+							"raw": "{\n    \"capacitiesPitaco\": {\n        \"insPeakFlow\": -12.25,\n        \"expPeakFlow\": 12.125,\n        \"insFlowDuration\": 579.75,\n        \"expFlowDuration\": 993.875,\n        \"respiratoryRate\": 1.46664\n    },\n    \"capacitiesMano\": {\n        \"insPeakFlow\": 0,\n        \"expPeakFlow\": 0,\n        \"insFlowDuration\": 0,\n        \"expFlowDuration\": 0,\n        \"respiratoryRate\": 0\n    },\n    \"capacitiesCinta\": {\n        \"insPeakFlow\": 0,\n        \"expPeakFlow\": 0,\n        \"insFlowDuration\": 0,\n        \"expFlowDuration\": 0,\n        \"respiratoryRate\": 0\n    },\n    \"name\": \"jhonatan Nery\",\n    \"birthday\": \"1991-06-04T03:00:00Z\",\n    \"sex\": \"Male\",\n    \"observations\": \"Teste de Envio Remoto 2\",\n    \"condition\": \"Obstructive\",\n    \"unlockedLevels\": 2,\n    \"accumulatedScore\": 0,\n    \"playSessionsDone\": 80,\n    \"calibrationPitacoDone\": true,\n    \"calibrationManoDone\": true,\n    \"calibrationCintaDone\": true,\n    \"howToPlayDone\": true,\n    \"weigth\": 0,\n    \"heigth\": 0,\n    \"pitacoThreshold\": 7.5,\n    \"manoThreshold\": 0,\n    \"cintaThreshold\": 0,\n    \"ethnicity\": \"Pardo\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -597,12 +656,11 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/api/pacients/:pacientId",
+							"raw": "{{url}}/pacients/:pacientId",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"api",
 								"pacients",
 								":pacientId"
 							],
