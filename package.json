@@ -7,9 +7,11 @@
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.28",
     "mongoose": "^5.9.2",
+    "nodemailer": "^6.4.6",
     "uuid": "^7.0.3",
     "validate.js": "^0.13.1"
   },

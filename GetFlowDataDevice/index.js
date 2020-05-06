@@ -40,7 +40,7 @@ module.exports = async function (context, req) {
     }
 
     const findObj = {
-        flowDataDeviceId: req.params.flowDataDeviceId,
+        _id: req.params.flowDataDeviceId,
         _gameToken: req.headers.gametoken 
     }
 

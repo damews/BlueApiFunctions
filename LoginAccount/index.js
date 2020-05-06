@@ -8,15 +8,16 @@ module.exports = async function (context, req) {
     const UserAccountModel = mongoose.model('UserAccount');
 
     const utils = require('../shared/utils');
-    const { v4: uuidv4 } = require('uuid');
 
-    const gameTokenReq = req.body || {};
+    const bcrypt = require("bcryptjs");
 
-    if (Object.entries(gameTokenReq).length === 0) {
+    const userAccountReq = req.body || {};
+
+    if (Object.entries(userAccountReq).length === 0) {
         context.res = {
             status: 400,
             body: utils.createResponse(false,
-                true,
+                false,
                 "Dados vazios!",
                 null,
                 2)
@@ -26,60 +27,55 @@ module.exports = async function (context, req) {
     }
 
     try {
-
-        const user = await UserAccountModel.findById(gameTokenReq.userId);
-
+        context.log("[DB FINDING] - Finding User Account: ", userAccountReq.username);
+        const user = await UserAccountModel.findOne({ username: userAccountReq.username });
         if (!user) {
             context.res = {
-                status: 404,
+                status: 400,
                 body: utils.createResponse(true,
-                    true,
-                    "Usuário inexistente!.",
-                    { userId: gameTokenReq.userId },
+                    false,
+                    "Este usuário não existe!.",
+                    null,
                     null)
             }
             context.done();
             return;
         }
-
-        if (user.gameToken.token != "") {
+        if (!bcrypt.compareSync(userAccountReq.password, user.password)) {
             context.res = {
-                status: 200,
+                status: 401,
                 body: utils.createResponse(true,
-                    true,
-                    "Já existe um Token de Acesso gerado para este usuário!.",
-                    { gameToken: user.gameToken.token },
+                    false,
+                    "Senha inválida!.",
+                    null,
                     null)
             }
             context.done();
             return;
         }
 
-        user.gameToken.token = uuidv4();
-        user.gameToken.description = gameTokenReq.description;
-        user.gameToken.createdAt = new Date();
+        var authTime = new Date();
+        var authExpirationTime = new Date(authTime);
+        authExpirationTime.setHours(authExpirationTime.getHours() + 2);
 
-        const savedUser = await user.save();
         context.res = {
-            status: 201,
+            status: 200,
             body: utils.createResponse(true,
                 true,
-                "Token de Acesso criado com sucesso!.",
-                { gameToken: savedUser.gameToken.token },
+                "Authenticado com sucesso!.",
+                { redirectUrl: '/', authTime: authTime, authExpirationTime: authExpirationTime, gameToken: user.gameToken.token},
                 null)
         }
-
     } catch (err) {
         context.log("[DB SAVING] - ERROR: ", err);
         context.res = {
             status: 500,
             body: utils.createResponse(false,
-                true,
+                false,
                 "Ocorreu um erro interno ao realizar a operação.",
                 null,
                 00)
         }
     }
-
     context.done();
 };
