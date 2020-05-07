@@ -1,12 +1,8 @@
 const verifyGameToken = async (token, mongoose) => {
-    require('../shared/GameToken');
-    const GameTokenModel = mongoose.model('GameToken');
-
-    const gameTokenDocument = await GameTokenModel.findOne({ token: token })
-
-    if (Object.entries(gameTokenDocument).length === 0)
-        return false;
-
+    require('../shared/UserAccount');
+    const UserAccountModel = mongoose.model('UserAccount');
+    const user = await UserAccountModel.findOne({ "gameToken.token": token });
+    if (!user) return false;
     return true;
 }
 
@@ -46,7 +42,7 @@ const createResponse = function (success, authorized, message, data, errorCode) 
 }
 
 function createErrorObj(errorCode) {
-    if(errorCode == null) return null;
+    if (errorCode == null) return null;
     var errorMessage = errorCodes[errorCode];
     var errorObj = [{
         code: errorCode,
@@ -76,8 +72,8 @@ const sendWelcomeEmail = function (fullname, username, password, userEmail) {
         from: process.env.SMTP_FromEmail,
         to: userEmail,
         subject: 'Bem-vindo(a) ao I BLUE IT Service!',
-        text: `
-        <p>Ol&aacute; ` + fullname + `,</p>
+        html: `
+        <p>Olá` + fullname + `,</p>
         <p>Obrigado por se cadastrar no I BLUE IT Services!.</p>
         <p>A sua conta &eacute;:</p>
         <p><strong>Usu&aacute;rio</strong>: `+ username + `</p>
