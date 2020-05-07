@@ -62,7 +62,7 @@
 							},
 							{
 								"key": "GameToken",
-								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"value": "6a422033-6426-4b70-8096-da579f999849",
 								"description": "Token de permissão de acesso a API",
 								"type": "text"
 							}
@@ -181,7 +181,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"author\": \"Teste 1\",\n\t\"description\": \"Teste 1\"\n}",
+							"raw": "{\n\t\"userId\": \"5eb33d7fd07b931374764546\",\n\t\"description\": \"Game Token para testes.\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -198,6 +198,60 @@
 							]
 						},
 						"description": "Rota para criar token de acesso a API"
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Usuário",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"fullname\": \"Adam Mews\",\n\t\"username\": \"adammews\",\n\t\"password\": \"adam123\",\n\t\"email\": \"adammews@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/CreateAccount",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"CreateAccount"
+							]
+						},
+						"description": "Cria um usuário no sistema"
+					},
+					"response": []
+				},
+				{
+					"name": "Autenticar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"Test1\",\n\t\"password\": \"Test1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/LoginAccount",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"LoginAccount"
+							]
+						},
+						"description": "Autenticação de usuário com username/password"
 					},
 					"response": []
 				}
@@ -463,6 +517,9 @@
 				},
 				{
 					"name": "Resumos Minigame",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [
@@ -473,6 +530,15 @@
 								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw=="
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{url}}/minigames?minigameOverviewId=5e7bb65396145d14144b345e",
 							"host": [
@@ -542,7 +608,7 @@
 						"header": [
 							{
 								"key": "GameToken",
-								"value": "d536dfd4-f69e-4b79-a2aa-5539f50fe215",
+								"value": "8329231b-4965-40fe-938d-514360be798c",
 								"description": "Token de permissão de acesso a API",
 								"type": "text"
 							}
@@ -590,7 +656,7 @@
 							"variable": [
 								{
 									"key": "{flowDataDeviceid}",
-									"value": "5e8d25e9c3d49a5860b0b27a",
+									"value": "5ea94be161e04910d43fa46c",
 									"description": "ID do registro do Flow Data Device"
 								}
 							]
