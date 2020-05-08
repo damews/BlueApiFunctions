@@ -31,8 +31,8 @@ module.exports = async function (context, req) {
         const user = await UserAccountModel.findOne({ username: userAccountReq.username });
         if (!user) {
             context.res = {
-                status: 400,
-                body: utils.createResponse(true,
+                status: 404,
+                body: utils.createResponse(false,
                     false,
                     "Este usuário não existe!.",
                     null,
@@ -44,7 +44,7 @@ module.exports = async function (context, req) {
         if (!bcrypt.compareSync(userAccountReq.password, user.password)) {
             context.res = {
                 status: 401,
-                body: utils.createResponse(true,
+                body: utils.createResponse(false,
                     false,
                     "Senha inválida!.",
                     null,
@@ -63,7 +63,7 @@ module.exports = async function (context, req) {
             body: utils.createResponse(true,
                 true,
                 "Authenticado com sucesso!.",
-                { redirectUrl: '/', authTime: authTime, authExpirationTime: authExpirationTime, gameToken: user.gameToken.token, userId: user._id},
+                { redirectUrl: '/', authTime: authTime, authExpirationTime: authExpirationTime, fullname: user.fullname, gameToken: user.gameToken.token, userId: user._id},
                 null)
         }
     } catch (err) {
