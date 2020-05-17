@@ -63,7 +63,7 @@ module.exports = async function (context, req) {
             body: utils.createResponse(true,
                 true,
                 "Authenticado com sucesso!.",
-                { redirectUrl: '/', authTime: authTime, authExpirationTime: authExpirationTime, fullname: user.fullname, gameToken: user.gameToken.token, userId: user._id},
+                { redirectUrl: '/', authTime: authTime, authExpirationTime: authExpirationTime, fullname: user.fullname, gameToken: user.gameToken.token, userId: user._id, role: user.role},
                 null)
         }
     } catch (err) {

@@ -4,15 +4,15 @@ module.exports = async function (context, req) {
     mongoose.connect(DATABASE);
     mongoose.Promise = global.Promise;
 
-    //MinigameOverview Schema
-    require('../shared/MinigameOverview');
-    const MinigameOverviewModel = mongoose.model('MinigameOverview');
+    //PlataformOverview Schema
+    require('../shared/UserAccount');
+    const UserAccountModel = mongoose.model('UserAccount');
 
     const utils = require('../shared/utils');
 
     var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
 
-    if (!isVerifiedGameToken) {
+    if(!isVerifiedGameToken){
         context.res = {
             status: 403,
             body: utils.createResponse(false,
@@ -25,12 +25,11 @@ module.exports = async function (context, req) {
         return;
     }
 
-
     if (req.params.pacientId === undefined || req.params.pacientId == null) {
         context.res = {
             status: 400,
             body: utils.createResponse(false,
-                false,
+                true,
                 "Parâmetros de consulta inexistentes.",
                 null,
                 300)
@@ -39,36 +38,15 @@ module.exports = async function (context, req) {
         return;
     }
 
-    const findObj = {
-        pacientId: req.params.pacientId,
-        _gameToken: req.headers.gametoken
-    }
-
-    if (req.query.minigameName)
-        findObj.minigameName = req.query.minigameName;
-    if (req.query.devices)
-        findObj.devices = req.query.devices.split(',');
-    if (req.query.dataIni && req.query.dataFim)
-        findObj.created_at = {
-            $gte: new Date(req.query.dataIni).toISOString("yyyy-MM-ddThh:mm:ss.msZ"),
-            $lte: new Date(req.query.dataFim).toISOString("yyyy-MM-ddThh:mm:ss.msZ")
-        };
-    if (req.query.dataIni)
-        findObj.created_at = {
-            $gte: new Date(req.query.dataIni).toISOString("yyyy-MM-ddThh:mm:ss.msZ")
-        };
-
-
     try {
-
-        const minigamesOverview = await MinigameOverviewModel.find(findObj);
-        context.log("[DB QUERYING] - MinigameOverview Get by Pacient ID");
+        const pacients = await UserAccountModel.find({pacientId: req.params.pacientId}, '_id pacientId username password');
+        context.log("[DB QUERYING] - Pacient Account Get by ID");
         context.res = {
             status: 200,
             body: utils.createResponse(true,
                 true,
                 "Consulta realizada com sucesso.",
-                minigamesOverview,
+                pacients,
                 null)
         }
     } catch (err) {

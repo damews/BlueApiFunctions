@@ -7,6 +7,7 @@ const minigameOverviewSchema = mongoose.Schema({
     gameDevice: { type: String },
     respiratoryExercise: { type: String },
     minigameName: { type: String },
+    devices: [String],
     flowDataRounds: [
         {
             minigameRound: { type: Number },

@@ -50,6 +50,8 @@ module.exports = async function (context, req) {
 
     var flowDataDevicesObjects = minigameOverviewReq.flowDataRounds.map(x => x.flowDataDevices);
 
+    var devices = flowDataDevicesObjects[0].map(x=>x.deviceName);
+
     minigameOverviewReq.flowDataRounds.map(x => delete x.flowDataDevices);
 
     try {
@@ -65,6 +67,7 @@ module.exports = async function (context, req) {
         minigameOverviewReq.flowDataRounds[0].flowDataDevicesId = flowDataDevicesIds[0];
         minigameOverviewReq.flowDataRounds[1].flowDataDevicesId = flowDataDevicesIds[1];
         minigameOverviewReq.flowDataRounds[2].flowDataDevicesId = flowDataDevicesIds[2];
+        minigameOverviewReq.devices = devices
 
         const savedMinigameOverview = await (new MinigameOverviewModel(minigameOverviewReq)).save();
         context.log("[OUTPUT] - MinigameOverview Saved: ", savedMinigameOverview);

@@ -5,8 +5,8 @@
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
-      "methods": [ "post" ],
-      "route": "login"
+      "methods": [ "get" ],
+      "route": "pacients/{pacientId}/account"
     },
     {
       "type": "http",

@@ -27,53 +27,83 @@ module.exports = async function (context, req) {
         return;
     }
 
-    var existingUserFinder = { email: userAccountReq.email, username: userAccountReq.username };
-
     try {
 
-        const existingUser = await UserAccountModel.findOne(existingUserFinder);
-        context.log("[DB FIND] - Find Existing User: ", existingUserFinder);
+        if (userAccountReq.role == "Administrator") {
+            const existingUser = await UserAccountModel.findOne({ $or: [{ email: userAccountReq.email, role: "Administrator" }, { username: userAccountReq.username, role: "Administrator" }] });
+            context.log("[DB FIND] - Find Existing User: ", existingUser);
 
-
-        if (existingUser) {
-            context.res = {
-                status: 400,
-                body: utils.createResponse(true,
-                    false,
-                    "Já existe um usuário cadastrado com este nome e email.",
-                    null,
-                    null)
+            if (existingUser) {
+                context.res = {
+                    status: 400,
+                    body: utils.createResponse(true,
+                        false,
+                        "Já existe um usuário cadastrado com este nome e/ou email.",
+                        null,
+                        null)
+                }
+                context.done();
+                return;
             }
-            context.done();
-            return;
+        }
+
+        if (userAccountReq.role == "User") {
+            const existingUser = await UserAccountModel.findOne({ username: userAccountReq.username, role: "User", "gameToken.token": userAccountReq.gameToken });
+            context.log("[DB FIND] - Find Existing User: ", existingUser);
+
+            if (existingUser) {
+                context.res = {
+                    status: 400,
+                    body: utils.createResponse(false,
+                        false,
+                        "Já existe um usuário cadastrado com este nome.",
+                        null,
+                        null)
+                }
+                context.done();
+                return;
+            }
         }
 
         var newUser = new UserAccountModel({
             fullname: userAccountReq.fullname,
             username: userAccountReq.username,
-            password: bcrypt.hashSync(userAccountReq.password, 10),
-            email: userAccountReq.email,
-            role: "Administrator",
+            password: userAccountReq.password,
+            email: userAccountReq.role == "Administrator" ? userAccountReq.email : userAccountReq.username,
+            role: userAccountReq.role,
+            pacientId: userAccountReq.role == "User" ? userAccountReq.pacientId : "",
             gameToken: {
-                token: "",
+                token: userAccountReq.role == "Administrator" ? "" : userAccountReq.gameToken,
                 description: "",
                 createdAt: null
             }
-        })
+        });
 
         const savedUser = await newUser.save();
         context.log("[DB SAVING] - User Account Created: ", savedUser);
-        
-        utils.sendWelcomeEmail(savedUser.fullname, savedUser.username, userAccountReq.password, savedUser.email);
 
-        context.res = {
-            status: 201,
-            body: utils.createResponse(true,
-                false,
-                "Usuário criado com sucesso.",
-                {redirectUrl: '/login'},
-                null)
+        if (savedUser.role == "Administrator") {
+            utils.sendWelcomeEmail(savedUser.fullname, savedUser.username, userAccountReq.password, savedUser.email);
+            context.res = {
+                status: 201,
+                body: utils.createResponse(true,
+                    false,
+                    "Usuário criado com sucesso.",
+                    { redirectUrl: '/login' },
+                    null)
+            }
         }
+        else {
+            context.res = {
+                status: 201,
+                body: utils.createResponse(true,
+                    false,
+                    "Usuário criado com sucesso.",
+                    null,
+                    null)
+            }
+        }
+
 
     } catch (err) {
         context.log("[DB SAVING] - ERROR: ", err);
