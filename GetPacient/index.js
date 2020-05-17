@@ -45,7 +45,7 @@ module.exports = async function (context, req) {
 
 
     try {
-        const pacients = await PacientModel.find(findObj);
+        const pacients = await PacientModel.findOne(findObj);
         context.log("[DB QUERYING] - Pacient Get by ID");
         context.res = {
             status: 200,

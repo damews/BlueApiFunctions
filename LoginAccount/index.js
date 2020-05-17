@@ -41,18 +41,35 @@ module.exports = async function (context, req) {
             context.done();
             return;
         }
-        if (!bcrypt.compareSync(userAccountReq.password, user.password)) {
-            context.res = {
-                status: 401,
-                body: utils.createResponse(false,
-                    false,
-                    "Senha inválida!.",
-                    null,
-                    null)
+        if(user.role == 'Administrator'){
+            if (!bcrypt.compareSync(userAccountReq.password, user.password)) {
+                context.res = {
+                    status: 401,
+                    body: utils.createResponse(false,
+                        false,
+                        "Senha inválida!.",
+                        null,
+                        null)
+                }
+                context.done();
+                return;
             }
-            context.done();
-            return;
         }
+        else {
+            if(userAccountReq.password != user.password){
+                context.res = {
+                    status: 401,
+                    body: utils.createResponse(false,
+                        false,
+                        "Senha inválida!.",
+                        null,
+                        null)
+                }
+                context.done();
+                return;
+            }
+        }
+        
 
         var authTime = new Date();
         var authExpirationTime = new Date(authTime);
@@ -63,7 +80,7 @@ module.exports = async function (context, req) {
             body: utils.createResponse(true,
                 true,
                 "Authenticado com sucesso!.",
-                { redirectUrl: '/', authTime: authTime, authExpirationTime: authExpirationTime, fullname: user.fullname, gameToken: user.gameToken.token, userId: user._id, role: user.role},
+                { redirectUrl: '/', authTime: authTime, authExpirationTime: authExpirationTime, fullname: user.fullname, gameToken: user.gameToken.token, userId: user._id, role: user.role, pacientId: user.pacientId},
                 null)
         }
     } catch (err) {
