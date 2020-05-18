@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "a507d981-4fcb-4ca0-96a4-e1c5668959fd",
+		"_postman_id": "b050a29e-7145-4735-9b61-c2a5d2926b77",
 		"name": "BlueApiFunc",
 		"description": "Coleção de chamadas para os endpoints da API do I Blue It (Blue Api)\n\n**Definição de prefixos dos endpoints**\n\n- Send: envia de dados para serem gravados no banco de dados.\n- Get: busca os dados de acordo com os parâmetros incluídos na URL\n- Update: realiza a atualização dos dados. Deve-se passar o mesmo modelo enviado para a mesma rota contendo o prefixo Send, mas desta vez, contendo o ID do modelo a ser atualizado.\n\n---\n\n**Observações**\n\n- Os parâmetros na busca (Get) são encadeados, ou seja, os resultados têm que obedecer todos os parâmetros passados.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -102,14 +102,14 @@
 							},
 							{
 								"key": "GameToken",
-								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"value": "e2cfa72e-7fc3-4f45-aa6f-2d904299d6cf",
 								"description": "Token de permissão de acesso a API",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"pacientId\": \"5e530fb8e706ad47ac659557\",\n    \"minigameName\": \"CakeGame\",\n    \"respiratoryExercise\": \"RespiratoryFrequency\",\n    \"flowDataRounds\": [\n        {\n            \"minigameRound\": 1,\n            \"roundScore\": 2,\n            \"roundFlowScore\": 50,\n            \"flowDataDevices\": [\n                {\n                    \"deviceName\": \"Pitaco\",\n                    \"flowData\": [\n                        {\n                            \"flowValue\": 100,\n                            \"timestamp\": \"2020-02-23T08:59:50\"\n                        },\n                        {\n                            \"flowValue\": 110,\n                            \"timestamp\": \"2020-02-23T09:00:00\"\n                        },\n                        {\n                            \"flowValue\": 120,\n                            \"timestamp\": \"2020-02-23T09:01:10\"\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            \"minigameRound\": 2,\n            \"roundScore\": 2,\n            \"roundFlowScore\": 50,\n            \"flowDataDevices\": [\n                {\n                    \"deviceName\": \"Pitaco\",\n                    \"flowData\": [\n                        {\n                            \"flowValue\": 100,\n                            \"timestamp\": \"2020-02-23T08:59:50\"\n                        },\n                        {\n                            \"flowValue\": 110,\n                            \"timestamp\": \"2020-02-23T09:00:00\"\n                        },\n                        {\n                            \"flowValue\": 120,\n                            \"timestamp\": \"2020-02-23T09:01:10\"\n                        }\n                    ]\n                }\n            ]\n        },\n        {\n            \"minigameRound\": 3,\n            \"roundScore\": 2,\n            \"roundFlowScore\": 50,\n            \"flowDataDevices\": [\n                {\n                    \"deviceName\": \"Pitaco\",\n                    \"flowData\": [\n                        {\n                            \"flowValue\": 100,\n                            \"timestamp\": \"2020-02-23T08:59:50\"\n                        },\n                        {\n                            \"flowValue\": 110,\n                            \"timestamp\": \"2020-02-23T09:00:00\"\n                        },\n                        {\n                            \"flowValue\": 120,\n                            \"timestamp\": \"2020-02-23T09:01:10\"\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
+							"raw": "{\r\n    \"pacientId\": \"5eb48243ca979a1f907f9fa1\",\r\n    \"minigameName\": \"WaterGame\",\r\n    \"respiratoryExercise\": \"InspiratoryPeak\",\r\n    \"devices\": [\r\n      \"Pitaco\"\r\n    ],\r\n    \"flowDataRounds\": [\r\n      {\r\n        \"minigameRound\": 1,\r\n        \"roundScore\": 2,\r\n        \"roundFlowScore\": 152,\r\n        \"flowDataDevices\": [\r\n          {\r\n            \"deviceName\": \"Pitaco\",\r\n            \"flowData\": [\r\n              {\r\n                \"flowValue\": 36,\r\n                \"timestamp\": \"2020-02-23T08:59:50\"\r\n              },\r\n              {\r\n                \"flowValue\": 64,\r\n                \"timestamp\": \"2020-02-23T09:00:00\"\r\n              },\r\n              {\r\n                \"flowValue\": 160,\r\n                \"timestamp\": \"2020-02-23T09:01:10\"\r\n              }\r\n            ]\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"minigameRound\": 2,\r\n        \"roundScore\": 2,\r\n        \"roundFlowScore\": 87,\r\n        \"flowDataDevices\": [\r\n          {\r\n            \"deviceName\": \"Pitaco\",\r\n            \"flowData\": [\r\n              {\r\n                \"flowValue\": 35,\r\n                \"timestamp\": \"2020-02-23T08:59:50\"\r\n              },\r\n              {\r\n                \"flowValue\": 86,\r\n                \"timestamp\": \"2020-02-23T09:00:00\"\r\n              },\r\n              {\r\n                \"flowValue\": 75,\r\n                \"timestamp\": \"2020-02-23T09:01:10\"\r\n              }\r\n            ]\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"minigameRound\": 3,\r\n        \"roundScore\": 1,\r\n        \"roundFlowScore\": 91,\r\n        \"flowDataDevices\": [\r\n          {\r\n            \"deviceName\": \"Pitaco\",\r\n            \"flowData\": [\r\n              {\r\n                \"flowValue\": 4,\r\n                \"timestamp\": \"2020-02-23T08:59:50\"\r\n              },\r\n              {\r\n                \"flowValue\": 86,\r\n                \"timestamp\": \"2020-02-23T09:00:00\"\r\n              },\r\n              {\r\n                \"flowValue\": 60,\r\n                \"timestamp\": \"2020-02-23T09:01:10\"\r\n              }\r\n            ]\r\n          }\r\n        ]\r\n      }\r\n    ]\r\n  }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -208,7 +208,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"fullname\": \"Adam Mews\",\n\t\"username\": \"adammews\",\n\t\"password\": \"adam123\",\n\t\"email\": \"adammews@gmail.com\"\n}",
+							"raw": "{\n\t\"fullname\": \"Jhonatan Nery\",\n\t\"username\": \"jhonatannery\",\n\t\"password\": \"jhonatan123\",\n\t\"email\": \"\",\n\t\"role\": \"User\",\n\t\"pacientId\": \"5eb48243ca979a1f907f9fa1\",\n\t\"gameToken\": \"e2cfa72e-7fc3-4f45-aa6f-2d904299d6cf\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -216,12 +216,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/CreateAccount",
+							"raw": "{{url}}/register",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"CreateAccount"
+								"register"
 							]
 						},
 						"description": "Cria um usuário no sistema"
@@ -235,7 +235,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"username\": \"Test1\",\n\t\"password\": \"Test1\"\n}",
+							"raw": "{\n\t\"username\": \"jhonatannery\",\n\t\"password\": \"jhonatan123\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -243,12 +243,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/LoginAccount",
+							"raw": "{{url}}/login",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"LoginAccount"
+								"login"
 							]
 						},
 						"description": "Autenticação de usuário com username/password"
@@ -273,7 +273,7 @@
 										"description": "Token de permissão de acesso a API",
 										"key": "GameToken",
 										"type": "text",
-										"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw=="
+										"value": "e2cfa72e-7fc3-4f45-aa6f-2d904299d6cf"
 									}
 								],
 								"url": {
@@ -287,10 +287,9 @@
 									],
 									"variable": [
 										{
-											"description": "ID do Paciente [OBRIGATÓRIO]",
 											"key": "pacientId",
-											"type": "string",
-											"value": "5e7e4681ec40020e3cd70558"
+											"value": "5eb48243ca979a1f907f9fa1",
+											"description": "ID do Paciente [OBRIGATÓRIO]"
 										}
 									]
 								}
@@ -304,12 +303,12 @@
 								"header": [
 									{
 										"key": "GameToken",
-										"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+										"value": "e2cfa72e-7fc3-4f45-aa6f-2d904299d6cf",
 										"type": "text"
 									}
 								],
 								"url": {
-									"raw": "{{url}}/pacients/:pacientId/minigames",
+									"raw": "{{url}}/pacients/:pacientId/minigames?devices=Pitaco",
 									"host": [
 										"{{url}}"
 									],
@@ -326,16 +325,25 @@
 											"disabled": true
 										},
 										{
-											"key": "gameDevice",
+											"key": "dataIni",
+											"value": "2020-05-10T09:53:00.000Z",
+											"disabled": true
+										},
+										{
+											"key": "devices",
 											"value": "Pitaco",
-											"description": "Nome do dispositivo [NÃO OBRIGATÓRIO]",
+											"description": "Nome do dispositivo [NÃO OBRIGATÓRIO]"
+										},
+										{
+											"key": "devices",
+											"value": "Mano",
 											"disabled": true
 										}
 									],
 									"variable": [
 										{
 											"key": "pacientId",
-											"value": "5e7e4681ec40020e3cd70558",
+											"value": "5eb48243ca979a1f907f9fa1",
 											"description": "ID do Paciente [OBRIGATÓRIO]"
 										}
 									]
@@ -443,6 +451,38 @@
 										}
 									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "Conta",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "GameToken",
+										"value": "8329231b-4965-40fe-938d-514360be798c",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/pacients/:pacientId/account",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"pacients",
+										":pacientId",
+										"account"
+									],
+									"variable": [
+										{
+											"key": "pacientId",
+											"value": "5eb349ea8f6b341ab8bcd7a8"
+										}
+									]
+								},
+								"description": "Busca a conta de acesso ao sistema do paciente com o ID pesquisado"
 							},
 							"response": []
 						}
@@ -640,7 +680,7 @@
 						"header": [
 							{
 								"key": "GameToken",
-								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"value": "e2cfa72e-7fc3-4f45-aa6f-2d904299d6cf",
 								"type": "text"
 							}
 						],
@@ -656,7 +696,7 @@
 							"variable": [
 								{
 									"key": "{flowDataDeviceid}",
-									"value": "5ea94be161e04910d43fa46c",
+									"value": "5eb484edca979a1f907f9fa2",
 									"description": "ID do registro do Flow Data Device"
 								}
 							]
@@ -771,7 +811,6 @@
 								{
 									"key": "pacientId",
 									"value": "5e796795a624b507e4355222",
-									"type": "string",
 									"description": "ID do Paciente [OBRIGATÓRIO]"
 								}
 							]
