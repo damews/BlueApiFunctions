@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b050a29e-7145-4735-9b61-c2a5d2926b77",
+		"_postman_id": "452847a9-fa75-4c87-9e10-3b6fcf1e29e3",
 		"name": "BlueApiFunc",
 		"description": "Coleção de chamadas para os endpoints da API do I Blue It (Blue Api)\n\n**Definição de prefixos dos endpoints**\n\n- Send: envia de dados para serem gravados no banco de dados.\n- Get: busca os dados de acordo com os parâmetros incluídos na URL\n- Update: realiza a atualização dos dados. Deve-se passar o mesmo modelo enviado para a mesma rota contendo o prefixo Send, mas desta vez, contendo o ID do modelo a ser atualizado.\n\n---\n\n**Observações**\n\n- Os parâmetros na busca (Get) são encadeados, ou seja, os resultados têm que obedecer todos os parâmetros passados.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -62,14 +62,14 @@
 							},
 							{
 								"key": "GameToken",
-								"value": "6a422033-6426-4b70-8096-da579f999849",
+								"value": "e2cfa72e-7fc3-4f45-aa6f-2d904299d6cf",
 								"description": "Token de permissão de acesso a API",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"pacientId\": \"5e7e4681ec40020e3cd70558\",\r\n    \"gameDevice\": \"Pitaco\",\r\n    \"calibrationValue\": 100,\r\n    \"calibrationExercise\": \"InspiratoryPeak\"\r\n}",
+							"raw": "{\r\n    \"pacientId\": \"5eb48243ca979a1f907f9fa1\",\r\n    \"gameDevice\": \"Pitaco\",\r\n    \"calibrationValue\": -500,\r\n    \"calibrationExercise\": \"InspiratoryPeak\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -308,7 +308,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{url}}/pacients/:pacientId/minigames?devices=Pitaco",
+									"raw": "{{url}}/pacients/:pacientId/minigames?devices=Pitaco&limit=10",
 									"host": [
 										"{{url}}"
 									],
@@ -320,13 +320,18 @@
 									"query": [
 										{
 											"key": "minigameName",
-											"value": "CakeGame",
+											"value": "WaterGame",
 											"description": "Nome do Jogo [NÃO OBRIGATÓRIO]",
 											"disabled": true
 										},
 										{
 											"key": "dataIni",
-											"value": "2020-05-10T09:53:00.000Z",
+											"value": "05-10-2020",
+											"disabled": true
+										},
+										{
+											"key": "dataFim",
+											"value": "06-10-2020",
 											"disabled": true
 										},
 										{
@@ -338,13 +343,26 @@
 											"key": "devices",
 											"value": "Mano",
 											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "sort",
+											"value": "asc",
+											"disabled": true
+										},
+										{
+											"key": "skip",
+											"value": "0",
+											"disabled": true
 										}
 									],
 									"variable": [
 										{
 											"key": "pacientId",
-											"value": "5eb48243ca979a1f907f9fa1",
-											"description": "ID do Paciente [OBRIGATÓRIO]"
+											"value": ""
 										}
 									]
 								}
@@ -358,12 +376,12 @@
 								"header": [
 									{
 										"key": "GameToken",
-										"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+										"value": "e2cfa72e-7fc3-4f45-aa6f-2d904299d6cf",
 										"type": "text"
 									}
 								],
 								"url": {
-									"raw": "{{url}}/pacients/:pacientId/plataforms",
+									"raw": "{{url}}/pacients/:pacientId/plataforms?limit=10",
 									"host": [
 										"{{url}}"
 									],
@@ -396,13 +414,26 @@
 											"value": "Pitaco",
 											"description": "Dispositivo [NÃO OBRIGATÓRIO]",
 											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										},
+										{
+											"key": "sort",
+											"value": "asc",
+											"disabled": true
+										},
+										{
+											"key": "skip",
+											"value": "0",
+											"disabled": true
 										}
 									],
 									"variable": [
 										{
 											"key": "pacientId",
-											"value": "5e84cfd3de8a0e16fc9d3096",
-											"description": "ID do Paciente [OBRIGATÓRIO]"
+											"value": "5eb48243ca979a1f907f9fa1"
 										}
 									]
 								}
@@ -416,12 +447,13 @@
 								"header": [
 									{
 										"key": "GameToken",
-										"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+										"value": "e2cfa72e-7fc3-4f45-aa6f-2d904299d6cf",
+										"description": "Chave de Acesso",
 										"type": "text"
 									}
 								],
 								"url": {
-									"raw": "{{url}}/pacients/:pacientId/calibrations",
+									"raw": "{{url}}/pacients/:pacientId/calibrations?gameDevice=Mano&dataIni=05-10-2020&dataFim=05-10-2020",
 									"host": [
 										"{{url}}"
 									],
@@ -433,21 +465,43 @@
 									"query": [
 										{
 											"key": "gameDevice",
-											"value": "Pitaco",
-											"description": "Dispositivo [NÃO OBRIGATÓRIO]",
+											"value": "Mano",
+											"description": "Dispositivo [NÃO OBRIGATÓRIO]"
+										},
+										{
+											"key": "calibrationExercise",
+											"value": "ExpiratoryPeak",
+											"description": "Exercício [NÃO OBRIGATÓRIO]",
 											"disabled": true
 										},
 										{
-											"key": "gameDevice",
-											"value": "InspiratoryPeak",
-											"description": "Exercício [NÃO OBRIGATÓRIO]",
+											"key": "dataIni",
+											"value": "05-10-2020"
+										},
+										{
+											"key": "dataFim",
+											"value": "05-10-2020"
+										},
+										{
+											"key": "limit",
+											"value": "10",
+											"disabled": true
+										},
+										{
+											"key": "sort",
+											"value": "asc",
+											"disabled": true
+										},
+										{
+											"key": "skip",
+											"value": "0",
 											"disabled": true
 										}
 									],
 									"variable": [
 										{
 											"key": "pacientId",
-											"value": "5e7e4681ec40020e3cd70558"
+											"value": "5eb48243ca979a1f907f9fa1"
 										}
 									]
 								}
@@ -485,13 +539,65 @@
 								"description": "Busca a conta de acesso ao sistema do paciente com o ID pesquisado"
 							},
 							"response": []
+						},
+						{
+							"name": "Estatísticas Plataforma",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "GameToken",
+										"value": "e2cfa72e-7fc3-4f45-aa6f-2d904299d6cf",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}/pacients/:pacientId/plataforms/statistics?sort=asc&devices=Mano",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"pacients",
+										":pacientId",
+										"plataforms",
+										"statistics"
+									],
+									"query": [
+										{
+											"key": "sort",
+											"value": "asc"
+										},
+										{
+											"key": "dataIni",
+											"value": "2020-05-09",
+											"disabled": true
+										},
+										{
+											"key": "dataFim",
+											"value": "2020-05-11",
+											"disabled": true
+										},
+										{
+											"key": "devices",
+											"value": "Mano"
+										}
+									],
+									"variable": [
+										{
+											"key": "pacientId",
+											"value": "5eb48243ca979a1f907f9fa1"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					],
 					"event": [
 						{
 							"listen": "prerequest",
 							"script": {
-								"id": "85ded69a-7a49-4785-8915-5fb8d1300bd5",
+								"id": "0e9af32a-0b23-4c88-9b5f-f093fe797605",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -501,7 +607,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0c6d62f9-4078-48b3-9435-f26cb4824543",
+								"id": "31d1930f-fcb3-492d-b79c-11a0764dfa3f",
 								"type": "text/javascript",
 								"exec": [
 									""
@@ -519,13 +625,13 @@
 						"header": [
 							{
 								"key": "GameToken",
-								"value": "QkxVRUFQSV9UT0tFTl9ESU9HTw==",
+								"value": "e2cfa72e-7fc3-4f45-aa6f-2d904299d6cf",
 								"description": "Token de permissão de acesso a API",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{url}}/calibrations?calibrationId=5e7bacc193a7f81adcb4d8fc",
+							"raw": "{{url}}/calibrations",
 							"host": [
 								"{{url}}"
 							],
@@ -536,7 +642,8 @@
 								{
 									"key": "calibrationId",
 									"value": "5e7bacc193a7f81adcb4d8fc",
-									"description": "ID do Registro da Calibração [NÃO OBRIGATÓRIO]"
+									"description": "ID do Registro da Calibração [NÃO OBRIGATÓRIO]",
+									"disabled": true
 								},
 								{
 									"key": "gameDevice",
@@ -548,6 +655,23 @@
 									"key": "calibrationExercise",
 									"value": "InspiratoryPeak",
 									"description": "Exercício [NÃO OBRIGATÓRIO]",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"description": "Quantidade de resultados",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "asc",
+									"description": "Ordenar data ascendente (Descendente é o padrão)",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "0",
 									"disabled": true
 								}
 							]
@@ -580,7 +704,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/minigames?minigameOverviewId=5e7bb65396145d14144b345e",
+							"raw": "{{url}}/minigames?minigameOverviewId=5e7bb65396145d14144b345e&limit=10",
 							"host": [
 								"{{url}}"
 							],
@@ -604,6 +728,20 @@
 									"value": "CakeGame",
 									"description": "Exercício [NÃO OBRIGATÓRIO]",
 									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "sort",
+									"value": "asc",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "0",
+									"disabled": true
 								}
 							]
 						}
@@ -623,7 +761,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{url}}/plataforms?plataformOverviewId=5e7e4681ec40020e3cd70558",
+							"raw": "{{url}}/plataforms?plataformOverviewId=5e7e4681ec40020e3cd70558&limit=10&sort=asc&skip",
 							"host": [
 								"{{url}}"
 							],
@@ -635,6 +773,18 @@
 									"key": "plataformOverviewId",
 									"value": "5e7e4681ec40020e3cd70558",
 									"description": "ID do Registro do Resumo da Plataforma [NÃO OBRIGATÓRIO]"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "sort",
+									"value": "asc"
+								},
+								{
+									"key": "skip",
+									"value": null
 								}
 							]
 						}
@@ -648,13 +798,13 @@
 						"header": [
 							{
 								"key": "GameToken",
-								"value": "8329231b-4965-40fe-938d-514360be798c",
+								"value": "e2cfa72e-7fc3-4f45-aa6f-2d904299d6cf",
 								"description": "Token de permissão de acesso a API",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "{{url}}/pacients",
+							"raw": "{{url}}/pacients?sort=asc",
 							"host": [
 								"{{url}}"
 							],
@@ -666,6 +816,21 @@
 									"key": "name",
 									"value": "Ada",
 									"description": "Letras iniciais do nome do paciente (Case-Sensitive)",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "asc",
+									"description": "Ordena pelo nome (descentente por padrão) [asc]"
+								},
+								{
+									"key": "skip",
+									"value": "0",
 									"disabled": true
 								}
 							]
@@ -711,7 +876,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "bd7c39ff-f9ec-4a0d-a05f-877cc2d549c9",
+						"id": "0a2e266e-a92e-4845-aa04-f57539305345",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -721,7 +886,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "cb31b794-fc8f-4dfc-b3ad-c362c42694cf",
+						"id": "968fd4a2-1b95-4e70-ace7-6cc5e5976ca7",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -826,7 +991,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "e63271e3-edcd-453c-8817-064da478dcbb",
+				"id": "427bf137-ac3b-4b33-bafd-0a0c926fd663",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -836,7 +1001,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "8608e849-f577-4fdd-8f8e-8a3392c7cf15",
+				"id": "3f4dd85d-57ec-4aba-89e5-a96b8c82ea8a",
 				"type": "text/javascript",
 				"exec": [
 					""
