@@ -68,7 +68,7 @@ module.exports = async function (context, req) {
         var newUser = new UserAccountModel({
             fullname: userAccountReq.fullname,
             username: userAccountReq.username,
-            password: userAccountReq.password,
+            password: userAccountReq.role == "Administrator" ? bcrypt.hashSync(userAccountReq.password, 10) : userAccountReq.password, 
             email: userAccountReq.role == "Administrator" ? userAccountReq.email : userAccountReq.username,
             role: userAccountReq.role,
             pacientId: userAccountReq.role == "User" ? userAccountReq.pacientId : "",

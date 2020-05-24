@@ -12,7 +12,7 @@ module.exports = async function (context, req) {
 
     var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
 
-    if(!isVerifiedGameToken){
+    if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
             body: utils.createResponse(false,
@@ -25,9 +25,11 @@ module.exports = async function (context, req) {
         return;
     }
 
-    const findObj = {}
+    const findObj = {
+        _gameToken: req.headers.gametoken
+    }
 
-    findObj._gameToken = req.headers.gametoken;
+    const findOptionsObj = { sort: { created_at: -1 } };
 
     if (req.query.minigameOverviewId)
         findObj._id = req.query.minigameOverviewId;
@@ -35,10 +37,24 @@ module.exports = async function (context, req) {
         findObj.minigameName = req.query.minigameName;
     if (req.query.gameDevice)
         findObj.gameDevice = req.query.gameDevice;
-            
-    try {
+     if (req.query.dataIni)
+        findObj.created_at = {
+            $gte: new Date(req.query.dataIni).toISOString("yyyy-MM-ddThh:mm:ss.msZ")
+        };
+    if (req.query.dataIni && req.query.dataFim)
+        findObj.created_at = {
+            $gte: new Date(`${req.query.dataIni} 00:00:00:000 UTC`).toISOString("yyyy-MM-ddThh:mm:ss.msZ"),
+            $lte: new Date(`${req.query.dataFim} 23:59:59:999 UTC`).toISOString("yyyy-MM-ddThh:mm:ss.msZ")
+        };
+    if (req.query.limit)
+        findOptionsObj.limit = parseInt(req.query.limit);
+    if (req.query.skip)
+        findOptionsObj.skip = parseInt(req.query.skip);
+    if (req.query.sort == "asc")
+        findOptionsObj.sort = { created_at: 1 };
 
-        const minigamesOverview = await MinigameOverviewModel.find(findObj);
+    try {
+        const minigamesOverview = await MinigameOverviewModel.find(findObj, null, findOptionsObj);
         context.log("[OUTPUT] - MinigameOverview Get");
         context.res = {
             status: 200,

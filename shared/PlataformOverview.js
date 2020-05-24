@@ -17,7 +17,7 @@ const PlataformOverviewSchema = mongoose.Schema({
     scoreRatio: { type: Number },
     targetsSpawned: { type: Number },
     TargetsSuccess: { type: Number },
-    TargetsInsuccess: { type: Number },
+    TargetsInsSuccess: { type: Number },
     TargetsExpSuccess: { type: Number },
     TargetsFails: { type: Number },
     TargetsInsFail: { type: Number },

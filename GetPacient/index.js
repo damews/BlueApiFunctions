@@ -12,7 +12,7 @@ module.exports = async function (context, req) {
 
     var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
 
-    if(!isVerifiedGameToken){
+    if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
             body: utils.createResponse(false,
@@ -42,17 +42,29 @@ module.exports = async function (context, req) {
         _id: req.params.pacientId,
         _gameToken: req.headers.gametoken
     }
+    const aggregate = PacientModel.aggregate();
+    aggregate.match({ _id: mongoose.Types.ObjectId(req.params.pacientId), _gameToken: req.headers.gametoken });
 
+    aggregate.lookup({
+        from: "playsessions",
+        let: { "pacientId": "$_id" },
+        pipeline:
+            [
+                { "$addFields": { "pacientId": { "$toObjectId": "$pacientId" } } },
+                { "$match": { "$expr": { "$eq": ["$pacientId", "$$pacientId"] } } }
+            ],
+        as: "playSessions"
+    });
 
     try {
-        const pacients = await PacientModel.findOne(findObj);
+        const pacients = await aggregate.exec();
         context.log("[DB QUERYING] - Pacient Get by ID");
         context.res = {
             status: 200,
             body: utils.createResponse(true,
                 true,
                 "Consulta realizada com sucesso.",
-                pacients,
+                pacients[0],
                 null)
         }
     } catch (err) {

@@ -6,7 +6,9 @@ module.exports = async function (context, req) {
 
     //MinigameOverview Schema
     require('../shared/CalibrationOverview');
+    require('../shared/PlaySession');
     const CalibrationOverviewModel = mongoose.model('CalibrationOverview');
+    const PlaySessionModel = mongoose.model('PlaySession');
 
     const utils = require('../shared/utils');
 
@@ -43,6 +45,22 @@ module.exports = async function (context, req) {
     calibrationReq._gameToken = req.headers.gametoken;
 
     try {
+
+        const pacientSession = await PlaySessionModel.findOne({ pacientId: calibrationReq.pacientId }, null, { sort: { sessionNumber: -1 } });
+
+        if (!pacientSession) {
+            await new PlaySessionModel({ pacientId: calibrationReq.pacientId, sessionNumber: 1 }).save();
+        } else {
+            let pacientSessionDate = new Date(pacientSession.created_at);
+            pacientSessionDate.setHours(0, 0, 0, 0);
+
+            let currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+
+            if (pacientSessionDate.getTime() != currentDate.getTime())
+                await new PlaySessionModel({ pacientId: calibrationReq.pacientId, sessionNumber: pacientSession.sessionNumber + 1 }).save()
+        }
+
         const savedCalibrationOverview = await (new CalibrationOverviewModel(calibrationReq)).save();
         context.log("[OUTPUT] - Calibration Overview Saved: ", savedCalibrationOverview);
         context.res = {
@@ -57,7 +75,7 @@ module.exports = async function (context, req) {
         context.log("[DB SAVING] - ERROR: ", err);
         context.res = {
             status: 500,
-            body:  utils.createResponse(false,
+            body: utils.createResponse(false,
                 true,
                 "Ocorreu um erro interno ao realizar a operação.",
                 null,

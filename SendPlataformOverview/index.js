@@ -49,9 +49,27 @@ module.exports = async function (context, req) {
 
     var flowDataDevicesReq = req.body.flowDataDevices;
 
+    plataformOverviewReq.devices = flowDataDevicesReq.map(x=>x.deviceName);
+
     delete plataformOverviewReq.flowDataDevices;
 
     try {
+
+        const pacientSession = await PlaySessionModel.findOne({ pacientId: calibrationReq.pacientId }, null, { sort: { sessionNumber: -1 } });
+
+        if (!pacientSession) {
+            await new PlaySessionModel({ pacientId: calibrationReq.pacientId, sessionNumber: 1 }).save();
+        } else {
+            let pacientSessionDate = new Date(pacientSession.created_at);
+            pacientSessionDate.setHours(0, 0, 0, 0);
+
+            let currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+
+            if (pacientSessionDate.getTime() != currentDate.getTime())
+                await new PlaySessionModel({ pacientId: calibrationReq.pacientId, sessionNumber: pacientSession.sessionNumber + 1 }).save()
+        }
+
         const savedFlowDataDevices = await (new FlowDataDeviceModel({ _gameToken: req.headers.gametoken, flowDataDevices: flowDataDevicesReq })).save();
         plataformOverviewReq.flowDataDevicesId = savedFlowDataDevices._id;
         const savedPlataformOverview = await (new PlataformOverviewModel(plataformOverviewReq)).save();

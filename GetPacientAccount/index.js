@@ -39,14 +39,14 @@ module.exports = async function (context, req) {
     }
 
     try {
-        const pacients = await UserAccountModel.find({pacientId: req.params.pacientId}, '_id pacientId username password');
+        const pacient = await UserAccountModel.findOne({pacientId: req.params.pacientId}, '_id pacientId username password');
         context.log("[DB QUERYING] - Pacient Account Get by ID");
         context.res = {
             status: 200,
             body: utils.createResponse(true,
                 true,
                 "Consulta realizada com sucesso.",
-                pacients,
+                pacient,
                 null)
         }
     } catch (err) {

@@ -7,8 +7,10 @@ module.exports = async function (context, req) {
     //MinigameOverview Schema
     require('../shared/MinigameOverview');
     require('../shared/FlowDataDevice');
+    require('../shared/PlaySession');
     const MinigameOverviewModel = mongoose.model('MinigameOverview');
     const FlowDataDeviceModel = mongoose.model('FlowDataDevice');
+    const PlaySessionModel = mongoose.model('PlaySession');
 
     const utils = require('../shared/utils');
 
@@ -67,7 +69,22 @@ module.exports = async function (context, req) {
         minigameOverviewReq.flowDataRounds[0].flowDataDevicesId = flowDataDevicesIds[0];
         minigameOverviewReq.flowDataRounds[1].flowDataDevicesId = flowDataDevicesIds[1];
         minigameOverviewReq.flowDataRounds[2].flowDataDevicesId = flowDataDevicesIds[2];
-        minigameOverviewReq.devices = devices
+        minigameOverviewReq.devices = devices;
+
+        const pacientSession = await PlaySessionModel.findOne({ pacientId: calibrationReq.pacientId }, null, { sort: { sessionNumber: -1 } });
+
+        if (!pacientSession) {
+            await new PlaySessionModel({ pacientId: calibrationReq.pacientId, sessionNumber: 1 }).save();
+        } else {
+            let pacientSessionDate = new Date(pacientSession.created_at);
+            pacientSessionDate.setHours(0, 0, 0, 0);
+
+            let currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+
+            if (pacientSessionDate.getTime() != currentDate.getTime())
+                await new PlaySessionModel({ pacientId: calibrationReq.pacientId, sessionNumber: pacientSession.sessionNumber + 1 }).save()
+        }
 
         const savedMinigameOverview = await (new MinigameOverviewModel(minigameOverviewReq)).save();
         context.log("[OUTPUT] - MinigameOverview Saved: ", savedMinigameOverview);

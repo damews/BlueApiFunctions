@@ -12,7 +12,7 @@ module.exports = async function (context, req) {
 
     var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
 
-    if(!isVerifiedGameToken){
+    if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
             body: utils.createResponse(false,
@@ -25,15 +25,39 @@ module.exports = async function (context, req) {
         return;
     }
 
-    const findObj = {
-        _gameToken: req.headers.gametoken
-    }
+    const matchOperators = { $match: { _gameToken: req.headers.gametoken } }
+
+    const aggregate = PacientModel.aggregate();
 
     if (req.query.name)
-        findObj.name = { $regex : "^" + req.query.name + ".*", $options: 'i' };
+        matchOperators.$match.name = { $regex: "^" + req.query.name + ".*", $options: 'i' };
+
+    aggregate.append(matchOperators);
+    
+    if (req.query.sort == "asc")
+        aggregate.sort({ name: 1 })
+    else
+        aggregate.sort({ name: -1 })
+
+    aggregate.lookup({
+        from: "playsessions",
+        let: { "pacientId": "$_id" },
+        pipeline:
+            [
+                { "$addFields": { "pacientId": { "$toObjectId": "$pacientId" } } },
+                { "$match": { "$expr": { "$eq": ["$pacientId", "$$pacientId"] } } }
+            ],
+        as: "playSessions"
+    });
+
+    if (req.query.limit)
+        aggregate.limit(parseInt(req.query.limit))
+    if (req.query.skip)
+        aggregate.skip(req.query.skip);
 
     try {
-        const pacients = await PacientModel.find(findObj);
+
+        const pacients = await aggregate.exec();
         context.log("[DB QUERYING] - Pacient Get");
         context.res = {
             status: 200,
