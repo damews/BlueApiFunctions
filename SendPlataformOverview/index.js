@@ -7,9 +7,11 @@ module.exports = async function (context, req) {
     //PlataformOverview Schema
     require('../shared/PlataformOverview');
     require('../shared/FlowDataDevice');
+    require('../shared/PlaySession');
 
     const PlataformOverviewModel = mongoose.model('PlataformOverview');
     const FlowDataDeviceModel = mongoose.model('FlowDataDevice');
+    const PlaySessionModel = mongoose.model('PlaySession');
 
     const validators = require("../shared/Validators");
     const validate = require("validate.js");
@@ -49,16 +51,16 @@ module.exports = async function (context, req) {
 
     var flowDataDevicesReq = req.body.flowDataDevices;
 
-    plataformOverviewReq.devices = flowDataDevicesReq.map(x=>x.deviceName);
+    plataformOverviewReq.devices = flowDataDevicesReq.map(x => x.deviceName);
 
     delete plataformOverviewReq.flowDataDevices;
 
     try {
 
-        const pacientSession = await PlaySessionModel.findOne({ pacientId: calibrationReq.pacientId }, null, { sort: { sessionNumber: -1 } });
+        const pacientSession = await PlaySessionModel.findOne({ pacientId: plataformOverviewReq.pacientId }, null, { sort: { sessionNumber: -1 } });
 
         if (!pacientSession) {
-            await new PlaySessionModel({ pacientId: calibrationReq.pacientId, sessionNumber: 1 }).save();
+            await new PlaySessionModel({ pacientId: plataformOverviewReq.pacientId, sessionNumber: 1 }).save();
         } else {
             let pacientSessionDate = new Date(pacientSession.created_at);
             pacientSessionDate.setHours(0, 0, 0, 0);
@@ -67,7 +69,7 @@ module.exports = async function (context, req) {
             currentDate.setHours(0, 0, 0, 0);
 
             if (pacientSessionDate.getTime() != currentDate.getTime())
-                await new PlaySessionModel({ pacientId: calibrationReq.pacientId, sessionNumber: pacientSession.sessionNumber + 1 }).save()
+                await new PlaySessionModel({ pacientId: plataformOverviewReq.pacientId, sessionNumber: pacientSession.sessionNumber + 1 }).save()
         }
 
         const savedFlowDataDevices = await (new FlowDataDeviceModel({ _gameToken: req.headers.gametoken, flowDataDevices: flowDataDevicesReq })).save();
@@ -79,14 +81,14 @@ module.exports = async function (context, req) {
             body: utils.createResponse(true,
                 true,
                 "Plataforma salva com sucesso.",
-                savedCalibrationOverview,
+                savedPlataformOverview,
                 null)
         }
     } catch (err) {
         context.log("[DB SAVING] - ERROR: ", err);
         context.res = {
             status: 500,
-            body:  utils.createResponse(false,
+            body: utils.createResponse(false,
                 true,
                 "Ocorreu um erro interno ao realizar a operação.",
                 null,

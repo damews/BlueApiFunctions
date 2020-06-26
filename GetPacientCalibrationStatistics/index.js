@@ -5,9 +5,8 @@ module.exports = async function (context, req) {
     mongoose.Promise = global.Promise;
 
     //PlataformOverview Schema
-    require('../shared/PlataformOverview');
-    require('../shared/FlowDataDevice');
-    const PlataformOverviewModel = mongoose.model('PlataformOverview');
+    require('../shared/CalibrationOverview');
+    const CalibrationOverviewModel = mongoose.model('CalibrationOverview');
 
     const utils = require('../shared/utils');
 
@@ -108,18 +107,18 @@ module.exports = async function (context, req) {
         "maxScore": "$newRoot.maxScore",
         "scoreRatio": "$newRoot.scoreRatio",
         "targetsSpawned": "$newRoot.targetsSpawned",
-        "targetsExpSuccess": "$newRoot.TargetsExpSuccess",
-        "targetsFails": "$newRoot.TargetsFails",
-        "targetsInsFail": "$newRoot.TargetsInsFail",
-        "targetsExpFail": "$newRoot.TargetsExpFail",
-        "obstaclesSpawned": "$newRoot.ObstaclesSpawned",
-        "obstaclesSuccess": "$newRoot.ObstaclesSuccess",
-        "obstaclesFail": "$newRoot.ObstaclesFail",
-        "obstaclesInsSuccess": "$newRoot.ObstaclesInsSuccess",
-        "obstaclesExpSuccess": "$newRoot.ObstaclesExpSuccess",
-        "obstaclesInsFail": "$newRoot.ObstaclesInsFail",
-        "obstaclesExpFail": "$newRoot.ObstaclesExpFail",
-        "playerHp": "$newRoot.PlayerHp",
+        "TargetsExpSuccess": "$newRoot.TargetsExpSuccess",
+        "TargetsFails": "$newRoot.TargetsFails",
+        "TargetsInsFail": "$newRoot.TargetsInsFail",
+        "TargetsExpFail": "$newRoot.TargetsExpFail",
+        "ObstaclesSpawned": "$newRoot.ObstaclesSpawned",
+        "ObstaclesSuccess": "$newRoot.ObstaclesSuccess",
+        "ObstaclesFail": "$newRoot.ObstaclesFail",
+        "ObstaclesInsSuccess": "$newRoot.ObstaclesInsSuccess",
+        "ObstaclesExpSuccess": "$newRoot.ObstaclesExpSuccess",
+        "ObstaclesInsFail": "$newRoot.ObstaclesInsFail",
+        "ObstaclesExpFail": "$newRoot.ObstaclesExpFail",
+        "PlayerHp": "$newRoot.PlayerHp",
         "maxInsFlow":
         {
             $min:

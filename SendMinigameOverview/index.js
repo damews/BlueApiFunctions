@@ -71,10 +71,10 @@ module.exports = async function (context, req) {
         minigameOverviewReq.flowDataRounds[2].flowDataDevicesId = flowDataDevicesIds[2];
         minigameOverviewReq.devices = devices;
 
-        const pacientSession = await PlaySessionModel.findOne({ pacientId: calibrationReq.pacientId }, null, { sort: { sessionNumber: -1 } });
+        const pacientSession = await PlaySessionModel.findOne({ pacientId: minigameOverviewReq.pacientId }, null, { sort: { sessionNumber: -1 } });
 
         if (!pacientSession) {
-            await new PlaySessionModel({ pacientId: calibrationReq.pacientId, sessionNumber: 1 }).save();
+            await new PlaySessionModel({ pacientId: minigameOverviewReq.pacientId, sessionNumber: 1 }).save();
         } else {
             let pacientSessionDate = new Date(pacientSession.created_at);
             pacientSessionDate.setHours(0, 0, 0, 0);
@@ -83,7 +83,7 @@ module.exports = async function (context, req) {
             currentDate.setHours(0, 0, 0, 0);
 
             if (pacientSessionDate.getTime() != currentDate.getTime())
-                await new PlaySessionModel({ pacientId: calibrationReq.pacientId, sessionNumber: pacientSession.sessionNumber + 1 }).save()
+                await new PlaySessionModel({ pacientId: minigameOverviewReq.pacientId, sessionNumber: pacientSession.sessionNumber + 1 }).save()
         }
 
         const savedMinigameOverview = await (new MinigameOverviewModel(minigameOverviewReq)).save();

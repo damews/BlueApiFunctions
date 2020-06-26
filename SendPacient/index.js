@@ -41,6 +41,7 @@ module.exports = async function (context, req) {
     }
 
     pacientReq._gameToken = req.headers.gametoken;
+    pacientReq.birthday = new Date(`${req.body.birthday} 00:00:00:000`);
 
     try {
         const savedPacient = await (new PacientModel(pacientReq)).save();
