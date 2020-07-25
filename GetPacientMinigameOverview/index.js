@@ -68,7 +68,6 @@ module.exports = async function (context, req) {
 
 
     try {
-
         const minigamesOverview = await MinigameOverviewModel.find(findObj, null, findOptionsObj);
         context.log("[DB QUERYING] - MinigameOverview Get by Pacient ID");
         context.res = {

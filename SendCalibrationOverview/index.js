@@ -11,6 +11,7 @@ module.exports = async function (context, req) {
     const PlaySessionModel = mongoose.model('PlaySession');
 
     const utils = require('../shared/utils');
+    const validations = require('../shared/Validators');
 
     var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
 
@@ -37,6 +38,18 @@ module.exports = async function (context, req) {
                 "Dados vazios!",
                 null,
                 2)
+        }
+        context.done();
+        return;
+    }
+
+    let validationResult = validations.calibrationOverviewSaveValidator(calibrationReq);
+    if(validationResult.errorCount !== 0){
+        let response = utils.createResponse(false, true, "Erros de validação encontrados!", null, 2);
+        response.errors = validationResult.errors.errors;
+        context.res = {
+            status: 400,
+            body: response
         }
         context.done();
         return;
