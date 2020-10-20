@@ -48,7 +48,7 @@ module.exports = async function (context, req) {
     }
 
     let validationResult = validations.plataformOverviewSaveValidator(plataformOverviewReq);
-    if(validationResult.errorCount !== 0){
+    if (validationResult.errorCount !== 0) {
         let response = utils.createResponse(false, true, "Erros de validação encontrados!", null, 2);
         response.errors = validationResult.errors.errors;
         context.res = {
@@ -64,6 +64,16 @@ module.exports = async function (context, req) {
     var flowDataDevicesReq = req.body.flowDataDevices;
 
     plataformOverviewReq.devices = flowDataDevicesReq.map(x => x.deviceName);
+
+    //BUSCAR OS MAIORES VALORES
+    plataformOverviewReq.flowDataDevicesValues = flowDataDevicesReq.map(function (element) {
+        return {
+            deviceName: element.deviceName,
+            maxFlowValue: element.flowData.reduce((max, el) => (el.flowValue > max ? el.flowValue : max), element.flowData[0].flowValue),
+            minFlowValue: element.flowData.reduce((min, el) => (el.flowValue < min ? el.flowValue : min), element.flowData[0].flowValue),
+            meanFlowValue: element.flowData.reduce((acc, value) => (acc + Number.parseFloat(value.flowValue)), 0) / element.flowData.length
+        }
+    });
 
     delete plataformOverviewReq.flowDataDevices;
 

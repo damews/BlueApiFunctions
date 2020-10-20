@@ -5,7 +5,9 @@ module.exports = async function (context, req) {
     mongoose.Promise = global.Promise;
 
     require('../shared/Pacient');
+    require('../shared/PlataformOverview');
     const PacientModel = mongoose.model('Pacient');
+    const PlataformOverviewModel = mongoose.model('PlataformOverview');
 
     const utils = require('../shared/utils');
 
@@ -237,16 +239,18 @@ module.exports = async function (context, req) {
             $push: {
                 maxInsFlow: '$maxInsFlow',
                 maxExpFlow: '$maxExpFlow',
-                maxScore:'$maxScore',
-                maxScoreRatio:'$maxScoreRatio',
+                maxScore: '$maxScore',
+                maxScoreRatio: '$maxScoreRatio',
+
                 created_at: '$_id.date',
                 sessionNumber: '$_id.sessionNumber'
-            }
+            },
         }
     });
     aggregate.project({
         pacientId: "$_id.pacientId",
-        maxFlows: 1,
+        maxFlowsPerSession: "$maxFlows",
+        plataformInfoPerSession: 1,
         _id: 0
     })
 
@@ -254,6 +258,11 @@ module.exports = async function (context, req) {
 
     try {
         const plataformStatistics = await aggregate.exec();
+        let plataformStatisticsPacientsIds = plataformStatistics.map(x => x.pacientId.toString());
+        let plataformInfos = await PlataformOverviewModel.find({ pacientId: { $in: plataformStatisticsPacientsIds } }, { pacientId: 1, maxScore: 1, scoreRatio: 1, phase: 1, level: 1 });
+        plataformStatistics.forEach(element => {
+            element.plataformInfo = plataformInfos.filter(x => x.pacientId == element.pacientId);
+        });
         context.log("[DB QUERYING] - PlataformOverviewStatistics Get by Pacient ID");
         context.res = {
             status: 200,
