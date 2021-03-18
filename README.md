@@ -1,5 +1,3 @@
-**ATENÇÃO**: este repositório foi descontinuado pois os desenvolvimentos serão continuados pelo grupo de pesquisa LARVA (LAboratory for Research on Visual Applications). Você pode acompanhar os desenvolvimentos [aqui]()
-
 # I Blue It  - API
 
 Este projeto contém uma API desenvolvida em Node.js com a tecnologia [Microsoft Azure Functions](https://azure.microsoft.com/pt-br/services/functions/) 3.0 para o Jogo Sério [I Blue It](https://udescmove2learn.wordpress.com/2018/04/26/i-blue-it/#manuais). Esta API serve para o envio das informações geradas dentro do jogo para um banco de dados facilitando a sua consulta dentro de uma aplicação web, o I Blue It Analytics (disponível [neste repositório]()).
