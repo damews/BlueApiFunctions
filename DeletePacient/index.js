@@ -1,5 +1,4 @@
 const { db } = require('../shared/Pacient');
-const { resolveContent } = require('nodemailer/lib/shared');
 
 module.exports = async function (context, req) {
     const mongoose = require('mongoose');

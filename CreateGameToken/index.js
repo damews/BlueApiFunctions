@@ -90,7 +90,7 @@ module.exports = async function (context, req) {
                 true,
                 "Ocorreu um erro interno ao realizar a operação.",
                 null,
-                00)
+                99)
         }
     }
 

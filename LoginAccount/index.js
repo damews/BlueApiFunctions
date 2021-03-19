@@ -104,7 +104,7 @@ module.exports = async function (context, req) {
                 false,
                 "Ocorreu um erro interno ao realizar a operação.",
                 null,
-                00)
+                99)
         }
     }
     context.done();

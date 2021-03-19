@@ -14,7 +14,6 @@ module.exports = async function (context, req) {
     const PlaySessionModel = mongoose.model('PlaySession');
 
     const validations = require('../shared/Validators');
-    const validate = require("validate.js");
     const utils = require('../shared/utils');
 
     var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
@@ -114,7 +113,7 @@ module.exports = async function (context, req) {
                 true,
                 "Ocorreu um erro interno ao realizar a operação.",
                 null,
-                00)
+                99)
         }
     }
 

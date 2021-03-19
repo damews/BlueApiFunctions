@@ -54,7 +54,7 @@ function createErrorObj(errorCode) {
 const errorCodes = {
     1: "Esta chave de acesso é inválida. Por favor, verifique-a novamente. Se o erro persistir, entre em contato com a equipe de suporte",
     2: "É necessário o envio dos dados para realizar esta operação.",
-    00: "Erro interno ao realizar a operação. Por favor, entre em contato com a equipe de suporte.",
+    99: "Erro interno ao realizar a operação. Por favor, entre em contato com a equipe de suporte.",
     300: "O ID do registro é necessário para realizar esta consulta/atualização."
 }
 

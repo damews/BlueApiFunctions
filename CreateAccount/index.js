@@ -95,7 +95,7 @@ module.exports = async function (context, req) {
         const savedUser = await newUser.save();
         context.log("[DB SAVING] - User Account Created: ", savedUser);
 
-        if (savedUser.role == "Administrator") {
+        if (savedUser.role == "Administrator"){
             utils.sendWelcomeEmail(savedUser.fullname, savedUser.username, userAccountReq.password, savedUser.email);
             context.res = {
                 status: 201,
@@ -126,7 +126,7 @@ module.exports = async function (context, req) {
                 false,
                 "Ocorreu um erro interno ao realizar a operação.",
                 null,
-                00)
+                99)
         }
     }
     context.done();

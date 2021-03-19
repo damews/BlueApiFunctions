@@ -3,7 +3,6 @@ var url = "mongodb+srv://bluedb:bluedbpassword@cluster0test-94vvs.azure.mongodb.
 
 MongoClient.connect(url, function (err, db) {
     if (err) throw err;
-    var dbo = db.db("IBLUEIT");
     db.plataformoverview.aggregate(
         [
             {

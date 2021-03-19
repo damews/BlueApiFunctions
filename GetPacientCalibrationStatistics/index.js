@@ -5,8 +5,8 @@ module.exports = async function (context, req) {
     mongoose.Promise = global.Promise;
 
     //PlataformOverview Schema
-    require('../shared/CalibrationOverview');
-    const CalibrationOverviewModel = mongoose.model('CalibrationOverview');
+    require('../shared/PlataformOverview');
+    const PlataformOverviewModel = mongoose.model('PlataformOverview');
 
     const utils = require('../shared/utils');
 
@@ -172,7 +172,7 @@ module.exports = async function (context, req) {
                 true,
                 "Ocorreu um erro interno ao realizar a operação.",
                 null,
-                00)
+                99)
         }
     }
 

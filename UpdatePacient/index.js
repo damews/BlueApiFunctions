@@ -94,7 +94,7 @@ module.exports = async function (context, req) {
             body: utils.createResponse(true,
                 true,
                 "Registro atualizado com sucesso.",
-                flowDataDevice,
+                updatedPacient,
                 null)
         }
     } catch (err) {
@@ -105,7 +105,7 @@ module.exports = async function (context, req) {
                 true,
                 "Ocorreu um erro interno ao realizar a operação.",
                 null,
-                00)
+                99)
         }
     }
 
