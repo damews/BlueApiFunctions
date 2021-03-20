@@ -7,20 +7,17 @@ module.exports = async function (context, req) {
     require('../shared/FlowDataDevice');
     const FlowDataDeviceModel = mongoose.model('FlowDataDevice');
 
-    const utils = require('../shared/utils');
+    const authorizationUtils = require('../shared/authorization/tokenVerifier');
+    const responseUtils = require('../shared/http/responseUtils');
+    const errorMessages = require('../shared/http/errorMessages');
+    const infoMessages = require('../shared/http/infoMessages');
 
-    utils.validateHeaders(req.headers, context);
+    var isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
 
-    var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
-
-    if(!isVerifiedGameToken){
+    if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
-            body: utils.createResponse(false,
-                false,
-                "Chave de acesso inválida.",
-                null,
-                1)
+            body: responseUtils.createResponse(false, false, errorMessages.INVALID_TOKEN, null)
         }
         context.done();
         return;
@@ -29,11 +26,7 @@ module.exports = async function (context, req) {
     if (req.params.flowDataDeviceId === undefined || req.params.flowDataDeviceId == null) {
         context.res = {
             status: 400,
-            body: utils.createResponse(false,
-                false,
-                "Parâmetros de consulta inexistentes.",
-                null,
-                300)
+            body: responseUtils.createResponse(false, false, errorMessages.INVALID_REQUEST, null)
         }
         context.done();
         return;
@@ -41,7 +34,7 @@ module.exports = async function (context, req) {
 
     const findObj = {
         _id: req.params.flowDataDeviceId,
-        _gameToken: req.headers.gametoken 
+        _gameToken: req.headers.gametoken
     }
 
     try {
@@ -49,9 +42,9 @@ module.exports = async function (context, req) {
         context.log("[DB QUERYING] - FlowDataDevice Get by ID");
         context.res = {
             status: 200,
-            body: utils.createResponse(true,
+            body: responseUtils.createResponse(true,
                 true,
-                "Consulta realizada com sucesso.",
+                infoMessages.SUCCESSFULLY_REQUEST,
                 flowDataDevice,
                 null)
         }
@@ -59,11 +52,7 @@ module.exports = async function (context, req) {
         context.log("[DB QUERYING] - ERROR: ", err);
         context.res = {
             status: 500,
-            body: utils.createResponse(false,
-                true,
-                "Ocorreu um erro interno ao realizar a operação.",
-                null,
-                99)
+            body: responseUtils.createResponse(false, true, errorMessages.DEFAULT_ERROR, null)
         }
     }
 

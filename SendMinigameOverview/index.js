@@ -12,21 +12,18 @@ module.exports = async function (context, req) {
     const FlowDataDeviceModel = mongoose.model('FlowDataDevice');
     const PlaySessionModel = mongoose.model('PlaySession');
 
-    const utils = require('../shared/utils');
-    const validations = require('../shared/Validators');
+    const authorizationUtils = require('../shared/authorization/tokenVerifier');
+    const responseUtils = require('../shared/http/responseUtils');
+    const errorMessages = require('../shared/http/errorMessages');
+    const infoMessages = require('../shared/http/infoMessages');
+    const inputValidator = require('../shared/validations/minigameOverviewInputValidator');
 
-    utils.validateHeaders(req.headers, context);
-
-    var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
+    var isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
 
     if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
-            body: utils.createResponse(false,
-                false,
-                "Chave de acesso inválida.",
-                null,
-                1)
+            body: responseUtils.createResponse(false, false, errorMessages.INVALID_TOKEN, null)
         }
         context.done();
         return;
@@ -37,19 +34,15 @@ module.exports = async function (context, req) {
     if (Object.entries(minigameOverviewReq).length === 0) {
         context.res = {
             status: 400,
-            body: utils.createResponse(false,
-                true,
-                "Dados vazios!",
-                null,
-                2)
+            body: responseUtils.createResponse(false, true, errorMessages.EMPTY_REQUEST, null)
         }
         context.done();
         return;
     }
 
-    let validationResult = validations.minigameOverviewSaveValidator(minigameOverviewReq);
-    if(validationResult.errorCount !== 0){
-        let response = utils.createResponse(false, true, "Erros de validação encontrados!", null, 2);
+    let validationResult = inputValidator.minigameOverviewSaveValidator(minigameOverviewReq);
+    if (validationResult.errorCount !== 0) {
+        let response = responseUtils.createResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
         response.errors = validationResult.errors.errors;
         context.res = {
             status: 400,
@@ -65,7 +58,7 @@ module.exports = async function (context, req) {
 
     var flowDataDevicesObjects = minigameOverviewReq.flowDataRounds.map(x => x.flowDataDevices);
 
-    var devices = flowDataDevicesObjects[0].map(x=>x.deviceName);
+    var devices = flowDataDevicesObjects[0].map(x => x.deviceName);
 
     minigameOverviewReq.flowDataRounds.map(x => delete x.flowDataDevices);
 
@@ -103,20 +96,12 @@ module.exports = async function (context, req) {
         context.log("[OUTPUT] - MinigameOverview Saved: ", savedMinigameOverview);
         context.res = {
             status: 201,
-            body: utils.createResponse(true,
-                true,
-                "Minigame salvo com sucesso.",
-                savedMinigameOverview,
-                null)
+            body: responseUtils.createResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, savedMinigameOverview)
         }
     } catch (err) {
         context.res = {
             status: 500,
-            body:  utils.createResponse(false,
-                true,
-                "Ocorreu um erro interno ao realizar a operação.",
-                null,
-                99)
+            body: responseUtils.createResponse(false, true, errorMessages.DEFAULT_ERROR, null)
         }
     }
 

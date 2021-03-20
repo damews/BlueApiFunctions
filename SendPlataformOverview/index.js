@@ -13,19 +13,18 @@ module.exports = async function (context, req) {
     const FlowDataDeviceModel = mongoose.model('FlowDataDevice');
     const PlaySessionModel = mongoose.model('PlaySession');
 
-    const validations = require('../shared/Validators');
-    const utils = require('../shared/utils');
+    const authorizationUtils = require('../shared/authorization/tokenVerifier');
+    const responseUtils = require('../shared/http/responseUtils');
+    const errorMessages = require('../shared/http/errorMessages');
+    const infoMessages = require('../shared/http/infoMessages');
+    const inputValidator = require('../shared/validations/plataformOverviewInputValidator');
 
-    var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
+    var isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
 
     if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
-            body: utils.createResponse(false,
-                false,
-                "Chave de acesso inválida.",
-                null,
-                1)
+            body: responseUtils.createResponse(false, false, errorMessages.INVALID_TOKEN, null)
         }
         context.done();
         return;
@@ -36,19 +35,15 @@ module.exports = async function (context, req) {
     if (Object.entries(plataformOverviewReq).length === 0) {
         context.res = {
             status: 400,
-            body: utils.createResponse(false,
-                true,
-                "Dados vazios!",
-                null,
-                2)
+            body: responseUtils.createResponse(false, true, errorMessages.EMPTY_REQUEST, null)
         }
         context.done();
         return;
     }
 
-    let validationResult = validations.plataformOverviewSaveValidator(plataformOverviewReq);
+    let validationResult = inputValidator.plataformOverviewSaveValidator(plataformOverviewReq);
     if (validationResult.errorCount !== 0) {
-        let response = utils.createResponse(false, true, "Erros de validação encontrados!", null, 2);
+        let response = responseUtils.createResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
         response.errors = validationResult.errors.errors;
         context.res = {
             status: 400,
@@ -99,21 +94,13 @@ module.exports = async function (context, req) {
         context.log("[OUTPUT] - PlataformOverview Saved: ", savedPlataformOverview);
         context.res = {
             status: 201,
-            body: utils.createResponse(true,
-                true,
-                "Plataforma salva com sucesso.",
-                savedPlataformOverview,
-                null)
+            body: responseUtils.createResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, savedPlataformOverview, null)
         }
     } catch (err) {
         context.log("[DB SAVING] - ERROR: ", err);
         context.res = {
             status: 500,
-            body: utils.createResponse(false,
-                true,
-                "Ocorreu um erro interno ao realizar a operação.",
-                null,
-                99)
+            body: responseUtils.createResponse(false, true, errorMessages.DEFAULT_ERROR, null)
         }
     }
 

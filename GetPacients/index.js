@@ -8,18 +8,17 @@ module.exports = async function (context, req) {
     require('../shared/Pacient');
     const PacientModel = mongoose.model('Pacient');
 
-    const utils = require('../shared/utils');
+    const authorizationUtils = require('../shared/authorization/tokenVerifier');
+    const responseUtils = require('../shared/http/responseUtils');
+    const errorMessages = require('../shared/http/errorMessages');
+    const infoMessages = require('../shared/http/infoMessages');
 
-    var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
+    var isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
 
     if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
-            body: utils.createResponse(false,
-                false,
-                "Chave de acesso inválida.",
-                null,
-                1)
+            body: responseUtils.createResponse(false, false, errorMessages.INVALID_TOKEN, null)
         }
         context.done();
         return;
@@ -35,7 +34,7 @@ module.exports = async function (context, req) {
         matchOperators.$match.condition = { $eq: req.query.condition };
     if (req.query.sex)
         matchOperators.$match.sex = { $eq: req.query.sex };
-    
+
     if (req.query.fromAge) {
         let date = new Date();
         date.setHours(0, 0, 0, 0);
@@ -75,25 +74,25 @@ module.exports = async function (context, req) {
     else
         aggregate.sort({ name: -1 })
 
-        aggregate.lookup({
-            from: 'playsessions',
-            'let': {
-                id: '$_id'
-            },
-            pipeline: [
-                {
-                    $match: {
-                        $expr: {
-                            $and: [
-                                { $eq: [{ $toObjectId: '$pacientId' }, '$$id'] }
-                            ]
-                        }
+    aggregate.lookup({
+        from: 'playsessions',
+        'let': {
+            id: '$_id'
+        },
+        pipeline: [
+            {
+                $match: {
+                    $expr: {
+                        $and: [
+                            { $eq: [{ $toObjectId: '$pacientId' }, '$$id'] }
+                        ]
                     }
                 }
-            ],
-            as: 'playSessions'
-        });
-    
+            }
+        ],
+        as: 'playSessions'
+    });
+
 
     if (req.query.limit)
         aggregate.limit(parseInt(req.query.limit))
@@ -106,21 +105,13 @@ module.exports = async function (context, req) {
         context.log("[DB QUERYING] - Pacient Get");
         context.res = {
             status: 200,
-            body: utils.createResponse(true,
-                true,
-                "Consulta realizada com sucesso.",
-                pacients,
-                null)
+            body: responseUtils.createResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, pacients, null)
         }
     } catch (err) {
         context.log("[DB QUERYING] - ERROR: ", err);
         context.res = {
             status: 500,
-            body: utils.createResponse(false,
-                true,
-                "Ocorreu um erro interno ao realizar a operação.",
-                null,
-                99)
+            body: responseUtils.createResponse(false, true, errorMessages.DEFAULT_ERROR, null)
         }
     }
 
