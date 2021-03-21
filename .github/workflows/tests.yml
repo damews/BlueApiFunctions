@@ -1,4 +1,4 @@
-name: CI
+name: Linter/Tests
 
 on:
   push:
@@ -18,5 +18,7 @@ jobs:
         run: npm install      
       - name: ESlint
         run: npm run eslint
+      - name: Jest
+        run: npm run test
         
 
