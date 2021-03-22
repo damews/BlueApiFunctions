@@ -7,8 +7,10 @@ module.exports = async function (context, req) {
     require('../shared/UserAccount');
     const UserAccountModel = mongoose.model('UserAccount');
 
-    const utils = require('../shared/utils');
-    const validations = require('../shared/Validators');
+    const responseUtils = require('../shared/http/responseUtils');
+    const inputValidator = require('../shared/validations/tokenCreateInputValidator');
+    const errorMessages = require('../shared/http/errorMessages');
+    const infoMessages = require('../shared/http/infoMessages');
     const { v4: uuidv4 } = require('uuid');
 
     const gameTokenReq = req.body || {};
@@ -16,19 +18,15 @@ module.exports = async function (context, req) {
     if (Object.entries(gameTokenReq).length === 0) {
         context.res = {
             status: 400,
-            body: utils.createResponse(false,
-                true,
-                "Dados vazios!",
-                null,
-                2)
+            body: responseUtils.createResponse(false, true, errorMessages.EMPTY_REQUEST, null)
         }
         context.done();
         return;
     }
 
-    let validationResult = validations.createTokenValidator(gameTokenReq);
-    if(validationResult.errorCount !== 0){
-        let response = utils.createResponse(false, true, "Erros de validação encontrados!", null, 2);
+    let validationResult = inputValidator.createTokenValidator(gameTokenReq);
+    if (validationResult.errorCount !== 0) {
+        let response = responseUtils.createResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
         response.errors = validationResult.errors.errors;
         context.res = {
             status: 400,
@@ -45,11 +43,7 @@ module.exports = async function (context, req) {
         if (!user) {
             context.res = {
                 status: 404,
-                body: utils.createResponse(true,
-                    true,
-                    "Usuário inexistente!.",
-                    { userId: gameTokenReq.userId },
-                    null)
+                body: responseUtils.createResponse(true, true, errorMessages.USER_NOT_FOUND, { userId: gameTokenReq.userId })
             }
             context.done();
             return;
@@ -58,11 +52,7 @@ module.exports = async function (context, req) {
         if (user.gameToken.token != "") {
             context.res = {
                 status: 200,
-                body: utils.createResponse(true,
-                    true,
-                    "Já existe um Token de Acesso gerado para este usuário!.",
-                    { gameToken: user.gameToken.token },
-                    null)
+                body: responseUtils.createResponse(true, true, errorMessages.TOKEN_ALREADY_GENERATED, { gameToken: user.gameToken.token })
             }
             context.done();
             return;
@@ -75,22 +65,14 @@ module.exports = async function (context, req) {
         const savedUser = await user.save();
         context.res = {
             status: 201,
-            body: utils.createResponse(true,
-                true,
-                "Token de Acesso criado com sucesso!.",
-                { gameToken: savedUser.gameToken.token },
-                null)
+            body: responseUtils.createResponse(true, true, infoMessages.SUCCESSFULLY_REGISTERED_TOKEN, { gameToken: savedUser.gameToken.token })
         }
 
     } catch (err) {
         context.log("[DB SAVING] - ERROR: ", err);
         context.res = {
             status: 500,
-            body: utils.createResponse(false,
-                true,
-                "Ocorreu um erro interno ao realizar a operação.",
-                null,
-                99)
+            body: responseUtils.createResponse(false, true, errorMessages.DEFAULT_ERROR, null)
         }
     }
 

@@ -8,18 +8,19 @@ module.exports = async function (context, req) {
     require('../shared/Pacient');
     const PacientModel = mongoose.model('Pacient');
 
-    const utils = require('../shared/utils');
+    const authorizationUtils = require('../shared/authorization/tokenVerifier');
+    const responseUtils = require('../shared/http/responseUtils');
+    const errorMessages = require('../shared/http/errorMessages');
+    const infoMessages = require('../shared/http/infoMessages');
+    const inputValidator = require('../shared/validations/pacientInputValidator');
 
-    var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
+
+    var isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
 
     if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
-            body: utils.createResponse(false,
-                false,
-                "Chave de acesso inválida.",
-                null,
-                1)
+            body: responseUtils.createResponse(false, false, errorMessages.INVALID_TOKEN, null)
         }
         context.done();
         return;
@@ -30,11 +31,19 @@ module.exports = async function (context, req) {
     if (req.params.pacientId === undefined || req.params.pacientId == null) {
         context.res = {
             status: 400,
-            body: utils.createResponse(false,
-                false,
-                "Parâmetros de consulta inexistentes.",
-                null,
-                300)
+            body: responseUtils.createResponse(false, false, errorMessages.INVALID_REQUEST, null)
+        }
+        context.done();
+        return;
+    }
+
+    let validationResult = inputValidator.pacientSaveValidator(pacientReq);
+    if (validationResult.errorCount !== 0) {
+        let response = responseUtils.createResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
+        response.errors = validationResult.errors.errors;
+        context.res = {
+            status: 400,
+            body: response
         }
         context.done();
         return;
@@ -50,7 +59,7 @@ module.exports = async function (context, req) {
                 {
                     name: req.body.name,
                     sex: req.body.sex,
-                    birthday:  req.body.birthday,
+                    birthday: req.body.birthday,
                     capacitiesPitaco: {
                         insPeakFlow: req.body.capacitiesPitaco.insPeakFlow,
                         expPeakFlow: req.body.capacitiesPitaco.expPeakFlow,
@@ -91,21 +100,13 @@ module.exports = async function (context, req) {
         context.log("[DB UPDATE] - Pacient Updated: ", updatedPacient);
         context.res = {
             status: 200,
-            body: utils.createResponse(true,
-                true,
-                "Registro atualizado com sucesso.",
-                updatedPacient,
-                null)
+            body: responseUtils.createResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, updatedPacient)
         }
     } catch (err) {
         context.log("[DB DELETE] - ERROR: ", err);
         context.res = {
             status: 500,
-            body: utils.createResponse(false,
-                true,
-                "Ocorreu um erro interno ao realizar a operação.",
-                null,
-                99)
+            body: responseUtils.createResponse(false, true, errorMessages.DEFAULT_ERROR, null)
         }
     }
 

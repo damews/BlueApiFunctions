@@ -8,18 +8,20 @@ module.exports = async function (context, req) {
     require('../shared/MinigameOverview');
     const MinigameOverviewModel = mongoose.model('MinigameOverview');
 
-    const utils = require('../shared/utils');
+    const authorizationUtils = require('../shared/authorization/tokenVerifier');
+    const responseUtils = require('../shared/http/responseUtils');
+    const errorMessages = require('../shared/http/errorMessages');
+    const infoMessages = require('../shared/http/infoMessages');
 
-    var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
+    var isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
 
     if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
-            body: utils.createResponse(false,
+            body: responseUtils.createResponse(false,
                 false,
-                "Chave de acesso inválida.",
-                null,
-                1)
+                errorMessages.INVALID_TOKEN,
+                null)
         }
         context.done();
         return;
@@ -58,21 +60,19 @@ module.exports = async function (context, req) {
         context.log("[OUTPUT] - MinigameOverview Get");
         context.res = {
             status: 200,
-            body: utils.createResponse(true,
+            body: responseUtils.createResponse(true,
                 true,
-                "Consulta realizada com sucesso.",
-                minigamesOverview,
-                null)
+                infoMessages.SUCCESSFULLY_REQUEST,
+                minigamesOverview)
         }
     } catch (err) {
         context.log("[DB QUERYING] - ERROR: ", err);
         context.res = {
             status: 500,
-            body: utils.createResponse(false,
+            body: responseUtils.createResponse(false,
                 true,
-                "Ocorreu um erro interno ao realizar a operação.",
-                null,
-                99)
+                errorMessages.DEFAULT_ERROR,
+                null)
         }
     }
 

@@ -8,19 +8,18 @@ module.exports = async function (context, req) {
     require('../shared/Pacient');
     const PacientModel = mongoose.model('Pacient');
 
-    const utils = require('../shared/utils');
-    const validations = require('../shared/Validators');
+    const authorizationUtils = require('../shared/authorization/tokenVerifier');
+    const responseUtils = require('../shared/http/responseUtils');
+    const errorMessages = require('../shared/http/errorMessages');
+    const infoMessages = require('../shared/http/infoMessages');
+    const inputValidator = require('../shared/validations/pacientInputValidator');
 
-    var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
+    var isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
 
     if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
-            body: utils.createResponse(false,
-                false,
-                "Chave de acesso inválida.",
-                null,
-                1)
+            body: responseUtils.createResponse(false, false, errorMessages.INVALID_TOKEN, null)
         }
         context.done();
         return;
@@ -31,19 +30,15 @@ module.exports = async function (context, req) {
     if (Object.entries(pacientReq).length === 0) {
         context.res = {
             status: 400,
-            body: utils.createResponse(false,
-                true,
-                "Dados vazios!",
-                null,
-                2)
+            body: responseUtils.createResponse(false, true, errorMessages.EMPTY_REQUEST, null)
         }
         context.done();
         return;
     }
 
-    let validationResult = validations.pacientSaveValidator(pacientReq);
-    if(validationResult.errorCount !== 0){
-        let response = utils.createResponse(false, true, "Erros de validação encontrados!", null, 2);
+    let validationResult = inputValidator.pacientSaveValidator(pacientReq);
+    if (validationResult.errorCount !== 0) {
+        let response = responseUtils.createResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null, 2);
         response.errors = validationResult.errors.errors;
         context.res = {
             status: 400,
@@ -61,21 +56,13 @@ module.exports = async function (context, req) {
         context.log("[DB SAVING] - Pacient Saved: ", savedPacient);
         context.res = {
             status: 201,
-            body: utils.createResponse(true,
-                true,
-                "Paciente salvo com sucesso.",
-                savedPacient,
-                null)
+            body: responseUtils.createResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, savedPacient)
         }
     } catch (err) {
         context.log("[DB SAVING] - ERROR: ", err);
         context.res = {
             status: 500,
-            body: utils.createResponse(false,
-                true,
-                "Ocorreu um erro interno ao realizar a operação.",
-                null,
-                99)
+            body: responseUtils.createResponse(false, true, errorMessages.DEFAULT_ERROR, null)
         }
     }
 

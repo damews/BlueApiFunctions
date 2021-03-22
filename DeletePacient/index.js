@@ -20,18 +20,17 @@ module.exports = async function (context, req) {
     const UserAccountModel = mongoose.model('UserAccount');
     const PlaySessionModel = mongoose.model('PlaySession');
 
-    const utils = require('../shared/utils');
+    const authorizationUtils = require('../shared/authorization/tokenVerifier');
+    const responseUtils = require('../shared/http/responseUtils');
+    const errorMessages = require('../shared/http/errorMessages');
+    const infoMessages = require('../shared/http/infoMessages');
 
-    var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
+    var isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
 
     if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
-            body: utils.createResponse(false,
-                false,
-                "Chave de acesso inválida.",
-                null,
-                1)
+            body: responseUtils.createResponse(false, false, errorMessages.INVALID_TOKEN, null)
         }
         context.done();
         return;
@@ -41,11 +40,7 @@ module.exports = async function (context, req) {
     if (!isValidPacientId) {
         context.res = {
             status: 404,
-            body: utils.createResponse(false,
-                false,
-                "Parâmetros de inválidos.",
-                null,
-                300)
+            body: responseUtils.createResponse(false, false, errorMessages.INVALID_REQUEST, null)
         }
         context.done();
         return;
@@ -74,11 +69,7 @@ module.exports = async function (context, req) {
         }
         context.res = {
             status: 200,
-            body: utils.createResponse(true,
-                true,
-                "Exclusão realizada com sucesso.",
-                null,
-                null)
+            body: responseUtils.createResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, null)
         }
     } catch (err) {
         await session.abortTransaction();
@@ -86,7 +77,7 @@ module.exports = async function (context, req) {
         context.log("[DB DELETE] - ERROR: ", err);
         context.res = {
             status: 500,
-            body: err
+            body: responseUtils.createResponse(false, true, errorMessages.DEFAULT_ERROR, null)
         }
     }
 

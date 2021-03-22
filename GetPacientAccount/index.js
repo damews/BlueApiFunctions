@@ -8,18 +8,17 @@ module.exports = async function (context, req) {
     require('../shared/UserAccount');
     const UserAccountModel = mongoose.model('UserAccount');
 
-    const utils = require('../shared/utils');
+    const authorizationUtils = require('../shared/authorization/tokenVerifier');
+    const responseUtils = require('../shared/http/responseUtils');
+    const errorMessages = require('../shared/http/errorMessages');
+    const infoMessages = require('../shared/http/infoMessages');
 
-    var isVerifiedGameToken = await utils.verifyGameToken(req.headers.gametoken, mongoose);
+    var isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
 
-    if(!isVerifiedGameToken){
+    if (!isVerifiedGameToken) {
         context.res = {
             status: 403,
-            body: utils.createResponse(false,
-                false,
-                "Chave de acesso inválida.",
-                null,
-                1)
+            body: responseUtils.createResponse(false, false, errorMessages.INVALID_TOKEN, null)
         }
         context.done();
         return;
@@ -28,36 +27,24 @@ module.exports = async function (context, req) {
     if (req.params.pacientId === undefined || req.params.pacientId == null) {
         context.res = {
             status: 400,
-            body: utils.createResponse(false,
-                true,
-                "Parâmetros de consulta inexistentes.",
-                null,
-                300)
+            body: responseUtils.createResponse(false, true, errorMessages.INVALID_REQUEST, null)
         }
         context.done();
         return;
     }
 
     try {
-        const pacient = await UserAccountModel.findOne({pacientId: req.params.pacientId}, '_id pacientId username password');
+        const pacient = await UserAccountModel.findOne({ pacientId: req.params.pacientId }, '_id pacientId username password');
         context.log("[DB QUERYING] - Pacient Account Get by ID");
         context.res = {
             status: 200,
-            body: utils.createResponse(true,
-                true,
-                "Consulta realizada com sucesso.",
-                pacient,
-                null)
+            body: responseUtils.createResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, pacient)
         }
     } catch (err) {
         context.log("[DB QUERYING] - ERROR: ", err);
         context.res = {
             status: 500,
-            body: utils.createResponse(false,
-                true,
-                "Ocorreu um erro interno ao realizar a operação.",
-                null,
-                99)
+            body: responseUtils.createResponse(false, true, errorMessages.DEFAULT_ERROR, null)
         }
     }
 
