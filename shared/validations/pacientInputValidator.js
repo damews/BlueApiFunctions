@@ -2,11 +2,9 @@ const Validator = require('validatorjs');
 
 exports.pacientSaveValidator = (pacientReq) => {
 
-    pacientReq.birthday = pacientReq.birthday.replace(new RegExp('/', 'g'), '-');
-
     let rules = {
         name: 'required|string',
-        sex: ['required', 'string', { 'in': ["Male", "Female"] }],
+        sex: ['required', 'string', { 'in': ['Male', 'Female'] }],
         birthday: 'required|date',
         capacitiesPitaco: {
             insPeakFlow: 'required|integer',
@@ -29,7 +27,7 @@ exports.pacientSaveValidator = (pacientReq) => {
             expFlowDuration: 'required|integer',
             respiratoryRate: 'required|integer',
         },
-        condition: ['required', 'string', { 'in': ["Healthy", "Obstrutive"] }],
+        condition: ['required', 'string', { 'in': ['Healthy', 'Obstrutive'] }],
         unlockedLevels: 'required|integer',
         accumulatedScore: 'required|integer',
         playSessionsDone: 'required|integer',
