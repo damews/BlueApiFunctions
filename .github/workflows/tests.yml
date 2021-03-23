@@ -1,8 +1,6 @@
-name: Linter/Tests
+name: PR Linter/Tests
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
 
