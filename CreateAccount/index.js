@@ -1,103 +1,86 @@
+import MongooseRepository from '../shared/database/repositories/mongooseRepository';
+
+import AccountService from '../shared/services/accountService';
+
+import mongoose from '../shared/database/mongoDatabase';
+
+import inputValidator from '../shared/validations/accountCreateInputValidator';
+
+import { createBaseResponse } from '../shared/http/responseUtils';
+
+import errorMessages from '../shared/constants/errorMessages';
+
+import infoMessages from '../shared/constants/infoMessages';
+
+// eslint-disable-next-line func-names
 module.exports = async function (context, req) {
-    const mongoose = require('mongoose');
-    const DATABASE = process.env.MongoDbAtlas;
-    mongoose.connect(DATABASE);
-    mongoose.Promise = global.Promise;
+  context.log.info(`[CreateAccount] Function has been called! - ${context.invocationId}`);
 
-    require('../shared/UserAccount');
-    const UserAccountModel = mongoose.model('UserAccount');
+  const userAccountReq = req.body || {};
 
-    const responseUtils = require('../shared/http/responseUtils');
-    const inputValidator = require('../shared/validations/accountCreateInputValidator');
-    const errorMessages = require('../shared/http/errorMessages');
-    const infoMessages = require('../shared/http/infoMessages');
+  if (Object.entries(userAccountReq).length === 0) {
+    context.log.info(`Empty body request. InvocationId: ${context.invocationId}`);
 
-    const bcrypt = require("bcryptjs");
-
-    const userAccountReq = req.body || {};
-
-    if (Object.entries(userAccountReq).length === 0) {
-        context.res = {
-            status: 400,
-            body: responseUtils.createResponse(false, false, errorMessages.EMPTY_REQUEST, null)
-        }
-        context.done();
-        return;
-    }
-
-    let validationResult = inputValidator.createUserValidator(userAccountReq);
-
-    if (validationResult.errorCount !== 0) {
-        let response = responseUtils.createResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
-        response.errors = validationResult.errors.errors;
-        context.res = {
-            status: 400,
-            body: response
-        }
-        context.done();
-        return;
-    }
-
-    try {
-
-        if (userAccountReq.role == "Administrator") {
-            const existingUser = await UserAccountModel.findOne({ $or: [{ email: userAccountReq.email, role: "Administrator" }, { username: userAccountReq.username, role: "Administrator" }] });
-            context.log("[DB FIND] - Find Existing User: ", existingUser);
-
-            if (existingUser) {
-                context.res = {
-                    status: 400,
-                    body: responseUtils.createResponse(true, false, errorMessages.USERNAME_EMAIL_ALREADY_USED, null)
-                }
-                context.done();
-                return;
-            }
-        }
-
-        if (userAccountReq.role == "User") {
-            const existingUser = await UserAccountModel.findOne({ username: userAccountReq.username, role: "User", "gameToken.token": userAccountReq.gameToken });
-            context.log("[DB FIND] - Find Existing User: ", existingUser);
-
-            if (existingUser) {
-                context.res = {
-                    status: 400,
-                    body: responseUtils.createResponse(false, false, errorMessages.USERNAME_EMAIL_ALREADY_USED, null, null)
-                }
-                context.done();
-                return;
-            }
-        }
-
-        var newUser = new UserAccountModel({
-            fullname: userAccountReq.fullname,
-            username: userAccountReq.username,
-            password: userAccountReq.role == "Administrator" ? bcrypt.hashSync(userAccountReq.password, 10) : userAccountReq.password,
-            email: userAccountReq.role == "Administrator" ? userAccountReq.email : userAccountReq.username,
-            role: userAccountReq.role,
-            pacientId: userAccountReq.role == "User" ? userAccountReq.pacientId : "",
-            gameToken: {
-                token: userAccountReq.role == "Administrator" ? "" : userAccountReq.gameToken,
-                description: "",
-                createdAt: null
-            }
-        });
-
-        const savedUser = await newUser.save();
-        context.log("[DB SAVING] - User Account Created: ", savedUser);
-        
-        context.res = {
-            status: 201,
-            body: responseUtils.createResponse(true, false, infoMessages.SUCCESSFULLY_REGISTERED, null)
-        }
-
-
-
-    } catch (err) {
-        context.log("[DB SAVING] - ERROR: ", err);
-        context.res = {
-            status: 500,
-            body: responseUtils.createResponse(false, false, errorMessages.DEFAULT_ERROR, null)
-        }
-    }
+    context.res = {
+      status: 400,
+      body: createBaseResponse(false, false, errorMessages.EMPTY_REQUEST, null),
+    };
     context.done();
+
+    return;
+  }
+
+  const validationResult = inputValidator.createUserValidator(userAccountReq);
+
+  if (validationResult.errorCount !== 0) {
+    context.log.info(`Validation failed on account creation. InvocationId: ${context.invocationId}`);
+
+    const response = createBaseResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
+    response.errors = validationResult.errors.errors;
+
+    context.res = {
+      status: 400,
+      body: response,
+    };
+    context.done();
+    return;
+  }
+
+  context.log.info(`Request body validated. InvocationId: ${context.invocationId}`);
+
+  try {
+    const mongoClient = await mongoose.connect(process.env.MONGO_CONNECTION, context);
+
+    const repository = new MongooseRepository(mongoClient.model('UserAccount'));
+    const service = new AccountService(repository, context);
+
+    context.log.info('Creating Account...');
+
+    const result = await service.create(userAccountReq);
+
+    if (result.error) {
+      context.log.info(`Error on creating Account: ${result.error}`, `InvocationId: ${context.invocationId}`);
+
+      context.res = {
+        status: 400,
+        body: createBaseResponse(true, false, result.error, null),
+      };
+      context.done();
+      return;
+    }
+
+    context.log.info('Success on account creation: \n', result);
+
+    context.res = {
+      status: 201,
+      body: createBaseResponse(true, false, infoMessages.SUCCESSFULLY_REGISTERED, result),
+    };
+  } catch (err) {
+    context.log.error(`An unexpected error has happened. InvocationId: ${context.invocationId}`);
+
+    context.res = {
+      status: 500,
+      body: createBaseResponse(false, false, errorMessages.DEFAULT_ERROR, null),
+    };
+  }
 };

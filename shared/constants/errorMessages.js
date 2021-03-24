@@ -7,6 +7,7 @@ module.exports = {
     DEFAULT_ERROR: "Ocorreu um erro durante a requisição.",
     VALIDATION_ERROR_FOUND: "Erros de validação encontrados.",
     USERNAME_EMAIL_ALREADY_USED: "Email e/ou nome de usário já cadastrado.",
+    USERNAME_ALREADY_USED: "Nome de usário já cadastrado.",
     USER_NOT_FOUND: "Usuário não encontrado",
     TOKEN_ALREADY_GENERATED: "Um token já foi cadastrado para este usuário.",
     INVALID_PASSWORD: "Senha incorreta."

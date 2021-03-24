@@ -1,6 +1,6 @@
-const { db } = require('../shared/Pacient');
 
 module.exports = async function (context, req) {
+    const { db } = require('../shared/Pacient');
     const mongoose = require('mongoose');
     const DATABASE = process.env.MongoDbAtlas;
     mongoose.connect(DATABASE);
