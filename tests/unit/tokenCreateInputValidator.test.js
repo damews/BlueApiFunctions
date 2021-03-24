@@ -1,63 +1,54 @@
 const inputValidator = require('../../shared/validations/tokenCreateInputValidator');
 
 describe('On Token Creation', () => {
+  it('should fail to validate when no property is given', () => {
+    // Arrange
+    const userInput = {};
 
-    it('should fail to validate when no property is given', () => {
+    const expected = {
+      errors: {
+        userId: ['The userId field is required.'],
+      },
+    };
 
-        //Arrange
-        let userInput = {};
+    // Act
+    const validationResult = inputValidator.createTokenValidator(userInput);
 
-        let expected = {
-            errors: {
-                userId: ["The userId field is required."]
-            }
-        };
+    // Assert
+    expect(validationResult.errorCount).toBe(1);
+    expect(validationResult.errors).toEqual(expected);
+  });
 
-        //Act
-        let validationResult = inputValidator.createTokenValidator(userInput);
+  it('should succeed to validate to an valid input', () => {
+    // Arrange
+    const userInput = {
+      userId: '507f191e810c19729de860ea',
+    };
 
-        //Assert
-        expect(validationResult.errorCount).toBe(1);
-        expect(validationResult.errors).toEqual(expected);
+    // Act
+    const validationResult = inputValidator.createTokenValidator(userInput);
 
-    });
+    // Assert
+    expect(validationResult.errorCount).toBe(0);
+  });
 
-    it('should succeed to validate to an valid input', () => {
+  it('should fail validation when the userId property is not valid', () => {
+    // Arrange
+    const userInput = {
+      userId: '123abc',
+    };
 
-        //Arrange
-        let userInput = {
-            userId: "507f191e810c19729de860ea",
-        };
+    const expected = {
+      errors: {
+        userId: ['The userId format is invalid.'],
+      },
+    };
 
-        //Act
-        let validationResult = inputValidator.createTokenValidator(userInput);
+    // Act
+    const validationResult = inputValidator.createTokenValidator(userInput);
 
-        //Assert
-        expect(validationResult.errorCount).toBe(0);
-
-    });
-
-    it('should fail validation when the userId property is not valid', () => {
-
-        //Arrange
-        let userInput = {
-            userId: "123abc",
-        };
-
-        let expected = {
-            errors: {
-                userId: ["The userId format is invalid."]
-            }
-        };
-
-        //Act
-        let validationResult = inputValidator.createTokenValidator(userInput);
-
-        //Assert
-        expect(validationResult.errorCount).toBe(1);
-        expect(validationResult.errors).toEqual(expected);
-
-    });
-
+    // Assert
+    expect(validationResult.errorCount).toBe(1);
+    expect(validationResult.errors).toEqual(expected);
+  });
 });
-

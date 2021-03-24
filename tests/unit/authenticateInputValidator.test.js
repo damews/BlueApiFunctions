@@ -1,43 +1,36 @@
 const inputValidator = require('../../shared/validations/authenticateInputValidator');
 
 describe('On Authenticate', () => {
+  it('should fail to validate when no property is given', () => {
+    // Arrange
+    const userInput = {};
 
-    it('should fail to validate when no property is given', () => {
+    const expected = {
+      errors: {
+        username: ['The username field is required.'],
+        password: ['The password field is required.'],
+      },
+    };
 
-        //Arrange
-        let userInput = {};
+    // Act
+    const validationResult = inputValidator.authenticateValidator(userInput);
 
-        let expected = {
-            errors: {
-                username: ["The username field is required."],
-                password: ["The password field is required."],
-            }
-        };
+    // Assert
+    expect(validationResult.errorCount).toBe(2);
+    expect(validationResult.errors).toEqual(expected);
+  });
 
-        //Act
-        let validationResult = inputValidator.authenticateValidator(userInput);
+  it('should succeed validation to a valid input', () => {
+    // Arrange
+    const userInput = {
+      username: 'test',
+      password: 'test',
+    };
 
-        //Assert
-        expect(validationResult.errorCount).toBe(2);
-        expect(validationResult.errors).toEqual(expected);
+    // Act
+    const validationResult = inputValidator.authenticateValidator(userInput);
 
-    });
-
-    it('should succeed validation to a valid input', () => {
-
-        //Arrange
-        let userInput = {
-            username: "test",
-            password: "test",
-        };
-
-        //Act
-        let validationResult = inputValidator.authenticateValidator(userInput);
-
-        //Assert
-        expect(validationResult.errorCount).toBe(0);
-
-    });
-
+    // Assert
+    expect(validationResult.errorCount).toBe(0);
+  });
 });
-
