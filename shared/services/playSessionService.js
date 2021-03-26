@@ -12,6 +12,6 @@ module.exports = class PlaySessionService {
   }
 
   async deleteManyByPacientId(pacientId) {
-    return this.plataformOverviewRepository.deleteMany({ pacientId });
+    return this.playSessionRepository.deleteMany({ pacientId });
   }
 };

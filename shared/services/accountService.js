@@ -50,7 +50,7 @@ module.exports = class AccountService {
     };
   }
 
-  async deleteManyByPacientId(pacientId) {
+  async deletebyPacientId(pacientId) {
     return this.accountRepository.deleteMany({ pacientId });
   }
 };

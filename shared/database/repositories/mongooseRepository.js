@@ -31,4 +31,9 @@ module.exports = class MongooseRepository {
     const document = new this.Model(body);
     return document.save();
   }
+
+  async deleteMany(filter = {}) {
+    const result = this.Model.deleteMany(filter);
+    return result.exec();
+  }
 };

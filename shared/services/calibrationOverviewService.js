@@ -108,7 +108,7 @@ module.exports = class CalibrationOverviewService {
     return savedCalibrationOverview;
   }
 
-  async deleteManyByPacientId(pacientId) {
+  deleteManyByPacientId(pacientId) {
     return this.calibrationOverviewRepository.deleteMany({ pacientId });
   }
 };

@@ -142,6 +142,6 @@ module.exports = class MinigameOverviewService {
   }
 
   async deleteManyByPacientId(pacientId) {
-    return this.accountRepository.deleteMany({ pacientId });
+    return this.minigameOverviewRepository.deleteMany({ pacientId });
   }
 };

@@ -70,7 +70,7 @@ module.exports = async function (context, req) {
     const playSessionRepository = new MongooseRepository(mongoClient.model('PlaySession'));
 
     const gameTokenService = new GameTokenService(userAccountRepository, context);
-    const userAccountService = new UserAccountService(userAccountRepository, context );
+    const userAccountService = new UserAccountService(userAccountRepository, context);
     const pacientService = new PacientService({ pacientRepository, context });
     const plataformOverviewService = new PlataformOverviewService(
       { plataformOverviewRepository, context },
@@ -97,14 +97,21 @@ module.exports = async function (context, req) {
       return;
     }
 
-    Promise.all(
-      pacientService.deleteMany(req.params.pacientId),
-      plataformOverviewService.deleteMany(req.params.pacientId),
-      calibrationOverviewService.deleteMany(req.params.pacientId),
-      minigameOverviewService.deleteMany(req.params.pacientId),
-      userAccountService.deleteMany(req.params.pacientId),
-      playSessionService.deleteMany(req.params.pacientId),
-    );
+    context.log.info('Deleting Pacient Data...');
+
+    // await calibrationOverviewService.deleteManyByPacientId(req.params.pacientId);
+    // const b = mongoClient.model('CalibrationOverview');
+    // await b.deleteMany({ pacientId: req.params.pacientId });
+    Promise.all([
+      pacientService.delete(req.params.pacientId),
+      plataformOverviewService.deleteManyByPacientId(req.params.pacientId),
+      calibrationOverviewService.deleteManyByPacientId(req.params.pacientId),
+      minigameOverviewService.deleteManyByPacientId(req.params.pacientId),
+      userAccountService.deletebyPacientId(req.params.pacientId),
+      playSessionService.deleteManyByPacientId(req.params.pacientId),
+    ]).then(() => {
+      context.log.info('Pacient Data Deleted...');
+    });
 
     context.res = {
       status: 200,

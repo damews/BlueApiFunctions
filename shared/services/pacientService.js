@@ -107,7 +107,7 @@ module.exports = class PacientService {
     return this.pacientRepository.create(newPacient);
   }
 
-  async deleteMany(pacientId) {
+  async delete(pacientId) {
     return this.pacientRepository.deleteMany({ _id: Types.ObjectId(pacientId) });
   }
 };
