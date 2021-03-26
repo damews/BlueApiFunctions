@@ -1,16 +1,18 @@
-import MongooseRepository from '../shared/database/repositories/mongooseRepository';
+const MongooseRepository = require('../shared/database/repositories/mongooseRepository');
 
-import AccountService from '../shared/services/accountService';
+const mongoose = require('../shared/database/mongoDatabase');
 
-import mongoose from '../shared/database/mongoDatabase';
+const { createBaseResponse } = require('../shared/http/responseUtils');
 
-import inputValidator from '../shared/validations/accountCreateInputValidator';
+const errorMessages = require('../shared/constants/errorMessages');
 
-import { createBaseResponse } from '../shared/http/responseUtils';
+const infoMessages = require('../shared/constants/infoMessages');
 
-import errorMessages from '../shared/constants/errorMessages';
+const AccountService = require('../shared/services/accountService');
 
-import infoMessages from '../shared/constants/infoMessages';
+const inputValidator = require('../shared/validations/accountCreateInputValidator');
+
+require('../shared/database/models/userAccount');
 
 // eslint-disable-next-line func-names
 module.exports = async function (context, req) {
@@ -26,7 +28,6 @@ module.exports = async function (context, req) {
       body: createBaseResponse(false, false, errorMessages.EMPTY_REQUEST, null),
     };
     context.done();
-
     return;
   }
 

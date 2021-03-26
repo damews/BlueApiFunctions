@@ -1,4 +1,4 @@
-export default function createBaseResponse(success, authorized, message, data) {
+module.exports.createBaseResponse = (success, authorized, message, data) => {
   const response = {
     success,
     authorized,
@@ -6,4 +6,4 @@ export default function createBaseResponse(success, authorized, message, data) {
     data,
   };
   return response;
-}
+};

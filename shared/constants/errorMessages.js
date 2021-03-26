@@ -1,4 +1,5 @@
 module.exports = {
+  GAMETOKEN_HEADER_NOT_FOUND: 'Header GameToken não encontrado.',
   INVALID_TOKEN: 'Chave de acesso inválida ou inexistente.',
   INVALID_REQUEST: 'Requisição inválida',
   EMPTY_REQUEST: 'É necessário o envio dos dados para realizar esta operação.',

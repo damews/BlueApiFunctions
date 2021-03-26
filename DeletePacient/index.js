@@ -1,35 +1,49 @@
+const MongooseRepository = require('../shared/database/repositories/mongooseRepository');
+
+const PacientService = require('../shared/services/pacientService');
+
+const PlataformOverviewService = require('../shared/services/plataformOverviewService');
+
+const PlaySessionService = require('../shared/services/playSessionService');
+
+const MinigameOverviewService = require('../shared/services/minigameOverviewService');
+
+const CalibrationOverviewService = require('../shared/services/calibrationOverviewService');
+
+const UserAccountService = require('../shared/services/accountService');
+
+const GameTokenService = require('../shared/services/gameTokenService');
+
+const mongoose = require('../shared/database/mongoDatabase');
+
+const { createBaseResponse } = require('../shared/http/responseUtils');
+
+const errorMessages = require('../shared/constants/errorMessages');
+
+const infoMessages = require('../shared/constants/infoMessages');
+
+require('../shared/database/models/pacient');
+
+require('../shared/database/models/plataformOverview');
+
+require('../shared/database/models/calibrationOverview');
+
+require('../shared/database/models/minigameOverview');
+
+require('../shared/database/models/userAccount');
+
+require('../shared/database/models/playSession');
+
+// eslint-disable-next-line func-names
 module.exports = async function (context, req) {
-  const { db } = require('../shared/Pacient');
-  const mongoose = require('mongoose');
-  const DATABASE = process.env.MongoDbAtlas;
-  mongoose.connect(DATABASE);
-  mongoose.Promise = global.Promise;
+  context.log.info(`[DeletePacient] Function has been called! - ${context.invocationId}`);
 
-  // MinigameOverview Schema
-  require('../shared/Pacient');
-  require('../shared/PlataformOverview');
-  require('../shared/CalibrationOverview');
-  require('../shared/MinigameOverview');
-  require('../shared/UserAccount');
-  require('../shared/PlaySession');
-  const PacientModel = mongoose.model('Pacient');
-  const PlataformOverviewModel = mongoose.model('PlataformOverview');
-  const CalibrationOverviewModel = mongoose.model('CalibrationOverview');
-  const MinigameOverviewModel = mongoose.model('MinigameOverview');
-  const UserAccountModel = mongoose.model('UserAccount');
-  const PlaySessionModel = mongoose.model('PlaySession');
+  if (!req.headers['game-token']) {
+    context.log.info(`Empty gameToken header. InvocationId: ${context.invocationId}`);
 
-  const authorizationUtils = require('../shared/authorization/tokenVerifier');
-  const responseUtils = require('../shared/http/responseUtils');
-  const errorMessages = require('../shared/http/errorMessages');
-  const infoMessages = require('../shared/http/infoMessages');
-
-  const isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
-
-  if (!isVerifiedGameToken) {
     context.res = {
       status: 403,
-      body: responseUtils.createResponse(false, false, errorMessages.INVALID_TOKEN, null),
+      body: createBaseResponse(false, false, errorMessages.GAMETOKEN_HEADER_NOT_FOUND, null),
     };
     context.done();
     return;
@@ -39,43 +53,68 @@ module.exports = async function (context, req) {
   if (!isValidPacientId) {
     context.res = {
       status: 404,
-      body: responseUtils.createResponse(false, false, errorMessages.INVALID_REQUEST, null),
+      body: createBaseResponse(false, false, errorMessages.INVALID_REQUEST, null),
     };
     context.done();
     return;
   }
 
-  let session = null;
   try {
-    if (req.query.allData === '0') {
-      const removedPacient = await PacientModel.deleteOne({ _id: req.params.pacientId });
-      context.log('[DB DELETE] - Pacient Deleted: ', removedPacient);
-    } else {
-      return db.startSession()
-        .then((_session) => {
-          session = _session;
-          session.startTransaction();
-        })
-        .then(async () => await PacientModel.deleteOne({ _id: mongoose.Types.ObjectId(req.params.pacientId) }).session(session))
-        .then(async () => await PlataformOverviewModel.deleteMany({ pacientId: req.params.pacientId }).session(session))
-        .then(async () => await CalibrationOverviewModel.deleteMany({ pacientId: req.params.pacientId }).session(session))
-        .then(async () => await MinigameOverviewModel.deleteMany({ pacientId: req.params.pacientId }).session(session))
-        .then(async () => await UserAccountModel.deleteOne({ pacientId: req.params.pacientId }).session(session))
-        .then(async () => await PlaySessionModel.deleteOne({ pacientId: req.params.pacientId }).session(session))
-        .then(async () => await session.commitTransaction())
-        .then(async () => await session.endSession());
+    const mongoClient = await mongoose.connect(process.env.MONGO_CONNECTION, context);
+
+    const pacientRepository = new MongooseRepository(mongoClient.model('Pacient'));
+    const plataformOverviewRepository = new MongooseRepository(mongoClient.model('PlataformOverview'));
+    const calibrationOverviewRepository = new MongooseRepository(mongoClient.model('CalibrationOverview'));
+    const minigameOverviewRepository = new MongooseRepository(mongoClient.model('MinigameOverview'));
+    const userAccountRepository = new MongooseRepository(mongoClient.model('UserAccount'));
+    const playSessionRepository = new MongooseRepository(mongoClient.model('PlaySession'));
+
+    const gameTokenService = new GameTokenService(userAccountRepository, context);
+    const userAccountService = new UserAccountService(userAccountRepository, context );
+    const pacientService = new PacientService({ pacientRepository, context });
+    const plataformOverviewService = new PlataformOverviewService(
+      { plataformOverviewRepository, context },
+    );
+    const calibrationOverviewService = new CalibrationOverviewService(
+      { calibrationOverviewRepository, context },
+    );
+    const minigameOverviewService = new MinigameOverviewService(
+      { minigameOverviewRepository, context },
+    );
+    const playSessionService = new PlaySessionService({ playSessionRepository, context });
+
+    context.log.info('Validating Token Account...');
+
+    const isValidated = await gameTokenService.validate(req.headers['game-token']);
+    if (!isValidated) {
+      context.log(`Game Token is invalid. InvocationId: ${context.invocationId}`);
+
+      context.res = {
+        status: 403,
+        body: createBaseResponse(false, false, errorMessages.INVALID_TOKEN, null),
+      };
+      context.done();
+      return;
     }
+
+    Promise.all(
+      pacientService.deleteMany(req.params.pacientId),
+      plataformOverviewService.deleteMany(req.params.pacientId),
+      calibrationOverviewService.deleteMany(req.params.pacientId),
+      minigameOverviewService.deleteMany(req.params.pacientId),
+      userAccountService.deleteMany(req.params.pacientId),
+      playSessionService.deleteMany(req.params.pacientId),
+    );
+
     context.res = {
       status: 200,
-      body: responseUtils.createResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, null),
+      body: createBaseResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, null),
     };
   } catch (err) {
-    await session.abortTransaction();
-    await session.endSession();
-    context.log('[DB DELETE] - ERROR: ', err);
+    context.log(`An unexpected error has happened. InvocationId: ${context.invocationId}`);
     context.res = {
       status: 500,
-      body: responseUtils.createResponse(false, true, errorMessages.DEFAULT_ERROR, null),
+      body: createBaseResponse(false, true, errorMessages.DEFAULT_ERROR, null),
     };
   }
 
