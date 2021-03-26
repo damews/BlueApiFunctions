@@ -1,89 +1,87 @@
+const MongooseRepository = require('../shared/database/repositories/mongooseRepository');
+
+const AuthenticationService = require('../shared/services/authenticationService');
+
+const mongoose = require('../shared/database/mongoDatabase');
+
+const inputValidator = require('../shared/validations/authenticateInputValidator');
+
+const { createBaseResponse } = require('../shared/http/responseUtils');
+
+const errorMessages = require('../shared/constants/errorMessages');
+
+const infoMessages = require('../shared/constants/infoMessages');
+
+require('../shared/database/models/userAccount');
+
+// eslint-disable-next-line func-names
 module.exports = async function (context, req) {
-    const mongoose = require('mongoose');
-    const DATABASE = process.env.MongoDbAtlas;
-    mongoose.connect(DATABASE);
-    mongoose.Promise = global.Promise;
+  context.log.info(`[LoginAccount] Function has been called! - ${context.invocationId}`);
 
-    require('../shared/UserAccount');
-    const UserAccountModel = mongoose.model('UserAccount');
+  const userAccountReq = req.body || {};
 
-    const responseUtils = require('../shared/http/responseUtils');
-    const errorMessages = require('../shared/http/errorMessages');
-    const infoMessages = require('../shared/http/infoMessages');
-    const inputValidator = require('../shared/validations/authenticateInputValidator');
+  if (Object.entries(userAccountReq).length === 0) {
+    context.log.info(`Empty body request. InvocationId: ${context.invocationId}`);
 
-    const bcrypt = require("bcryptjs");
-
-    const userAccountReq = req.body || {};
-
-    if (Object.entries(userAccountReq).length === 0) {
-        context.res = {
-            status: 400,
-            body: responseUtils.createResponse(false, false, errorMessages.EMPTY_REQUEST, null)
-        }
-        context.done();
-        return;
-    }
-
-    let validationResult = inputValidator.authenticateValidator(userAccountReq);
-    if (validationResult.errorCount !== 0) {
-        let response = responseUtils.createResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
-        response.errors = validationResult.errors.errors;
-        context.res = {
-            status: 400,
-            body: response
-        }
-        context.done();
-        return;
-    }
-
-    try {
-        context.log("[DB FINDING] - Finding User Account: ", userAccountReq.username);
-        const user = await UserAccountModel.findOne({ username: userAccountReq.username });
-        if (!user) {
-            context.res = {
-                status: 404,
-                body: responseUtils.createResponse(false, false, errorMessages.USER_NOT_FOUND, null)
-            }
-            context.done();
-            return;
-        }
-        if (user.role == 'Administrator') {
-            if (!bcrypt.compareSync(userAccountReq.password, user.password)) {
-                context.res = {
-                    status: 401,
-                    body: responseUtils.createResponse(false, false, errorMessages.INVALID_PASSWORD, null)
-                }
-                context.done();
-                return;
-            }
-        }
-        else {
-            if (userAccountReq.password != user.password) {
-                context.res = {
-                    status: 401,
-                    body: responseUtils.createResponse(false, false, errorMessages.INVALID_PASSWORD, null)
-                }
-                context.done();
-                return;
-            }
-        }
-
-        var authTime = new Date();
-        var authExpirationTime = new Date(authTime);
-        authExpirationTime.setHours(authExpirationTime.getHours() + 2);
-
-        context.res = {
-            status: 200,
-            body: responseUtils.createResponse(true, true, infoMessages.SUCCESSFULLY_AUTHENTICATION,
-                { redirectUrl: '/', authTime: authTime, authExpirationTime: authExpirationTime, fullname: user.fullname, gameToken: user.gameToken.token, userId: user._id, role: user.role, pacientId: user.pacientId })
-        }
-    } catch (err) {
-        context.log("[DB SAVING] - ERROR: ", err);
-        context.res = {
-            status: 500,
-            body: responseUtils.createResponse(false, false, errorMessages.DEFAULT_ERROR, null)
-        }
-    }
+    context.res = {
+      status: 400,
+      body: createBaseResponse(false, false, errorMessages.EMPTY_REQUEST, null),
+    };
     context.done();
+    return;
+  }
+
+  const validationResult = inputValidator.authenticateValidator(userAccountReq);
+  if (validationResult.errorCount !== 0) {
+    context.log.info(`Validation failed on authentication creation. InvocationId: ${context.invocationId}`);
+
+    const response = createBaseResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
+    response.errors = validationResult.errors.errors;
+
+    context.res = {
+      status: 400,
+      body: response,
+    };
+    context.done();
+    return;
+  }
+
+  try {
+    const mongoClient = await mongoose.connect(process.env.MONGO_CONNECTION, context);
+
+    const userAccountRepository = new MongooseRepository(mongoClient.model('UserAccount'));
+    const authenticationService = new AuthenticationService({ userAccountRepository, context });
+
+    context.log.info('Authenticating...');
+
+    const result = await authenticationService.authenticate(
+      userAccountReq.username,
+      userAccountReq.password,
+    );
+
+    if (result.error) {
+      context.log.info(`Error on authenticate: ${result.error}`, `InvocationId: ${context.invocationId}`);
+
+      context.res = {
+        status: 400,
+        body: createBaseResponse(true, false, result.error, null),
+      };
+      context.done();
+      return;
+    }
+
+    context.log.info('Success to authenticate: \n', result);
+
+    context.res = {
+      status: 201,
+      body: createBaseResponse(true, false, infoMessages.SUCCESSFULLY_AUTHENTICATION, result),
+    };
+  } catch (err) {
+    context.log(`An unexpected error has happened. InvocationId: ${context.invocationId}`);
+    context.res = {
+      status: 500,
+      body: createBaseResponse(false, true, errorMessages.DEFAULT_ERROR, null),
+    };
+  }
+  context.done();
 };

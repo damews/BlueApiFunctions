@@ -1,108 +1,105 @@
+const MongooseRepository = require('../shared/database/repositories/mongooseRepository.js');
+
+const GameTokenService = require('../shared/services/gameTokenService');
+
+const PlataformService = require('../shared/services/plataformOverviewService');
+
+const mongoose = require('../shared/database/mongoDatabase');
+
+const inputValidator = require('../shared/validations/plataformOverviewInputValidator');
+
+const { createBaseResponse } = require('../shared/http/responseUtils');
+
+const errorMessages = require('../shared/constants/errorMessages');
+
+const infoMessages = require('../shared/constants/infoMessages');
+
+require('../shared/database/models/userAccount');
+require('../shared/database/models/plataformOverview');
+require('../shared/database/models/flowDataDevice');
+require('../shared/database/models/playSession');
+
+// eslint-disable-next-line func-names
 module.exports = async function (context, req) {
-    const mongoose = require('mongoose');
-    const DATABASE = process.env.MongoDbAtlas;
-    mongoose.connect(DATABASE);
-    mongoose.Promise = global.Promise;
+  context.log.info(`[SendPlataformOverview] Function has been called! - ${context.invocationId}`);
 
-    //PlataformOverview Schema
-    require('../shared/PlataformOverview');
-    require('../shared/FlowDataDevice');
-    require('../shared/PlaySession');
+  const pacientReq = req.body || {};
 
-    const PlataformOverviewModel = mongoose.model('PlataformOverview');
-    const FlowDataDeviceModel = mongoose.model('FlowDataDevice');
-    const PlaySessionModel = mongoose.model('PlaySession');
+  if (Object.entries(pacientReq).length === 0) {
+    context.log.info(`Empty body request. InvocationId: ${context.invocationId}`);
 
-    const authorizationUtils = require('../shared/authorization/tokenVerifier');
-    const responseUtils = require('../shared/http/responseUtils');
-    const errorMessages = require('../shared/http/errorMessages');
-    const infoMessages = require('../shared/http/infoMessages');
-    const inputValidator = require('../shared/validations/plataformOverviewInputValidator');
+    context.res = {
+      status: 400,
+      body: createBaseResponse(false, false, errorMessages.EMPTY_REQUEST, null),
+    };
+    context.done();
+    return;
+  }
 
-    var isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
+  const validationResult = inputValidator.plataformOverviewSaveValidator(pacientReq);
 
-    if (!isVerifiedGameToken) {
-        context.res = {
-            status: 403,
-            body: responseUtils.createResponse(false, false, errorMessages.INVALID_TOKEN, null)
-        }
-        context.done();
-        return;
+  if (validationResult.errorCount !== 0) {
+    context.log.info(`Validation failed on account creation. InvocationId: ${context.invocationId}`);
+
+    const response = createBaseResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
+    response.errors = validationResult.errors.errors;
+
+    context.res = {
+      status: 400,
+      body: response,
+    };
+    context.done();
+    return;
+  }
+
+  context.log.info(`Request body validated. InvocationId: ${context.invocationId}`);
+
+  try {
+    const mongoClient = await mongoose.connect(process.env.MONGO_CONNECTION, context);
+
+    const userAccountRepository = new MongooseRepository(mongoClient.model('UserAccount'));
+    const gameTokenService = new GameTokenService(userAccountRepository, context);
+
+    context.log.info('Validating Token Account...');
+
+    const isValidated = gameTokenService.validate(req.headers['game-token']);
+    if (!isValidated) {
+      context.log(`Game Token is invalid. InvocationId: ${context.invocationId}`);
+
+      context.res = {
+        status: 403,
+        body: createBaseResponse(false, false, errorMessages.INVALID_TOKEN, null),
+      };
+      context.done();
+      return;
     }
 
-    const plataformOverviewReq = req.body || {};
-
-    if (Object.entries(plataformOverviewReq).length === 0) {
-        context.res = {
-            status: 400,
-            body: responseUtils.createResponse(false, true, errorMessages.EMPTY_REQUEST, null)
-        }
-        context.done();
-        return;
-    }
-
-    let validationResult = inputValidator.plataformOverviewSaveValidator(plataformOverviewReq);
-    if (validationResult.errorCount !== 0) {
-        let response = responseUtils.createResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
-        response.errors = validationResult.errors.errors;
-        context.res = {
-            status: 400,
-            body: response
-        }
-        context.done();
-        return;
-    }
-
-    plataformOverviewReq._gameToken = req.headers.gametoken;
-
-    var flowDataDevicesReq = req.body.flowDataDevices;
-
-    plataformOverviewReq.devices = flowDataDevicesReq.map(x => x.deviceName);
-
-    //BUSCAR OS MAIORES VALORES
-    plataformOverviewReq.flowDataDevicesValues = flowDataDevicesReq.map(function (element) {
-        return {
-            deviceName: element.deviceName,
-            maxFlowValue: element.flowData.reduce((max, el) => (el.flowValue > max ? el.flowValue : max), element.flowData[0].flowValue),
-            minFlowValue: element.flowData.reduce((min, el) => (el.flowValue < min ? el.flowValue : min), element.flowData[0].flowValue),
-            meanFlowValue: element.flowData.reduce((acc, value) => (acc + Number.parseFloat(value.flowValue)), 0) / element.flowData.length
-        }
+    const plataformOverviewRepository = new MongooseRepository(mongoClient.model('PlataformOverview'));
+    const flowDataDeviceRepository = new MongooseRepository(mongoClient.model('FlowDataDevice'));
+    const playSessionRepository = new MongooseRepository(mongoClient.model('PlaySession'));
+    const pacientService = new PlataformService({
+      plataformOverviewRepository,
+      flowDataDeviceRepository,
+      playSessionRepository,
+      context,
     });
 
-    delete plataformOverviewReq.flowDataDevices;
+    const result = await pacientService.create(pacientReq, req.headers['game-token']);
 
-    try {
+    context.log.info('Success on Pacient creation: \n', result);
 
-        const pacientSession = await PlaySessionModel.findOne({ pacientId: plataformOverviewReq.pacientId }, null, { sort: { sessionNumber: -1 } });
+    context.res = {
+      status: 201,
+      body: createBaseResponse(true, false, infoMessages.SUCCESSFULLY_REGISTERED, result),
+    };
+  } catch (err) {
+    context.log.error(`An unexpected error has happened. InvocationId: ${context.invocationId}`);
 
-        if (!pacientSession) {
-            await new PlaySessionModel({ pacientId: plataformOverviewReq.pacientId, sessionNumber: 1 }).save();
-        } else {
-            let pacientSessionDate = new Date(pacientSession.created_at);
-            pacientSessionDate.setHours(0, 0, 0, 0);
+    context.res = {
+      status: 500,
+      body: createBaseResponse(false, false, errorMessages.DEFAULT_ERROR, null),
+    };
+  }
 
-            let currentDate = new Date();
-            currentDate.setHours(0, 0, 0, 0);
-
-            if (pacientSessionDate.getTime() != currentDate.getTime())
-                await new PlaySessionModel({ pacientId: plataformOverviewReq.pacientId, sessionNumber: pacientSession.sessionNumber + 1 }).save()
-        }
-
-        const savedFlowDataDevices = await (new FlowDataDeviceModel({ _gameToken: req.headers.gametoken, flowDataDevices: flowDataDevicesReq })).save();
-        plataformOverviewReq.flowDataDevicesId = savedFlowDataDevices._id;
-        const savedPlataformOverview = await (new PlataformOverviewModel(plataformOverviewReq)).save();
-        context.log("[OUTPUT] - PlataformOverview Saved: ", savedPlataformOverview);
-        context.res = {
-            status: 201,
-            body: responseUtils.createResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, savedPlataformOverview, null)
-        }
-    } catch (err) {
-        context.log("[DB SAVING] - ERROR: ", err);
-        context.res = {
-            status: 500,
-            body: responseUtils.createResponse(false, true, errorMessages.DEFAULT_ERROR, null)
-        }
-    }
-
-    context.done();
+  context.done();
 };

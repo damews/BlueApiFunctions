@@ -1,80 +1,78 @@
+const MongooseRepository = require('../shared/database/repositories/mongooseRepository');
+
+const GameTokenService = require('../shared/services/gameTokenService');
+
+const CalibrationOverviewService = require('../shared/services/calibrationOverviewService');
+
+const mongoose = require('../shared/database/mongoDatabase');
+
+const { createBaseResponse } = require('../shared/http/responseUtils');
+
+const errorMessages = require('../shared/constants/errorMessages');
+
+const infoMessages = require('../shared/constants/infoMessages');
+
+require('../shared/database/models/userAccount');
+require('../shared/database/models/calibrationOverview');
+
+// eslint-disable-next-line func-names
 module.exports = async function (context, req) {
-    const mongoose = require('mongoose');
-    const DATABASE = process.env.MongoDbAtlas;
-    mongoose.connect(DATABASE);
-    mongoose.Promise = global.Promise;
+  context.log.info(`[GetCalibrationOverview] Function has been called! - ${context.invocationId}`);
 
-    //CalibrationOverview Schema
-    require('../shared/CalibrationOverview');
-    const CalibrationOverviewModel = mongoose.model('CalibrationOverview');
+  if (!req.headers['game-token']) {
+    context.log.info(`Empty gameToken header. InvocationId: ${context.invocationId}`);
 
-    const authorizationUtils = require('../shared/authorization/tokenVerifier');
-    const responseUtils = require('../shared/http/responseUtils');
-    const errorMessages = require('../shared/http/errorMessages');
-    const infoMessages = require('../shared/http/infoMessages');
-
-    var isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
-
-    if (!isVerifiedGameToken) {
-        context.res = {
-            status: 403,
-            body: responseUtils.createResponse(false,false, errorMessages.INVALID_TOKEN, null)
-        }
-        context.done();
-        return;
-    }
-
-    const findObj = {
-        _gameToken: req.headers.gametoken
-    }
-
-    const findOptionsObj = { sort: { created_at: -1 } };
-
-    if (req.query.calibrationId)
-        findObj._id = req.query.calibrationId;
-    if (req.query.gameDevice)
-        findObj.gameDevice = req.query.gameDevice;
-    if (req.query.calibrationExercise)
-        findObj.calibrationExercise = req.query.calibrationExercise;
-    if (req.query.dataIni)
-        findObj.created_at = {
-            $gte: new Date(req.query.dataIni).toISOString("yyyy-MM-ddThh:mm:ss.msZ")
-        };
-    if (req.query.dataIni && req.query.dataFim)
-        findObj.created_at = {
-            $gte: new Date(`${req.query.dataIni} 00:00:00:000 UTC`).toISOString("yyyy-MM-ddThh:mm:ss.msZ"),
-            $lte: new Date(`${req.query.dataFim} 23:59:59:999 UTC`).toISOString("yyyy-MM-ddThh:mm:ss.msZ")
-        };
-    if (req.query.limit)
-        findOptionsObj.limit = parseInt(req.query.limit);
-    if (req.query.skip)
-        findOptionsObj.skip = parseInt(req.query.skip);
-    if (req.query.sort == "asc")
-        findOptionsObj.sort = { created_at: 1 };
-
-    try {
-        const calibrationOverviews = await CalibrationOverviewModel.find(findObj, null, findOptionsObj);
-        context.log("[DB QUERYING] - CalibrationOverview Get");
-        context.res = {
-            status: 200,
-            body: responseUtils.createResponse(true,
-                true,
-                infoMessages.SUCCESSFULLY_REQUEST,
-                calibrationOverviews)
-        }
-    } catch (err) {
-        context.log("[DB QUERYING] - ERROR: ", err);
-        context.res = {
-            status: 500,
-            body: responseUtils.createResponse(false,
-                true,
-                errorMessages.DEFAULT_ERROR,
-                null)
-        }
-    }
-
+    context.res = {
+      status: 403,
+      body: createBaseResponse(false, false, errorMessages.GAMETOKEN_HEADER_NOT_FOUND, null),
+    };
     context.done();
+    return;
+  }
+
+  try {
+    const mongoClient = await mongoose.connect(process.env.MONGO_CONNECTION, context);
+
+    const userAccountRepository = new MongooseRepository(mongoClient.model('UserAccount'));
+    const gameTokenService = new GameTokenService(userAccountRepository, context);
+
+    context.log.info('Validating Token Account...');
+
+    const isValidated = gameTokenService.validate(req.headers['game-token']);
+    if (!isValidated) {
+      context.log(`Game Token is invalid. InvocationId: ${context.invocationId}`);
+
+      context.res = {
+        status: 403,
+        body: createBaseResponse(false, false, errorMessages.INVALID_TOKEN, null),
+      };
+      context.done();
+      return;
+    }
+
+    const calibrationOverviewRepository = new MongooseRepository(mongoClient.model('CalibrationOverview'));
+    const calibrationOverviewService = (
+      new CalibrationOverviewService({ calibrationOverviewRepository, context })
+    );
+
+    context.log.info('Getting CalibrationOverview Results...');
+
+    const results = (
+      await calibrationOverviewService
+        .getCalibrationOverview(req.query, req.headers['game-token'])
+    );
+
+    context.res = {
+      status: 200,
+      body: createBaseResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, results),
+    };
+  } catch (err) {
+    context.log(`An unexpected error has happened. InvocationId: ${context.invocationId}`);
+    context.res = {
+      status: 500,
+      body: createBaseResponse(false, true, errorMessages.DEFAULT_ERROR, null),
+    };
+  }
+
+  context.done();
 };
-
-
-

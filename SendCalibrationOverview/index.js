@@ -1,87 +1,111 @@
+const MongooseRepository = require('../shared/database/repositories/mongooseRepository');
+
+const GameTokenService = require('../shared/services/gameTokenService');
+
+const CalibrationOverviewService = require('../shared/services/calibrationOverviewService');
+
+const mongoose = require('../shared/database/mongoDatabase');
+
+const inputValidator = require('../shared/validations/calibrationOverviewInputValidator');
+
+const { createBaseResponse } = require('../shared/http/responseUtils');
+
+const errorMessages = require('../shared/constants/errorMessages');
+
+const infoMessages = require('../shared/constants/infoMessages');
+
+require('../shared/database/models/userAccount');
+require('../shared/database/models/calibrationOverview');
+require('../shared/database/models/playSession');
+
+// eslint-disable-next-line func-names
 module.exports = async function (context, req) {
-    const mongoose = require('mongoose');
-    const DATABASE = process.env.MongoDbAtlas;
-    mongoose.connect(DATABASE);
-    mongoose.Promise = global.Promise;
+  context.log.info(`[SendCalibrationOverview] Function has been called! - ${context.invocationId}`);
 
-    //MinigameOverview Schema
-    require('../shared/CalibrationOverview');
-    require('../shared/PlaySession');
-    const CalibrationOverviewModel = mongoose.model('CalibrationOverview');
-    const PlaySessionModel = mongoose.model('PlaySession');
+  if (!req.headers['game-token']) {
+    context.log.info(`Empty gameToken header. InvocationId: ${context.invocationId}`);
 
-    const authorizationUtils = require('../shared/authorization/tokenVerifier');
-    const responseUtils = require('../shared/http/responseUtils');
-    const errorMessages = require('../shared/http/errorMessages');
-    const infoMessages = require('../shared/http/infoMessages');
-    const inputValidator = require('../shared/validations/calibrationOverviewInputValidator');
-
-    var isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
-
-    if (!isVerifiedGameToken) {
-        context.res = {
-            status: 403,
-            body: responseUtils.createResponse(false, false, errorMessages.INVALID_TOKEN, null)
-        }
-        context.done();
-        return;
-    }
-
-    const calibrationReq = req.body || {};
-
-    if (Object.entries(calibrationReq).length === 0) {
-        context.res = {
-            status: 400,
-            body: responseUtils.createResponse(false, true, errorMessages.EMPTY_REQUEST, null)
-        }
-        context.done();
-        return;
-    }
-
-    let validationResult = inputValidator.calibrationOverviewSaveValidator(calibrationReq);
-    if (validationResult.errorCount !== 0) {
-        let response = responseUtils.createResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
-        response.errors = validationResult.errors.errors;
-        context.res = {
-            status: 400,
-            body: response
-        }
-        context.done();
-        return;
-    }
-
-    calibrationReq._gameToken = req.headers.gametoken;
-
-    try {
-
-        const pacientSession = await PlaySessionModel.findOne({ pacientId: calibrationReq.pacientId }, null, { sort: { sessionNumber: -1 } });
-
-        if (!pacientSession) {
-            await new PlaySessionModel({ pacientId: calibrationReq.pacientId, sessionNumber: 1 }).save();
-        } else {
-            let pacientSessionDate = new Date(pacientSession.created_at);
-            pacientSessionDate.setHours(0, 0, 0, 0);
-
-            let currentDate = new Date();
-            currentDate.setHours(0, 0, 0, 0);
-
-            if (pacientSessionDate.getTime() != currentDate.getTime())
-                await new PlaySessionModel({ pacientId: calibrationReq.pacientId, sessionNumber: pacientSession.sessionNumber + 1 }).save()
-        }
-
-        const savedCalibrationOverview = await (new CalibrationOverviewModel(calibrationReq)).save();
-        context.log("[OUTPUT] - Calibration Overview Saved: ", savedCalibrationOverview);
-        context.res = {
-            status: 201,
-            body: responseUtils.createResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, savedCalibrationOverview)
-        }
-    } catch (err) {
-        context.log("[DB SAVING] - ERROR: ", err);
-        context.res = {
-            status: 500,
-            body: responseUtils.createResponse(false, true, errorMessages.DEFAULT_ERROR, null)
-        }
-    }
-
+    context.res = {
+      status: 403,
+      body: createBaseResponse(false, false, errorMessages.GAMETOKEN_HEADER_NOT_FOUND, null),
+    };
     context.done();
+    return;
+  }
+
+  const calibrationOverviewReq = req.body || {};
+
+  if (Object.entries(calibrationOverviewReq).length === 0) {
+    context.log.info(`Empty body request. InvocationId: ${context.invocationId}`);
+
+    context.res = {
+      status: 400,
+      body: createBaseResponse(false, false, errorMessages.EMPTY_REQUEST, null),
+    };
+    context.done();
+    return;
+  }
+
+  const validationResult = inputValidator.calibrationOverviewSaveValidator(calibrationOverviewReq);
+
+  if (validationResult.errorCount !== 0) {
+    context.log.info(`Validation failed on account creation. InvocationId: ${context.invocationId}`);
+
+    const response = createBaseResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
+    response.errors = validationResult.errors.errors;
+
+    context.res = {
+      status: 400,
+      body: response,
+    };
+    context.done();
+    return;
+  }
+
+  context.log.info(`Request body validated. InvocationId: ${context.invocationId}`);
+
+  try {
+    const mongoClient = await mongoose.connect(process.env.MONGO_CONNECTION, context);
+
+    const userAccountRepository = new MongooseRepository(mongoClient.model('UserAccount'));
+    const gameTokenService = new GameTokenService(userAccountRepository, context);
+
+    context.log.info('Validating Token Account...');
+
+    const isValidated = await gameTokenService.validate(req.headers['game-token']);
+    if (!isValidated) {
+      context.log(`Game Token is invalid. InvocationId: ${context.invocationId}`);
+
+      context.res = {
+        status: 403,
+        body: createBaseResponse(false, false, errorMessages.INVALID_TOKEN, null),
+      };
+      context.done();
+      return;
+    }
+
+    const calibrationOverviewRepository = new MongooseRepository(mongoClient.model('CalibrationOverview'));
+    const playSessionRepository = new MongooseRepository(mongoClient.model('PlaySession'));
+    const calibrationOverviewService = new CalibrationOverviewService(
+      { calibrationOverviewRepository, playSessionRepository, context },
+    );
+
+    const result = await calibrationOverviewService.create(calibrationOverviewReq, req.headers['game-token']);
+
+    context.log.info('Success on CalibrationOverview creation: \n', result);
+
+    context.res = {
+      status: 201,
+      body: createBaseResponse(true, false, infoMessages.SUCCESSFULLY_REGISTERED, result),
+    };
+  } catch (err) {
+    context.log.error(`An unexpected error has happened. InvocationId: ${context.invocationId}`);
+
+    context.res = {
+      status: 500,
+      body: createBaseResponse(false, false, errorMessages.DEFAULT_ERROR, null),
+    };
+  }
+
+  context.done();
 };

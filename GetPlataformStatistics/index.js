@@ -1,282 +1,60 @@
+const MongooseRepository = require('../shared/database/repositories/mongooseRepository');
+
+const PlataformOverviewService = require('../shared/services/plataformOverviewService');
+
+const mongoose = require('../shared/database/mongoDatabase');
+
+const { createBaseResponse } = require('../shared/http/responseUtils');
+
+const errorMessages = require('../shared/constants/errorMessages');
+
+const infoMessages = require('../shared/constants/infoMessages');
+
+require('../shared/database/models/plataformOverview');
+
+// eslint-disable-next-line func-names
 module.exports = async function (context, req) {
-    const mongoose = require('mongoose');
-    const DATABASE = process.env.MongoDbAtlas;
-    mongoose.connect(DATABASE);
-    mongoose.Promise = global.Promise;
+  context.log.info(`[GetPlataformOverviewStatistics] Function has been called! - ${context.invocationId}`);
 
-    require('../shared/Pacient');
-    require('../shared/PlataformOverview');
-    const PacientModel = mongoose.model('Pacient');
-    const PlataformOverviewModel = mongoose.model('PlataformOverview');
+  if (!req.headers['game-token']) {
+    context.log.info(`Empty gameToken header. InvocationId: ${context.invocationId}`);
 
-    const authorizationUtils = require('../shared/authorization/tokenVerifier');
-    const responseUtils = require('../shared/http/responseUtils');
-    const errorMessages = require('../shared/http/errorMessages');
-    const infoMessages = require('../shared/http/infoMessages');
-
-    var isVerifiedGameToken = await authorizationUtils.verifyGameToken(req.headers.gametoken, mongoose);
-
-    if (!isVerifiedGameToken) {
-        context.res = {
-            status: 403,
-            body: responseUtils.createResponse(false, false, errorMessages.INVALID_TOKEN, null)
-        }
-        context.done();
-        return;
-    }
-
-    const aggregate = PacientModel.aggregate();
-
-    const pacientsMatchOperators = { $match: {} };
-    const plataformMathOperators = { $match: {} };
-    let maxSessions = Number.MAX_SAFE_INTEGER;
-    let deviceName = 'Pitaco';
-
-    if (req.query.condition)
-        pacientsMatchOperators.$match.condition = req.query.condition;
-    if (req.query.sex)
-        pacientsMatchOperators.$match.sex = req.query.sex;
-    if (req.query.fromBirthday)
-        pacientsMatchOperators.$match.birthday = {
-            $gte: new Date(new Date(`${req.query.fromBirthday} 00:00:00:000`).toISOString())
-        };
-    if (req.query.fromBirthday && req.query.toBirthday)
-        pacientsMatchOperators.$match.birthday = {
-            $gte: new Date(new Date(`${req.query.fromBirthday} 00:00:00:000`).toISOString()),
-            $lte: new Date(new Date(`${req.query.toBirthday} 23:59:59:999`).toISOString())
-        };
-
-    if (req.query.maxSessions)
-        maxSessions = req.query.maxSessions;
-
-    if (req.query.phase)
-        plataformMathOperators.$match.phase = req.query.phase;
-    if (req.query.level)
-        plataformMathOperators.$match.level = req.query.level
-
-    if (req.query.devices)
-        deviceName = req.query.devices;
-
-    aggregate.append(pacientsMatchOperators);
-    aggregate.project({ "_id": 1 });
-    aggregate.lookup({
-        from: 'playsessions',
-        'let': {
-            id: '$_id'
-        },
-        pipeline: [
-            {
-                $match: {
-                    $expr: {
-                        $and: [
-                            { $eq: [{ $toObjectId: '$pacientId' }, '$$id'] },
-                            { $lte: ['$sessionNumber', maxSessions] }
-                        ]
-                    }
-                }
-            },
-            {
-                $project: {
-                    day: { $dayOfMonth: { date: "$created_at" } },
-                    month: { $month: { date: "$created_at" } },
-                    year: { $year: { date: "$created_at" } },
-                    created_at: { $dateToString: { format: '%Y-%m-%d', date: '$created_at' } },
-                    sessionNumber: 1
-                }
-            }
-        ],
-        as: 'playsessions'
-    });
-
-    aggregate.lookup({
-        from: 'plataformoverviews',
-        'let': {
-            id: '$_id',
-            startDate: {
-                $arrayElemAt: [
-                    '$playsessions',
-                    0
-                ]
-            },
-            endDate: {
-                $arrayElemAt: [
-                    '$playsessions',
-                    -1
-                ]
-            }
-        },
-        pipeline: [
-            {
-                $addFields: {
-                    p: {
-                        $toObjectId: '$pacientId'
-                    }
-                }
-            },
-            {
-                $match: {
-                    $expr: {
-                        $and: [
-                            {
-                                $eq: [
-                                    '$p',
-                                    '$$id'
-                                ]
-                            },
-                            {
-                                $gte: [
-                                    '$created_at',
-                                    { $dateFromParts: { 'year': '$$startDate.year', 'month': '$$startDate.month', 'day': '$$startDate.day', 'hour': 0, 'minute': 0, 'second': 0, 'millisecond': 0 } }
-                                ]
-                            },
-                            {
-                                $lte: [
-                                    '$created_at',
-                                    { $dateFromParts: { 'year': '$$endDate.year', 'month': '$$endDate.month', 'day': '$$endDate.day', 'hour': 23, 'minute': 59, 'second': 59, 'millisecond': 999 } }
-                                ]
-                            }
-                        ]
-                    }
-                }
-            },
-            {
-                $project: {
-                    flowDataDevicesId: 1,
-                    created_at: {
-                        $dateToString: {
-                            format: '%Y-%m-%d',
-                            date: '$created_at'
-                        }
-                    },
-                    maxScore: 1,
-                    scoreRatio: 1
-                }
-            }
-        ],
-        as: 'plataform'
-    });
-
-    aggregate.unwind({ path: '$plataform' });
-    aggregate.project({
-        plataformId: '$plataform._id',
-        flowDataDevicesId: '$plataform.flowDataDevicesId',
-        created_at: '$plataform.created_at',
-        session: {
-            $arrayElemAt: [{
-                $filter: {
-                    input: "$playsessions",
-                    as: "playSessions",
-                    cond: { $eq: ['$$playSessions.created_at', '$plataform.created_at'] }
-                }
-            }, 0]
-        },
-        plataformScore: "$plataform.maxScore",
-        plataformScoreRatio: "$plataform.scoreRatio"
-    })
-    aggregate.lookup({
-        from: 'flowdatadevices',
-        'let': {
-            flowDataDeviceId: '$flowDataDevicesId'
-        },
-        localField: '',
-        pipeline: [
-            {
-                $match: {
-                    $expr: {
-                        $eq: [
-                            '$_id',
-                            '$$flowDataDeviceId'
-                        ]
-                    }
-                }
-            },
-            { $project: { flowDataDevices: 1 } }
-        ],
-        as: 'flowData'
-    });
-
-    aggregate.replaceRoot({ newRoot: { $mergeObjects: [{ $arrayElemAt: ["$flowData", 0] }, "$$ROOT"] } });
-    aggregate.unwind("$newRoot");
-    aggregate.project({ "newRoot.flowData": 0 });
-    aggregate.unwind("$newRoot.flowDataDevices");
-    aggregate.match({ 'newRoot.flowDataDevices.deviceName': deviceName });
-    aggregate.project({
-        "sessionNumber": "$newRoot.session.sessionNumber",
-        "pacientId": "$newRoot._id",
-        "created_at": "$newRoot.created_at",
-        "maxInsFlow": {
-            $min: {
-                $map: {
-                    input: '$newRoot.flowDataDevices.flowData',
-                    as: 'flowData',
-                    'in': '$$flowData.flowValue'
-                }
-            }
-        },
-        "maxExpFlow": {
-            $max: {
-                $map: {
-                    input: '$newRoot.flowDataDevices.flowData',
-                    as: 'flowData',
-                    'in': '$$flowData.flowValue'
-                }
-            }
-        },
-        "plataformScore": "$newRoot.plataformScore",
-        "plataformScoreRatio": "$newRoot.plataformScoreRatio"
-    });
-    aggregate.group({
-        _id: { pacientId: '$pacientId', date: '$created_at', sessionNumber: '$sessionNumber' },
-        maxExpFlow: { $max: '$maxExpFlow' },
-        maxInsFlow: { $min: '$maxInsFlow' },
-        maxScore: { $max: '$plataformScore' },
-        maxScoreRatio: { $max: '$plataformScoreRatio' }
-    });
-    aggregate.group({
-        _id: { pacientId: '$_id.pacientId' },
-        maxFlows: {
-            $push: {
-                maxInsFlow: '$maxInsFlow',
-                maxExpFlow: '$maxExpFlow',
-                maxScore: '$maxScore',
-                maxScoreRatio: '$maxScoreRatio',
-
-                created_at: '$_id.date',
-                sessionNumber: '$_id.sessionNumber'
-            },
-        }
-    });
-    aggregate.project({
-        pacientId: "$_id.pacientId",
-        maxFlowsPerSession: "$maxFlows",
-        plataformInfoPerSession: 1,
-        _id: 0
-    })
-
-    aggregate.sort({ 'maxFlows.created_at': 1 })
-
-    try {
-        const plataformStatistics = await aggregate.exec();
-        let plataformStatisticsPacientsIds = plataformStatistics.map(x => x.pacientId.toString());
-        let plataformInfos = await PlataformOverviewModel.find({ pacientId: { $in: plataformStatisticsPacientsIds } }, { pacientId: 1, maxScore: 1, scoreRatio: 1, phase: 1, level: 1 });
-        plataformStatistics.forEach(element => {
-            element.plataformInfo = plataformInfos.filter(x => x.pacientId == element.pacientId);
-        });
-        context.log("[DB QUERYING] - PlataformOverviewStatistics Get by Pacient ID");
-        context.res = {
-            status: 200,
-            body: responseUtils.createResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, plataformStatistics)
-        }
-    } catch (err) {
-        context.log("[DB QUERYING] - ERROR: ", err);
-        context.res = {
-            status: 500,
-            body: responseUtils.createResponse(false, true, errorMessages.DEFAULT_ERROR, null)
-        }
-    }
-
+    context.res = {
+      status: 403,
+      body: createBaseResponse(false, false, errorMessages.GAMETOKEN_HEADER_NOT_FOUND, null),
+    };
     context.done();
+    return;
+  }
+
+  try {
+    const mongoClient = await mongoose.connect(process.env.MONGO_CONNECTION, context);
+
+    const plataformOverviewRepository = new MongooseRepository(mongoClient.model('PlataformOverview'));
+    const plataformOverviewService = (
+      new PlataformOverviewService({ plataformOverviewRepository, context })
+    );
+
+    context.log.info('Getting PlataformOverviewStatistics Results...');
+
+    const results = (
+      await plataformOverviewService
+        .getPlataformOverviewStatistics(
+          req.query,
+        )
+    );
+
+    context.res = {
+      status: 200,
+      body: createBaseResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, results),
+    };
+  } catch (err) {
+    context.log(`An unexpected error has happened. InvocationId: ${context.invocationId}`);
+    context.res = {
+      status: 500,
+      body: createBaseResponse(false, true, errorMessages.DEFAULT_ERROR, null),
+    };
+  }
+
+  context.done();
 };
-
-
-

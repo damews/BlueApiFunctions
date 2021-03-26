@@ -1,9 +1,9 @@
- exports.createResponse = function (success, authorized, message, data) {
-    let response = {
-        success: success,
-        authorized: authorized,
-        message: message,
-        data: data
-    }
-    return response;
-}
+module.exports.createBaseResponse = (success, authorized, message, data) => {
+  const response = {
+    success,
+    authorized,
+    message,
+    data,
+  };
+  return response;
+};
