@@ -87,7 +87,7 @@ module.exports = async function (context, req) {
 
     context.res = {
       status: 201,
-      body: createBaseResponse(true, false, infoMessages.SUCCESSFULLY_REQUEST, result),
+      body: createBaseResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, result),
     };
   } catch (err) {
     context.log.error(`An unexpected error has happened. InvocationId: ${context.invocationId}`);

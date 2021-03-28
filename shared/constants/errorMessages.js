@@ -12,4 +12,5 @@ module.exports = {
   USER_NOT_FOUND: 'Usuário não encontrado',
   TOKEN_ALREADY_GENERATED: 'Um token já foi cadastrado para este usuário.',
   INVALID_PASSWORD: 'Senha incorreta.',
+  INVALID_ROLE_GAMETOKEN: 'Não é permitido criar uma Chave de Acesso com este tipo de conta.',
 };

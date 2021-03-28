@@ -30,7 +30,8 @@ module.exports = async function (context, req) {
     return;
   }
 
-  if (req.params.flowDataDeviceId === undefined || req.params.flowDataDeviceId == null) {
+  const isValidFlowDataDeviceId = /^[a-fA-F0-9]{24}$/.test(req.params.flowDataDeviceId);
+  if (!isValidFlowDataDeviceId) {
     context.log.info(`Must provide flowDataDeviceId parameter. InvocationId: ${context.invocationId}`);
 
     context.res = {

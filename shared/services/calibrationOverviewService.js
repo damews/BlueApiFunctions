@@ -16,8 +16,9 @@ module.exports = class CalibrationOverviewService {
       // eslint-disable-next-line no-underscore-dangle
       findObj._id = filter.calibrationId;
     }
-    if (filter.gameDevice) {
-      findObj.gameDevice = filter.gameDevice;
+    if (filter.devices) {
+      const devicesSearch = filter.devices.split(',');
+      findObj.gameDevice = { $in: devicesSearch };
     }
     if (filter.calibrationExercise) {
       findObj.calibrationExercise = filter.calibrationExercise;
@@ -50,7 +51,10 @@ module.exports = class CalibrationOverviewService {
 
     const options = { sort: { created_at: -1 } };
 
-    if (filter.gameDevice) { findObj.gameDevice = filter.gameDevice; }
+    if (filter.devices) {
+      const devicesSearch = filter.devices.split(',');
+      findObj.gameDevice = { $in: devicesSearch };
+    }
     if (filter.calibrationExercise) { findObj.calibrationExercise = filter.calibrationExercise; }
     if (filter.dataIni) {
       findObj.created_at = {
@@ -74,12 +78,12 @@ module.exports = class CalibrationOverviewService {
 
   async create(calibration, gameToken) {
     const pacientSession = await this.playSessionRepository.findOne(
-      { pacientId: calibration.pacientId }, { sort: { sessionNumber: -1 } },
+      { pacientId: calibration.pacientId, _gameToken: gameToken }, { sort: { sessionNumber: -1 } },
     );
 
     if (!pacientSession) {
       const newPlaySession = {
-        pacientId: calibration.pacientId, sessionNumber: 1,
+        pacientId: calibration.pacientId, sessionNumber: 1, _gameToken: gameToken,
       };
       await this.playSessionRepository.create(newPlaySession);
     } else {
@@ -110,5 +114,9 @@ module.exports = class CalibrationOverviewService {
 
   deleteManyByPacientId(pacientId) {
     return this.calibrationOverviewRepository.deleteMany({ pacientId });
+  }
+
+  async deleteManyByGameToken(gameToken) {
+    return this.calibrationOverviewRepository.deleteMany({ _gameToken: gameToken });
   }
 };

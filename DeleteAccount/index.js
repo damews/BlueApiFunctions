@@ -1,5 +1,7 @@
 const MongooseRepository = require('../shared/database/repositories/mongooseRepository');
 
+const UserAccountService = require('../shared/services/accountService');
+
 const PacientService = require('../shared/services/pacientService');
 
 const PlataformOverviewService = require('../shared/services/plataformOverviewService');
@@ -9,8 +11,6 @@ const PlaySessionService = require('../shared/services/playSessionService');
 const MinigameOverviewService = require('../shared/services/minigameOverviewService');
 
 const CalibrationOverviewService = require('../shared/services/calibrationOverviewService');
-
-const UserAccountService = require('../shared/services/accountService');
 
 const FlowDataDeviceService = require('../shared/services/flowDataDeviceService');
 
@@ -23,6 +23,8 @@ const { createBaseResponse } = require('../shared/http/responseUtils');
 const errorMessages = require('../shared/constants/errorMessages');
 
 const infoMessages = require('../shared/constants/infoMessages');
+
+require('../shared/database/models/userAccount');
 
 require('../shared/database/models/pacient');
 
@@ -40,7 +42,7 @@ require('../shared/database/models/flowDataDevice');
 
 // eslint-disable-next-line func-names
 module.exports = async function (context, req) {
-  context.log.info(`[DeletePacient] Function has been called! - ${context.invocationId}`);
+  context.log.info(`[DeleteAccount] Function has been called! - ${context.invocationId}`);
 
   if (!req.headers['game-token']) {
     context.log.info(`Empty gameToken header. InvocationId: ${context.invocationId}`);
@@ -53,8 +55,8 @@ module.exports = async function (context, req) {
     return;
   }
 
-  const isValidPacientId = /^[a-fA-F0-9]{24}$/.test(req.params.pacientId);
-  if (!isValidPacientId) {
+  const isValidUserAccountId = /^[a-fA-F0-9]{24}$/.test(req.params.userAccountId);
+  if (!isValidUserAccountId) {
     context.res = {
       status: 400,
       body: createBaseResponse(false, false, errorMessages.INVALID_REQUEST, null),
@@ -103,23 +105,23 @@ module.exports = async function (context, req) {
       return;
     }
 
-    context.log.info('Deleting Pacient Data...');
+    context.log.info('Deleting all data by game token...');
 
     Promise.all([
-      pacientService.delete(req.params.pacientId),
-      plataformOverviewService.deleteManyByPacientId(req.params.pacientId),
-      calibrationOverviewService.deleteManyByPacientId(req.params.pacientId),
-      minigameOverviewService.deleteManyByPacientId(req.params.pacientId),
-      userAccountService.deletebyPacientId(req.params.pacientId),
-      playSessionService.deleteManyByPacientId(req.params.pacientId),
-      flowDataDeviceService.deleteManyByPacientId(req.params.pacientId),
+      pacientService.deleteManyByGameToken(req.headers['game-token']),
+      plataformOverviewService.deleteManyByGameToken(req.headers['game-token']),
+      calibrationOverviewService.deleteManyByGameToken(req.headers['game-token']),
+      minigameOverviewService.deleteManyByGameToken(req.headers['game-token']),
+      userAccountService.deletebyUserAccounId(req.params.userAccountId),
+      playSessionService.deleteManyByGameToken(req.headers['game-token']),
+      flowDataDeviceService.deleteManyByGameToken(req.headers['game-token']),
     ]).then(() => {
-      context.log.info('Pacient Data Deleted...');
+      context.log.info('All data is now deleted...');
     });
 
     context.res = {
       status: 200,
-      body: createBaseResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, null),
+      body: createBaseResponse(true, false, infoMessages.SUCCESSFULLY_REQUEST, null),
     };
   } catch (err) {
     context.log(`An unexpected error has happened. InvocationId: ${context.invocationId}`);

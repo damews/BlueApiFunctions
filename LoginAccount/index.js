@@ -35,8 +35,9 @@ module.exports = async function (context, req) {
   if (validationResult.errorCount !== 0) {
     context.log.info(`Validation failed on authentication creation. InvocationId: ${context.invocationId}`);
 
-    const response = createBaseResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
-    response.errors = validationResult.errors.errors;
+    const response = createBaseResponse(
+      false, true, errorMessages.VALIDATION_ERROR_FOUND, validationResult.errors.errors,
+    );
 
     context.res = {
       status: 400,
@@ -63,7 +64,7 @@ module.exports = async function (context, req) {
       context.log.info(`Error on authenticate: ${result.error}`, `InvocationId: ${context.invocationId}`);
 
       context.res = {
-        status: 400,
+        status: 401,
         body: createBaseResponse(true, false, result.error, null),
       };
       context.done();
@@ -73,8 +74,8 @@ module.exports = async function (context, req) {
     context.log.info('Success to authenticate: \n', result);
 
     context.res = {
-      status: 201,
-      body: createBaseResponse(true, false, infoMessages.SUCCESSFULLY_AUTHENTICATION, result),
+      status: 200,
+      body: createBaseResponse(true, true, infoMessages.SUCCESSFULLY_AUTHENTICATION, result),
     };
   } catch (err) {
     context.log(`An unexpected error has happened. InvocationId: ${context.invocationId}`);

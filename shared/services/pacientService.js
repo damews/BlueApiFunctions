@@ -23,7 +23,7 @@ module.exports = class PacientService {
 
     const result = await aggregate.exec();
 
-    return result;
+    return result[0];
   }
 
   async getPacients(filter, gameToken) {
@@ -90,7 +90,7 @@ module.exports = class PacientService {
     });
 
     if (filter.limit) { aggregate.limit(parseInt(filter.limit, 10)); }
-    if (filter.skip) { aggregate.skip(filter.skip); }
+    if (filter.skip) { aggregate.skip(parseInt(filter.skip, 10)); }
 
     const result = await aggregate.exec();
 
@@ -109,5 +109,9 @@ module.exports = class PacientService {
 
   async delete(pacientId) {
     return this.pacientRepository.deleteMany({ _id: Types.ObjectId(pacientId) });
+  }
+
+  async deleteManyByGameToken(gameToken) {
+    return this.pacientRepository.deleteMany({ _gameToken: gameToken });
   }
 };

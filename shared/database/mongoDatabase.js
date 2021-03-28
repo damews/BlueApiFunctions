@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
 
-let mongoClient = null;
-
 async function connect(connection, logger) {
   logger.log('[DB] - Connecting...');
 
-  mongoClient = await mongoose
+  const mongoClient = await mongoose
     .connect(connection, { useNewUrlParser: true, useUnifiedTopology: true })
     .catch((error) => {
       logger.log('[DB] - Error while connecting to database', error);
@@ -16,10 +14,11 @@ async function connect(connection, logger) {
   return mongoClient;
 }
 
-async function close(logger) {
+async function close(mongoClient, logger) {
   logger.log('[DB] - Disconnecting...');
 
   mongoClient
+    .connection
     .close()
     .catch((error) => {
       this.logger.log('[DB] - Error while disconnecting to the database', error);

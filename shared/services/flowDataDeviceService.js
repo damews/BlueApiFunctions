@@ -1,6 +1,6 @@
 const { Types } = require('mongoose');
 
-module.exports = class AccountService {
+module.exports = class FlowDataDeviceService {
   constructor(flowDataDeviceRepository, context) {
     this.flowDataDeviceRepository = flowDataDeviceRepository;
     this.context = context;
@@ -15,5 +15,13 @@ module.exports = class AccountService {
     const result = await this.flowDataDeviceRepository.find(findObj);
 
     return result;
+  }
+
+  async deleteManyByPacientId(pacientId) {
+    return this.flowDataDeviceRepository.deleteMany({ pacientId });
+  }
+
+  async deleteManyByGameToken(gameToken) {
+    return this.flowDataDeviceRepository.deleteMany({ _gameToken: gameToken });
   }
 };

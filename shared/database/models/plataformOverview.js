@@ -7,7 +7,10 @@ const PlataformOverviewSchema = mongoose.Schema({
   devices: [String],
   flowDataDevicesId: { type: mongoose.Schema.Types.ObjectId, ref: 'FlowDataDevice' },
   flowDataDevicesValues: [{
-    deviceName: { type: String }, maxFlowValue: { type: Number }, minFlowValue: { type: Number }, meanFlowValue: { type: Number },
+    deviceName: { type: String },
+    maxFlowValue: { type: Number },
+    minFlowValue: { type: Number },
+    meanFlowValue: { type: Number },
   }],
   playStart: { type: Date },
   playFinish: { type: Date },

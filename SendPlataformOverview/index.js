@@ -41,8 +41,9 @@ module.exports = async function (context, req) {
   if (validationResult.errorCount !== 0) {
     context.log.info(`Validation failed on account creation. InvocationId: ${context.invocationId}`);
 
-    const response = createBaseResponse(false, true, errorMessages.VALIDATION_ERROR_FOUND, null);
-    response.errors = validationResult.errors.errors;
+    const response = createBaseResponse(
+      false, true, errorMessages.VALIDATION_ERROR_FOUND, validationResult.errors.errors,
+    );
 
     context.res = {
       status: 400,
@@ -90,7 +91,7 @@ module.exports = async function (context, req) {
 
     context.res = {
       status: 201,
-      body: createBaseResponse(true, false, infoMessages.SUCCESSFULLY_REGISTERED, result),
+      body: createBaseResponse(true, true, infoMessages.SUCCESSFULLY_REGISTERED, result),
     };
   } catch (err) {
     context.log.error(`An unexpected error has happened. InvocationId: ${context.invocationId}`);

@@ -14,4 +14,8 @@ module.exports = class PlaySessionService {
   async deleteManyByPacientId(pacientId) {
     return this.playSessionRepository.deleteMany({ pacientId });
   }
+
+  async deleteManyByGameToken(gameToken) {
+    return this.playSessionRepository.deleteMany({ _gameToken: gameToken });
+  }
 };

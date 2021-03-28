@@ -475,11 +475,18 @@ module.exports = class PlataformOverviewService {
     delete newPlataformOverview.flowDataDevices;
 
     const pacientSession = await this.playSessionRepository.findOne(
-      { pacientId: plataformOverview.pacientId }, { sort: { sessionNumber: -1 } },
+      {
+        pacientId: plataformOverview.pacientId,
+        _gameToken: gameToken,
+      }, { sort: { sessionNumber: -1 } },
     );
 
     if (!pacientSession) {
-      const newPlaySession = { pacientId: plataformOverview.pacientId, sessionNumber: 1 };
+      const newPlaySession = {
+        pacientId: plataformOverview.pacientId,
+        _gameToken: gameToken,
+        sessionNumber: 1,
+      };
       await this.playSessionRepository.create(newPlaySession);
     } else {
       const pacientSessionDate = new Date(pacientSession.created_at);
@@ -490,14 +497,18 @@ module.exports = class PlataformOverviewService {
 
       if (pacientSessionDate.getTime() !== currentDate.getTime()) {
         const newPlaySession = {
-          pacientId: plataformOverview.pacientId, sessionNumber: pacientSession.sessionNumber + 1,
+          pacientId: plataformOverview.pacientId,
+          _gameToken: gameToken,
+          sessionNumber: pacientSession.sessionNumber + 1,
         };
         await this.playSessionRepository.create(newPlaySession);
       }
     }
 
     const savedFlowDataDevices = await this.flowDataDeviceRepository.create({
-      _gameToken: gameToken, flowDataDevices: flowDataDevicesReq,
+      _gameToken: gameToken,
+      pacientId: plataformOverview.pacientId,
+      flowDataDevices: flowDataDevicesReq,
     });
     // eslint-disable-next-line no-underscore-dangle
     newPlataformOverview.flowDataDevicesId = savedFlowDataDevices._id;
@@ -510,5 +521,9 @@ module.exports = class PlataformOverviewService {
 
   async deleteManyByPacientId(pacientId) {
     return this.plataformOverviewRepository.deleteMany({ pacientId });
+  }
+
+  async deleteManyByGameToken(gameToken) {
+    return this.plataformOverviewRepository.deleteMany({ _gameToken: gameToken });
   }
 };

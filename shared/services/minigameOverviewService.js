@@ -94,7 +94,9 @@ module.exports = class MinigameOverviewService {
 
     const saveFlowDataDevices = async () => {
       flowDataDevicesObjects.forEach(async (flowDataDevices) => {
-        const newFlowDataDevice = { _gameToken: gameToken, flowDataDevices };
+        const newFlowDataDevice = {
+          _gameToken: gameToken, pacientId: minigameOverview.pacientId, flowDataDevices,
+        };
         const savedFlowDataDevices = await this.flowDataDeviceRepository.create(newFlowDataDevice);
         // eslint-disable-next-line no-underscore-dangle
         flowDataDevicesIds.push(savedFlowDataDevices._id);
@@ -110,7 +112,7 @@ module.exports = class MinigameOverviewService {
 
     const pacientSession = await this.playSessionRepository.findOne(
       {
-        pacientId: minigameOverview.pacientId,
+        pacientId: minigameOverview.pacientId, _gameToken: gameToken,
       },
       {
         sort: { sessionNumber: -1 },
@@ -118,7 +120,11 @@ module.exports = class MinigameOverviewService {
     );
 
     if (!pacientSession) {
-      const newPlaySession = { pacientId: minigameOverview.pacientId, sessionNumber: 1 };
+      const newPlaySession = {
+        pacientId: minigameOverview.pacientId,
+        _gameToken: gameToken,
+        sessionNumber: 1,
+      };
       await this.playSessionRepository.create(newPlaySession);
     } else {
       const pacientSessionDate = new Date(pacientSession.created_at);
@@ -130,6 +136,7 @@ module.exports = class MinigameOverviewService {
       if (pacientSessionDate.getTime() !== currentDate.getTime()) {
         const newPlaySession = ({
           pacientId: minigameOverview.pacientId,
+          _gameToken: gameToken,
           sessionNumber: pacientSession.sessionNumber + 1,
         });
         await this.playSessionRepository.create(newPlaySession);
@@ -143,5 +150,9 @@ module.exports = class MinigameOverviewService {
 
   async deleteManyByPacientId(pacientId) {
     return this.minigameOverviewRepository.deleteMany({ pacientId });
+  }
+
+  async deleteManyByGameToken(gameToken) {
+    return this.minigameOverviewRepository.deleteMany({ _gameToken: gameToken });
   }
 };

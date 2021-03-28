@@ -1,4 +1,5 @@
 const { hashSync } = require('bcryptjs');
+const { Types } = require('mongoose');
 
 const errorMessages = require('../constants/errorMessages');
 
@@ -41,6 +42,10 @@ module.exports = class AccountService {
   async getPacientAccount(pacientId) {
     const result = await this.accountRepository.findOne({ pacientId });
 
+    if (!result) {
+      return null;
+    }
+
     return {
       // eslint-disable-next-line no-underscore-dangle
       _id: result._id,
@@ -52,5 +57,9 @@ module.exports = class AccountService {
 
   async deletebyPacientId(pacientId) {
     return this.accountRepository.deleteMany({ pacientId });
+  }
+
+  async deletebyUserAccounId(userAccountId) {
+    return this.accountRepository.deleteMany({ _id: Types.ObjectId(userAccountId) });
   }
 };

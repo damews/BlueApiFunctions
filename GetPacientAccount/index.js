@@ -30,7 +30,8 @@ module.exports = async function (context, req) {
     return;
   }
 
-  if (req.params.pacientId === undefined || req.params.pacientId == null) {
+  const isValidPacientId = /^[a-fA-F0-9]{24}$/.test(req.params.pacientId);
+  if (!isValidPacientId) {
     context.log.info(`Must provide pacientId parameter. InvocationId: ${context.invocationId}`);
 
     context.res = {
@@ -65,14 +66,14 @@ module.exports = async function (context, req) {
 
     context.log.info('Getting Pacient Result...');
 
-    const results = (
+    const result = (
       await accountService
-        .getPacient(req.params.pacientId, req.headers['game-token'])
+        .getPacientAccount(req.params.pacientId, req.headers['game-token'])
     );
 
     context.res = {
       status: 200,
-      body: createBaseResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, results),
+      body: createBaseResponse(true, true, infoMessages.SUCCESSFULLY_REQUEST, result),
     };
   } catch (err) {
     context.log(`An unexpected error has happened. InvocationId: ${context.invocationId}`);

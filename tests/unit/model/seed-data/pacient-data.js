@@ -1,0 +1,46 @@
+const idSeed = require('./ids-data');
+
+module.exports = {
+  pacientOne: {
+    _gameToken: idSeed.gameTokenOne,
+    name: 'Mike Doe',
+    sex: 'Male',
+    birthday: new Date(),
+    capacitiesPitaco: {
+      insPeakFlow: 0,
+      expPeakFlow: 0,
+      insFlowDuration: 0,
+      expFlowDuration: 0,
+      respiratoryRate: 0,
+    },
+    capacitiesMano: {
+      insPeakFlow: 0,
+      expPeakFlow: 0,
+      insFlowDuration: 0,
+      expFlowDuration: 0,
+      respiratoryRate: 0,
+    },
+    capacitiesCinta: {
+      insPeakFlow: 0,
+      expPeakFlow: 0,
+      insFlowDuration: 0,
+      expFlowDuration: 0,
+      respiratoryRate: 0,
+    },
+    observations: 'Mike is Healthy!',
+    condition: 'Healthy',
+    unlockedLevels: 0,
+    accumulatedScore: 0,
+    playSessionsDone: 0,
+    calibrationPitacoDone: false,
+    calibrationManoDone: false,
+    calibrationCintaDone: false,
+    howToPlayDone: false,
+    weight: 100,
+    height: 100,
+    pitacoThreshold: 7.5,
+    manoThreshold: 7.5,
+    cintaThreshold: 7.5,
+    ethnicity: 'White',
+  },
+};

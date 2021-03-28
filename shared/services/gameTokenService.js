@@ -15,6 +15,10 @@ module.exports = class GameTokenService {
       return { error: errorMessages.USER_NOT_FOUND };
     }
 
+    if (user.role === 'User') {
+      return { error: errorMessages.INVALID_ROLE_GAMETOKEN };
+    }
+
     if (user.gameToken.token !== '') {
       return { error: errorMessages.TOKEN_ALREADY_GENERATED };
     }

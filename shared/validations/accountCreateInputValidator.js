@@ -5,7 +5,7 @@ exports.createUserValidator = (createTokenReq) => {
     fullname: 'required|string',
     username: 'required|string',
     password: 'required|string',
-    email: 'required|email',
+    email: [{ required_if: ['role', 'Administrator'] }, 'email'],
     role: ['required', { in: ['Administrator', 'User'] }],
     pacientId: [{ required_if: ['role', 'User'] }, 'regex:/^[0-9a-fA-F]{24}$/i'],
   };
