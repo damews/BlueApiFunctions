@@ -34,6 +34,7 @@ describe('On Pacient Input', () => {
         howToPlayDone: ['The howToPlayDone field is required.'],
         manoThreshold: ['The manoThreshold field is required.'],
         name: ['The name field is required.'],
+        observations: ['The observations field is required.'],
         pitacoThreshold: ['The pitacoThreshold field is required.'],
         playSessionsDone: ['The playSessionsDone field is required.'],
         sex: ['The sex field is required.'],
@@ -46,7 +47,7 @@ describe('On Pacient Input', () => {
     const validationResult = inputValidator.pacientSaveValidator(userInput);
 
     // Assert
-    expect(validationResult.errorCount).toBe(32);
+    expect(validationResult.errorCount).toBe(33);
     expect(validationResult.errors).toEqual(expected);
   });
 
@@ -77,6 +78,7 @@ describe('On Pacient Input', () => {
         expFlowDuration: '1',
         respiratoryRate: '1',
       },
+      observations: 'Test',
       condition: 'Healthy',
       unlockedLevels: '0',
       accumulatedScore: '0',
@@ -127,6 +129,7 @@ describe('On Pacient Input', () => {
         expFlowDuration: '1',
         respiratoryRate: '1',
       },
+      observations: 'Test',
       condition: 'Healthy',
       unlockedLevels: '0',
       accumulatedScore: '0',
@@ -177,6 +180,7 @@ describe('On Pacient Input', () => {
         expFlowDuration: '1',
         respiratoryRate: '1',
       },
+      observations: 'Test',
       condition,
       unlockedLevels: '0',
       accumulatedScore: '0',

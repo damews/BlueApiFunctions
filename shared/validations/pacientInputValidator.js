@@ -26,6 +26,7 @@ exports.pacientSaveValidator = (pacientReq) => {
       expFlowDuration: 'required|integer',
       respiratoryRate: 'required|integer',
     },
+    observations: 'required|string',
     condition: ['required', 'string', { in: ['Healthy', 'Obstrutive'] }],
     unlockedLevels: 'required|integer',
     accumulatedScore: 'required|integer',

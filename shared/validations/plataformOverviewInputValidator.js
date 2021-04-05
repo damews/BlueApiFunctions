@@ -19,7 +19,7 @@ exports.plataformOverviewSaveValidator = (plataformOverviewReq) => {
     scoreRatio: 'required|numeric',
     targetsSpawned: 'required|integer',
     targetsSuccess: 'required|integer',
-    targetsInsuccess: 'required|integer',
+    targetsInsSuccess: 'required|integer',
     targetsExpSuccess: 'required|integer',
     targetsFails: 'required|integer',
     targetsInsFail: 'required|integer',

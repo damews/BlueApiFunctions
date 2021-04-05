@@ -52,6 +52,7 @@ module.exports = class AccountService {
       pacientId: result.pacientId,
       username: result.username,
       password: result.password,
+      fullname: result.fullname,
     };
   }
 
