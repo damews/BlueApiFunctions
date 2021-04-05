@@ -100,13 +100,7 @@ A seguir, encontra-se uma tabela com as rotas desenvolvidas e qual é a sua fun�
 
 ### Documentação em POSTMAN
 
-Caso queira exemplos de requisições e uma documentação mais detalhada você pode:
-
-Realizar a visualização via Postman ou ferramenta auxiliar:
-1. Instale o [Postman](https://www.postman.com/downloads/)
-2. Dentro do Postman, vá em File->Import
-3. Importe o arquivo que se encontra na pasta **utils** deste repositório (*BlueApiFunc.postman_collection.json*)
-
-ou
-
 Acessar a página de documentação criada em Postman -> [acesse aqui](https://documenter.getpostman.com/view/10430998/TzCL7ntL)
+
+### Outros
+[Para saber mais sobre a história e dificuldades deste projeto](https://github.com/LiserLine/BlueApiFunctions/wiki/Histórico-e-Dificuldades-encontradas)
