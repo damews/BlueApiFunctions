@@ -22,8 +22,10 @@ A tecnologia *serverless* Microsoft Azure Functions, ou seja, não necessita de 
 - [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
 - [Mongoose](https://mongoosejs.com) 5.9.2
 - [validatorjs](https://github.com/skaterdav85/validatorjs) 3.18.1
-- [Nodemailer](https://nodemailer.com/about/) 6.4.6
 - bcryptjs 2.4.3
+- [mongo-db-memoryserver](https://github.com/nodkz/mongodb-memory-server) 6.9.6
+- [Jest](https://github.com/facebook/jest) 26.6.3
+- ESLinter (AirBnB)
 
 ## Antes de executar...
 
@@ -51,6 +53,10 @@ Primeiro, vamos preparar o seu ambiente para que consiga simular a chamada de fu
 Ao rodar a aplicação você verá no terminal do VS Code as rotas geradas (localhost) que podem ser utilizadas para enviar/buscar as informações.
 
 As informações para caso queira implantar as funções no ambiente da Microsoft estão disponíveis na documentação da própria Microsoft sobre esta plataforma.
+
+##Testes
+
+O projeto está configurado para utilizar a biblioteca de testes Jest. Para rodar os testes unitários basta executar o comando **_npm run test_**, que serão executados os testes unitários existentes na pasta **test/**.
 
 ## Autenticação
 
@@ -103,4 +109,4 @@ Realizar a visualização via Postman ou ferramenta auxiliar:
 
 ou
 
-Acessar a página de documentação criada em Postman -> [acesse aqui]()
+Acessar a página de documentação criada em Postman -> [acesse aqui](https://documenter.getpostman.com/view/10430998/TzCL7ntL)
